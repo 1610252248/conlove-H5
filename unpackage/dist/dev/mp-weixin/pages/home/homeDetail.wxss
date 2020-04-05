@@ -1,0 +1,40 @@
+.user-info {
+  width: 100%;
+  color: #333;
+  font-size: $uni-font-size-base;
+}
+.box-info-up {
+  width: 85%;
+  height: 55rpx;
+  margin: 30rpx auto 0;
+}
+.box-info-down {
+  width: 85%;
+  height: 55rpx;
+  margin: 0 auto 30rpx;
+}
+.box-info-down .user {
+  max-width: 45%;
+}
+.box-info-down .user .box-userAvatar {
+  width: 55rpx;
+  height: 55rpx;
+  border-radius: 50%;
+}
+.box-info-down .user .box-userName {
+  margin-left: 10rpx;
+  max-width: 70%;
+}
+.box-info-down .title {
+  max-width: 45%;
+  height: 100%;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+.box-info-down .title .title-text {
+  margin-left: 10rpx;
+}
+.user-info-image {
+  width: 100%;
+}
+

@@ -1,0 +1,62 @@
+{
+	"pages": [{
+		"path": "pages/home/home",
+		"style": {
+			"navigationBarTitleText": "缘来",
+			"enablePullDownRefresh": true
+		}
+	}, {
+		"path": "pages/square/post"
+	}, {
+		"path": "pages/square/square"
+	}, {
+		"path": "pages/square/treeHole"
+	}, {
+		"path": "pages/user/user"
+	}, {
+		"path": "pages/release/release"
+	}, {
+		"path": "pages/message/message"
+	}, {
+		"path": "pages/home/homeDetail",
+		"style": {
+			"navigationBarTitleText": "帖子详情"
+		}
+	}],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "缘来是你",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF"
+	},
+	"tabBar": {
+		"color": "#111111",
+		"selectedColor": "#111111",
+		"borderStyle": "white",
+		"backgroundColor": "#e6e6e6",
+		"list": [{
+			"pagePath": "pages/home/home",
+			"iconPath": "static/tabar-image/home.png",
+			"selectedIconPath": "static/tabar-image/home-select.png",
+			"text": "缘来"
+		}, {
+			"pagePath": "pages/square/square",
+			"iconPath": "static/tabar-image/square.png",
+			"selectedIconPath": "static/tabar-image/square-select.png",
+			"text": "小宇宙"
+		}, {
+			"pagePath": "pages/release/release",
+			"iconPath": "static/tabar-image/jia.png"
+		}, {
+			"pagePath": "pages/message/message",
+			"iconPath": "static/tabar-image/message.png",
+			"selectedIconPath": "static/tabar-image/message-select.png",
+			"text": "消息"
+		}, {
+			"pagePath": "pages/user/user",
+			"iconPath": "static/tabar-image/user.png",
+			"selectedIconPath": "static/tabar-image/user-select.png",
+			"text": "我的"
+		}]
+	}
+}

@@ -1,0 +1,76 @@
+.scroll-view {
+  height: 100vh;
+  overflow: scroll;
+  width: 100%;
+}
+.display-box {
+  width: 95%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+          align-items: center;
+  padding-top: 30rpx;
+  margin: 0rpx auto 20rpx;
+  border-top: 1px dotted #d2dfe6;
+}
+.box-image {
+  width: 90%;
+  border-radius: 20rpx;
+  box-shadow: 0rpx 0rpx 20rpx 4rpx rgba(51,51,51,0.15);
+}
+.box-info-up {
+  width: 90%;
+  font-size: $uni-font-size-base;
+  color: #333;
+  margin: 30rpx auto 20rpx;
+}
+.box-info-down {
+  width: 90%;
+  height: 55rpx;
+}
+.box-info-down .user {
+  max-width: 45%;
+}
+.box-info-down .user .box-userAvatar {
+  width: 55rpx;
+  height: 55rpx;
+  border-radius: 50%;
+}
+.box-info-down .user .box-userName {
+  font-size: $uni-font-size-base;
+  color: #333;
+  margin-left: 10rpx;
+  max-width: 70%;
+}
+.box-info-down .title {
+  max-width: 45%;
+  height: 100%;
+  font-size: 30rpx;
+  color: #333;
+  font-weight: 600;
+}
+.box-info-down .title .title-text {
+  margin-left: 10rpx;
+}
+.box-no-data {
+  width: 100%;
+  height: 40rpx;
+  text-align: center;
+}
+.goToTop {
+  position: fixed;
+  bottom: 55rpx;
+  right: 8rpx;
+  z-index: 99999;
+}
+.top-image {
+  width: 44rpx;
+  height: 68rpx;
+}
+
