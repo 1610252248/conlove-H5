@@ -18,3 +18,35 @@
 	white-space: nowrap;
 	text-overflow: ellipsis;
 }
+
+.text-my-red {
+	color: #ff4a2d;
+}
+
+.bg-text-red {
+	background-color: #ff4a2d;
+	color: #ffffff;
+}
+
+.bg-text-red.light {
+	color: #ff4a2d;
+	background-color: #f9d7ea;
+}
+
+.dotted-top {
+	border-top: 1px dotted #d2dfe6;
+}
+
+.userAvatar{
+	width: 60rpx;
+	height: 60rpx;
+	border-radius: 50%;
+}
+
+.text-wrap {
+	word-break: break-word;
+}
+
+.text-nowrap {
+	white-space: nowrap;
+}

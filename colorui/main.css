@@ -524,7 +524,7 @@ radio.white.checked .uni-radio-input {
 }
 
 .solids-top::after {
-	border-top: 8upx solid #eee;
+	border-top: 20upx solid #eee;
 }
 
 .solids-right::after {
@@ -532,7 +532,7 @@ radio.white.checked .uni-radio-input {
 }
 
 .solids-bottom::after {
-	border-bottom: 8upx solid #eee;
+	border-bottom: 20upx solid #eee;
 }
 
 .solids-left::after {
@@ -862,8 +862,10 @@ button.cuIcon.lg {
 }
 
 .cu-tag[class*="cuIcon-"] {
-	width: 32upx;
-	height: 32upx;
+	/* width: 32upx;
+	height: 32upx */;
+	width: 28upx;
+	height: 28upx;
 	top: -4upx;
 	right: -4upx;
 }
@@ -1525,7 +1527,7 @@ button.cuIcon.lg {
 	bottom: -0.2rem;
 	border-radius: 6upx;
 	width: 100%;
-	height: 0.6rem;
+	height: 0.5rem;
 	left: 0.6rem;
 	opacity: 0.3;
 	z-index: 0;
@@ -1957,7 +1959,10 @@ button.cuIcon.lg {
 }
 
 .nav .cu-item.cur {
-	border-bottom: 4upx solid;
+	border-bottom: 20upx solid;
+	/* border-bottom-right-radius: 20rpx;
+	border-bottom-left-radius: 20rpx;	 */
+	/* border-radius: 20upx; */
 }
 
 /* ==================
@@ -2244,7 +2249,7 @@ button.cuIcon.lg {
 
 .cu-card.dynamic>.cu-item>.text-content {
 	padding: 0 30upx 0;
-	max-height: 6.4em;
+	max-height: 8.4em;
 	overflow: hidden;
 	font-size: 30upx;
 	margin-bottom: 20upx;
@@ -2926,9 +2931,9 @@ scroll-view.cu-steps .cu-item {
 }
 
 .grid.grid-square>view {
-	margin-right: 20upx;
-	margin-bottom: 20upx;
-	border-radius: 6upx;
+	margin-right: 10upx;
+	margin-bottom: 10upx;
+	/* border-radius: 6upx; */
 	position: relative;
 	overflow: hidden;
 }
@@ -2938,7 +2943,7 @@ scroll-view.cu-steps .cu-item {
 	position: absolute;
 }
 .grid.col-1.grid-square>view {
-	padding-bottom: 100%;
+	padding-bottom: 80%;
 	height: 0;
 	margin-right: 0;
 }
@@ -2950,9 +2955,9 @@ scroll-view.cu-steps .cu-item {
 }
 
 .grid.col-3.grid-square>view {
-	padding-bottom: calc((100% - 40upx)/3);
+	padding-bottom: calc((100% - 20upx)/3);
 	height: 0;
-	width: calc((100% - 40upx)/3);
+	width: calc((100% - 20upx)/3);
 }
 
 .grid.col-4.grid-square>view {
@@ -2975,7 +2980,8 @@ scroll-view.cu-steps .cu-item {
 }
 
 .grid.col-1>view {
-	width: 100%;
+	width: 70%;
+	
 }
 
 .grid.col-2>view {
@@ -3404,7 +3410,7 @@ scroll-view.cu-steps .cu-item {
 }
 
 .bg-red {
-	background-color: #e54d42;
+	background-color: #ff4a2d;
 	color: #ffffff;
 }
 
@@ -3824,7 +3830,7 @@ scroll-view.cu-steps .cu-item {
 .text-red,
 .line-red,
 .lines-red {
-	color: #e54d42;
+	color: #ff4a2d;
 }
 
 .text-orange,

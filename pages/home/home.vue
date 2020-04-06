@@ -1,7 +1,7 @@
 <template>
 	<view class="page-content">
-		<scroll-view class="scroll-view" scroll-y @scrolltolower="lower()" scroll-with-animation @scroll="scroll" :scroll-top="scrollTop" show-scrollbar>
-			<view class="display-box" v-for="item in listData" :key="item.id" @click="navToHomeDetail(item.id)">
+		<c-scroll @scrolltolower="lower">
+			<view class="display-box solids-bottom" v-for="item in listData" :key="item.id" @click="navToHomeDetail(item.id)">
 				<image lazy-load class="box-image" :src="item.images[0]" mode="widthFix"></image>
 				<view class="box-info-up">
 					<text class="fl">{{ item.school + ' | ' + item.grade }}</text>
@@ -10,7 +10,7 @@
 				</view>
 				<view class="box-info-down">
 					<view class="user fl flex align-center">
-						<image class="box-userAvatar" :src="item.userDto.avatarUrl"></image>
+						<image class="userAvatar" :src="item.userDto.avatarUrl"></image>
 						<text class="box-userName text-hidden">{{ item.userDto.nickname }}</text>
 					</view>
 					<view class="title fr flex align-center">
@@ -19,18 +19,22 @@
 					</view>
 				</view>
 			</view>
-
+			
 			<view class="box-no-data">
 				<text v-show="isShowDiv">~~~~~~ 我是有界线的 ~~~~~~</text>
 				<text v-show="isNoData && listData.length" class="cuIcon-loading2">加载中...</text>
 				<text v-show="isNoData && !listData.length" class="cuIcon-loading2">出了点小问题，暂时没有数据</text>
 			</view>
-		</scroll-view>
-		<view class="goToTop" @click="goTop()" v-show="canGoTop"><image class="top-image" src="@/static/image/top.png"></image></view>
+		</c-scroll>
 	</view>
 </template>
 
 <script>
+
+/**
+ * 使用混合 把data和menthods 的方法抽出来了
+ */
+
 export default {
 	data() {
 		return {
@@ -38,11 +42,6 @@ export default {
 			currentPage: 1, //当前请求页
 			totalPage: 0, // 帖子总页数
 			isShowDiv: false, //显示‘我是有界限的’
-			canGoTop: false, //回顶部
-			scrollTop: 0, // 滚动窗口位置
-			old: {
-				scrollTop: 0
-			},
 			isNoData: false //延迟2s拿数据
 		};
 	},
@@ -55,6 +54,7 @@ export default {
 			uni.stopPullDownRefresh();
 		}, 1000);
 	},
+	
 	methods: {
 		/**
 		 * 初始化拿数据,清空原数据之后请求
@@ -104,25 +104,6 @@ export default {
 		},
 
 		/**
-		 * 监听滚动位置，设置回顶部按钮
-		 */
-		scroll(e) {
-			this.old.scrollTop = e.detail.scrollTop;
-			this.canGoTop = e.detail.scrollTop > 2500;
-		},
-
-		/**
-		 * 回顶部事件
-		 */
-		goTop() {
-			this.scrollTop = this.old.scrollTop;
-			this.$nextTick(function() {
-				this.scrollTop = 0;
-			});
-			this.canGoTop = false;
-		},
-
-		/**
 		 * 跳转首页详情
 		 */
 		navToHomeDetail(id) {
@@ -143,13 +124,12 @@ export default {
 	overflow scroll
 	width 100%
 .display-box
-	width 95%
+	width 100%
 	display flex
 	flex-direction column
 	align-items center
-	padding-top 30rpx
+	padding 30rpx 0
 	margin 0rpx auto 20rpx
-	border-top 1px dotted #d2dfe6
 .box-image
 	width 90%
 	border-radius 20rpx
@@ -161,13 +141,9 @@ export default {
 	margin 30rpx auto 20rpx
 .box-info-down
 	width 90%
-	height 55rpx
+	height 60rpx
 	.user
 		max-width 45%
-		.box-userAvatar
-			width 55rpx
-			height 55rpx
-			border-radius 50%
 		.box-userName
 			font-size $uni-font-size-base
 			color #333333

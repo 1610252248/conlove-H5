@@ -6,11 +6,10 @@
 			"enablePullDownRefresh": true
 		}
 	}, {
-		"path": "pages/square/post"
-	}, {
-		"path": "pages/square/square"
-	}, {
-		"path": "pages/square/treeHole"
+		"path": "pages/square/square",
+		"style": {
+			"navigationStyle":"custom"
+		}
 	}, {
 		"path": "pages/user/user"
 	}, {
@@ -21,6 +20,11 @@
 		"path": "pages/home/homeDetail",
 		"style": {
 			"navigationBarTitleText": "帖子详情"
+		}
+	},{
+		"path": "pages/square/postDetail",
+		"style": {
+			"navigationBarTitleText": "说说详情"
 		}
 	}],
 	"globalStyle": {

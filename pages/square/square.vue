@@ -1,11 +1,75 @@
 <template>
 	<view>
-		这是广场
+		<view class="bg-white nav text-black">
+			<view class="cu-item" v-for="(item, index) in navs" :key="index" @click="tabSelect(index)">
+				<view class="text-df text-center">{{ item}}</view>
+				<view :class="{active:tabCur==index}"></view>
+			</view>
+			<view class="add-fixed text-xxl">
+				<text class="cuIcon-roundaddfill"></text>
+			</view>
+		</view>
+		<!-- <scroll-view  class="scroll-view" scroll-y @scrolltolower="lower" scroll-with-animation @scroll="scroll" :scroll-top="scrollTop" show-scrollbar>
+			<view class="main-content">
+				<post></post>
+			</view>
+		</scroll-view> -->
+		<c-scroll>
+			<view class="main-content">
+				<post></post>
+				<post></post>
+				<post></post>
+				<post></post>
+				<post></post>
+				<post></post>
+				<post></post>
+				<post></post>
+				<post></post>
+				<post></post>
+			</view>
+			
+		</c-scroll>
 	</view>
 </template>
 
 <script>
+import post from '@/pages/square/post.vue'
+
+export default {
+	components: {post},
+	data() {
+		return {
+			tabCur: 0,
+			navs:["说说", "树洞"]
+		};
+	},
+	methods: {
+		tabSelect(index) {
+			this.tabCur = index;
+		}
+	}
+};
 </script>
 
-<style>
+<style lang="stylus">
+.nav
+	width 95%
+	margin 0 auto
+.cu-item
+	margin 0
+	view
+		width 100rpx
+	
+.active
+	position relative
+	bottom 12rpx
+	height 10rpx
+	background-color #c0c0c0;
+	border-radius 10rpx
+.add-fixed 
+	position fixed
+	right 40rpx
+	top 20rpx
+.main-content 
+	width 100%
 </style>
