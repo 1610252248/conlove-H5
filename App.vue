@@ -1,9 +1,7 @@
 <script>
-import cScroll from '@/components/conlove/c-scroll.vue'
+import pageAnimation from '@/components/page-animation'
 export default {
-	components: {
-		cScroll
-	},
+	 mixins: [pageAnimation]
 };
 </script>
 
@@ -18,7 +16,6 @@ export default {
 		height: 100%;
 		margin: 0;
 		overflow: hidden;
-		
 	}
 	
 	

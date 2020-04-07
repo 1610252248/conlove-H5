@@ -22,7 +22,7 @@
 						<text>回复</text>
 					</view>
 					<view class="reply" v-if="item.reply">
-						<view class="sm cu-btn bg-grey light round">{{item.reply + '个回复'}}</view>
+						<view class="sm cu-btn bg-grey light round">{{item.reply + '个回复 >'}}</view>
 					</view>
 				</view>
 			</view>
@@ -38,7 +38,6 @@
 
 <script>
 export default {
-	name: 'cComment',
 	data() {
 		return {
 			comments: [

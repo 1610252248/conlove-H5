@@ -2,7 +2,8 @@
 	<view>
 		<c-scroll >
 			<post-info style="padding-top: 30rpx;"/>
-			<c-comment class="margin-top"/>
+			<c-info-bar />
+			<c-comment class="margin-top-sm"/>
 		</c-scroll>
 	</view>
 </template>
@@ -11,8 +12,9 @@
 import postInfo from '@/pages/square/postInfo.vue';
 import cComment from '@/components/conlove/c-comment.vue';
 import cScroll from '@/components/conlove/c-scroll.vue'
+import cInfoBar from '@/components/conlove/c-info-bar.vue'	
 export default {
-	components: {postInfo, cComment,cScroll}
+	components: {postInfo, cComment,cScroll, cInfoBar}
 };
 </script>
 

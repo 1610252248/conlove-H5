@@ -13,7 +13,6 @@
 
 
 export default {
-	name: 'cScroll',
 	data() {
 		return {
 			canGoTop: false, //回顶部

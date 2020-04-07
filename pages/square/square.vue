@@ -1,11 +1,11 @@
 <template>
 	<view>
 		<view class="bg-white nav text-black">
-			<view class="cu-item" v-for="(item, index) in navs" :key="index" @click="tabSelect(index)">
-				<view class="text-df text-center">{{ item}}</view>
+			<view class="cu-item text-lg  text-bold" v-for="(item, index) in navs" :key="index" @click="tabSelect(index)">
+				<view class=" text-center">{{ item}}</view>
 				<view :class="{active:tabCur==index}"></view>
 			</view>
-			<view class="add-fixed text-xxl">
+			<view class="add-fixed text-xxl" @click="navToNewSquare">
 				<text class="cuIcon-roundaddfill"></text>
 			</view>
 		</view>
@@ -14,8 +14,8 @@
 				<post></post>
 			</view>
 		</scroll-view> -->
-		<c-scroll>
-			<view class="main-content">
+		<c-scroll class="main-content">
+			<view v-if="tabCur == 0">
 				<post></post>
 				<post></post>
 				<post></post>
@@ -27,6 +27,9 @@
 				<post></post>
 				<post></post>
 			</view>
+			<view v-else>
+				<tree-hole/>
+			</view>
 			
 		</c-scroll>
 	</view>
@@ -34,18 +37,32 @@
 
 <script>
 import post from '@/pages/square/post.vue'
+import treeHole from '@/pages/square/treeHole.vue'
 
 export default {
-	components: {post},
+	components: {post, treeHole},
 	data() {
 		return {
 			tabCur: 0,
-			navs:["说说", "树洞"]
+			navs:["说说", "树洞"],
+			
 		};
 	},
 	methods: {
+		/**
+		 * 导航切换["说说", "树洞"]
+		 */
 		tabSelect(index) {
 			this.tabCur = index;
+		},
+		
+		/**
+		 * 发布新的["说说", "树洞"]
+		 */
+		navToNewSquare() {
+			uni.navigateTo({
+				url: this.tabCur == 0 ? '/pages/square/creatPost' : '/pages/square/creatTreeHole'
+			})
 		}
 	}
 };
@@ -72,4 +89,8 @@ export default {
 	top 20rpx
 .main-content 
 	width 100%
+.text-black {
+	color: #000000;
+}
+	
 </style>

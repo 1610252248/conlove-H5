@@ -11,9 +11,24 @@
 			"navigationStyle":"custom"
 		}
 	}, {
+		"path": "pages/square/treeHoleDetail",
+		"style": {
+			"navigationBarTitleText": "树洞详情"
+		}
+	}, {
 		"path": "pages/user/user"
 	}, {
 		"path": "pages/release/release"
+	}, {
+		"path": "pages/square/creatPost",
+		"style": {
+			"navigationStyle":"custom"
+		}
+	}, {
+		"path": "pages/square/creatTreeHole",
+		"style": {
+			"navigationStyle":"custom"
+		}
 	}, {
 		"path": "pages/message/message"
 	}, {

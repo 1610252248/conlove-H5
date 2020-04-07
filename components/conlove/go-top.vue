@@ -4,7 +4,6 @@
 
 <script>
 export default {
-	name: 'GoTop',
 	props: {
 		// 是否显示组件
 		canGoTop: {

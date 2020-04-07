@@ -3,6 +3,8 @@
 		<view class="display-box solids-bottom" @click="navToPostDetail">
 			<!-- 说说内容 -->
 			<post-info />
+			<!-- 赞评论功能 -->
+			<c-info-bar showMode/>
 			<!-- 评论 至多展示三条评论 -->
 			<view class="post-comment margin-top-sm">
 				<view class="flex justify-start " v-for="(item, index) in comments" :key="index">
@@ -20,11 +22,12 @@
 
 <script>
 import postInfo from '@/pages/square/postInfo.vue'
-	
+import cInfoBar from '@/components/conlove/c-info-bar.vue'	
+
 export default {
 	name: 'post',
 	components: {
-		postInfo
+		postInfo, cInfoBar
 	},
 	data() {
 		return {

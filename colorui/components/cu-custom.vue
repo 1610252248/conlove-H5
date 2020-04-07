@@ -20,7 +20,7 @@
 		data() {
 			return {
 				StatusBar: this.StatusBar,
-				CustomBar: this.CustomBar
+				CustomBar: this.CustomBar-10
 			};
 		},
 		name: 'cu-custom',
@@ -55,6 +55,7 @@
 				uni.navigateBack({
 					delta: 1
 				});
+				history.back();
 			}
 		}
 	}

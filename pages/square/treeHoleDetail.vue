@@ -1,6 +1,6 @@
 <template>
-	<view>
-		<view class="solids-bottom padding-bottom" @click="navToTreeHoleDetail">
+	<c-scroll>
+		<view>
 			<view class="flex padding justify-center">
 				<image class="cu-avatar xl round margin-left" src="https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg" mode="aspectFill"></image>
 			</view>
@@ -12,36 +12,21 @@
 			<view class="middle"></view>
 			<c-info-bar />
 		</view>
-		<view class="solids-bottom padding-bottom">
-			<view class="flex padding justify-center">
-				<image class="cu-avatar xl round margin-left" src="https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg" mode="aspectFill"></image>
-			</view>
-			<view class="box-content radius margin-center"><text class="text-white text-bold text-df padding-lr-xs">span多行居中</text></view>
-			<view class="middle"></view>
-			<c-info-bar />
-		</view>
-	</view>
+		<c-comment class="margin-top-sm"/>
+	</c-scroll>
 </template>
 
 <script>
 import cInfoBar from '@/components/conlove/c-info-bar.vue';
-
+import cComment from '@/components/conlove/c-comment.vue';
+import cScroll from '@/components/conlove/c-scroll.vue'
 export default {
-	name: 'treeHole',
+	name: 'treeHoleDetail',
 	components: {
-		cInfoBar
-	},
-	methods: {
-		navToTreeHoleDetail() {
-			uni.navigateTo({
-				// url: '@/pages/square/treeHoleD'
-				url: '/pages/square/treeHoleDetail'
-			})
-		}
-	},
+		cInfoBar,cComment,cScroll
+	}
 };
 </script>
-
 <style lang="stylus">
 .box-content
 	width 90%

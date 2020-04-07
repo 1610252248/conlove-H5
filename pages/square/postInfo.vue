@@ -1,10 +1,10 @@
 <template>
-	<view class="post-info" >
+	<view class="post-info">
 		<view class="box-content">
 			<view class="flex justify-start align-center">
 				<view style="height: 60rpx;">
-					<image class="userAvatar" src="@/static/image/avatar-default.png"/>
-					<view class="cu-tag badge" :class="isFemale?'cuIcon-female bg-pink':'cuIcon-male bg-blue'"/>
+					<image class="userAvatar" src="@/static/image/avatar-default.png" />
+					<view class="cu-tag badge" :class="isFemale ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'" />
 				</view>
 				<view class="margin-left-sm">
 					<view class="box-userName text-hidden">Bobbobbb</view>
@@ -18,41 +18,44 @@
 				<view class="bg-img " v-for="(item, index) in avatar" :key="index" :style="[{ backgroundImage: 'url(' + avatar[index] + ')' }]"></view>
 			</view>
 		</view>
-		<view class="post-like">
-			<view class="fl "><text class="text-gray margin-left-lg text-xs">52人 觉得很赞</text></view>
+		
+		<!-- <view class="post-like">
+			<view class="fl text-gray margin-left-lg text-xs"><text>52人 觉得很赞</text></view>
 			<view class="fr">
 				<image class="image-sm" src="@/static/image/like.png"></image>
 				<image class="image-sm margin-left-sm margin-right-lg" src="@/static/image/chat-dot-round.png"></image>
-				<!-- <text class="cuIcon-cha"></text> -->
 			</view>
-		</view>
+		</view> -->
+		<!-- <c-info-bar showMode/> -->
 	</view>
 </template>
 
 <script>
-	export default {
-		name: 'postInfo',
-		data() {
-			return {
-				isFemale: false,
-				avatar: [
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big81005.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big25002.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big25002.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg',
-				],
-			}
-		},
+import cInfoBar from '@/components/conlove/c-info-bar.vue'	
+export default {
+	name: 'postInfo',
+	components: {
+		cInfoBar
+	},
+	data() {
+		return {
+			isFemale: false,
+			avatar: [
+				'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
+				'https://ossweb-img.qq.com/images/lol/web201310/skin/big81005.jpg',
+				'https://ossweb-img.qq.com/images/lol/web201310/skin/big25002.jpg',
+				'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg',
+				'https://ossweb-img.qq.com/images/lol/web201310/skin/big25002.jpg',
+				'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
+			]
+		};
 	}
+};
 </script>
 
 <style lang="stylus">
-.post-info 
+.post-info
 	width 100%
-	// margin 30rpx 0
-
 .box-userName
 	font-size $uni-font-size-base
 	color #333333
