@@ -5,11 +5,10 @@
 				<image class="cu-avatar xl round margin-left" src="https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg" mode="aspectFill"></image>
 			</view>
 			<view class="box-content radius margin-center">
-				<text class="text-white text-bold text-df padding-lr-xs">
+				<text class="text-white  text-df padding-lr-xs">
 					span多行居中测试span多行span多行居中测试span多行span多行居中测试span多行span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试
 				</text>
 			</view>
-			<view class="middle"></view>
 			<c-info-bar />
 		</view>
 		<view class="solids-bottom padding-bottom">
@@ -17,7 +16,6 @@
 				<image class="cu-avatar xl round margin-left" src="https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg" mode="aspectFill"></image>
 			</view>
 			<view class="box-content radius margin-center"><text class="text-white text-bold text-df padding-lr-xs">span多行居中</text></view>
-			<view class="middle"></view>
 			<c-info-bar />
 		</view>
 	</view>
@@ -46,7 +44,7 @@ export default {
 .box-content
 	width 90%
 	background-color #ffadad
-	padding 20% 0
+	padding 30% 0
 	margin-top -100rpx
 	margin-bottom 20rpx
 	border 1px solid #c7c7c7

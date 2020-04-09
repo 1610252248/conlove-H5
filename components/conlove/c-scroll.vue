@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<scroll-view class="scroll-view" scroll-y @scrolltolower="scrolltolower" scroll-with-animation @scroll="scroll" :scroll-top="scrollTop" show-scrollbar>
+		<scroll-view :class="scrollHight?'scroll-height':''"  class="scroll-view" scroll-y @scrolltolower="scrolltolower" scroll-with-animation @scroll="scroll" :scroll-top="scrollTop" show-scrollbar>
 			<slot></slot>
 		</scroll-view>
 
@@ -13,6 +13,12 @@
 
 
 export default {
+	props: {
+		scrollHight: {
+			type: Boolean,
+			default: false
+		},
+	},
 	data() {
 		return {
 			canGoTop: false, //回顶部
@@ -60,6 +66,10 @@ export default {
 	/* #endif */
 	overflow scroll
 	width 100%
+
+.scroll-height
+	height 100vh!important
+
 .goToTop
 	position fixed
 	bottom 55rpx

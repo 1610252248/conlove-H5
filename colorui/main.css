@@ -1183,8 +1183,11 @@ button.cuIcon.lg {
 
 .cu-list>.cu-item {
 	transition: all .6s ease-in-out 0s;
-	transform: translateX(0upx)
+	transform: translateX(0upx);
+	border-bottom: 1upx solid #ffffff !important
 }
+
+
 
 .cu-list>.cu-item.move-cur {
 	transform: translateX(-260upx)
@@ -3909,6 +3912,7 @@ scroll-view.cu-steps .cu-item {
 .line-black,
 .lines-black {
 	color: #333333;
+	/* color: #000000; */
 }
 
 .text-white,

@@ -41,10 +41,12 @@
 	height 90rpx
 	line-height 90rpx
 	margin-bottom 90rpx
+	z-index 9999
+	background-color white
 .text-icon 
 	font-size 40rpx
 .cu-btn.sm
-	padding: 0 20upx;
-	font-size: 24upx;
+	padding: 0 22upx;
+	font-size: 26upx;
 	height: 48upx;
 </style>

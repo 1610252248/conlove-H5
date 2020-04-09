@@ -18,7 +18,10 @@
 	}, {
 		"path": "pages/user/user"
 	}, {
-		"path": "pages/release/release"
+		"path": "pages/release/release",
+		"style": {
+			"navigationBarTitleText": "发布缘来"
+		}
 	}, {
 		"path": "pages/square/creatPost",
 		"style": {
@@ -30,11 +33,29 @@
 			"navigationStyle":"custom"
 		}
 	}, {
-		"path": "pages/message/message"
+		"path": "pages/message/message",
+		"style": {
+			"navigationBarTitleText": "我的消息"
+		}
 	}, {
 		"path": "pages/home/homeDetail",
 		"style": {
 			"navigationBarTitleText": "帖子详情"
+		}
+	}, {
+		"path": "pages/message/receiveAppreciate",
+		"style": {
+			"navigationBarTitleText": "收到的赞"
+		}
+	}, {
+		"path": "pages/message/receiveComment",
+		"style": {
+			"navigationBarTitleText": "收到的评论"
+		}
+	}, {
+		"path": "pages/message/receiveLike",
+		"style": {
+			"navigationBarTitleText": "收到的秋波"
 		}
 	},{
 		"path": "pages/square/postDetail",
@@ -65,7 +86,8 @@
 			"text": "小宇宙"
 		}, {
 			"pagePath": "pages/release/release",
-			"iconPath": "static/tabar-image/jia.png"
+			"iconPath": "static/tabar-image/jia.png",
+			"selectedIconPath": "static/tabar-image/jia.png"
 		}, {
 			"pagePath": "pages/message/message",
 			"iconPath": "static/tabar-image/message.png",
