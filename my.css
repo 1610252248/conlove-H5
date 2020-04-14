@@ -54,3 +54,15 @@
 .margin-center {
 	margin: 0 auto;
 }
+
+.border-color-red {
+	border-color: #ff4a2d!important;
+}
+
+.border-color-yellow {
+	border-color: #ffb434!important;
+}
+
+.border-color-blue {
+	border-color: #3F91E3!important;	
+}

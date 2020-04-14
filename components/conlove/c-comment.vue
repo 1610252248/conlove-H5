@@ -16,13 +16,15 @@
 					</view>
 					<view class="text-black text-content text-df">{{ item.content }}</view>
 					
-					<view class="text-sm text-gray" >
-						<text>{{$utils.dateUtils.format(item.createTime)}}</text>
-						<image class="dot" src="@/static/image/dot1.png"></image>
-						<text>回复</text>
-					</view>
-					<view class="reply" v-if="item.reply">
-						<view class="sm cu-btn bg-grey light round">{{item.reply + '个回复 >'}}</view>
+					<view v-if="showInfo">
+						<view class="text-sm text-gray" >
+							<text>{{$utils.dateUtils.format(item.createTime)}}</text>
+							<image class="dot" src="@/static/image/dot1.png"></image>
+							<text>回复</text>
+						</view>
+						<view class="reply" v-if="item.reply" @click="navToReply">
+							<view class="sm cu-btn bg-grey light round">{{item.reply + '个回复 >'}}</view>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -38,6 +40,12 @@
 
 <script>
 export default {
+	props: {
+		showInfo: {
+			type: Boolean,
+			default: true
+		},
+	},
 	data() {
 		return {
 			comments: [
@@ -76,6 +84,13 @@ export default {
 				}
 			],
 			hotNums: [5, 10], // 点赞每超过几个有热度图标，暂时2个
+		}
+	},
+	methods: {
+		navToReply() {
+			uni.navigateTo({
+				url:'/components/conlove/c-reply-comment'
+			})
 		}
 	},
 }

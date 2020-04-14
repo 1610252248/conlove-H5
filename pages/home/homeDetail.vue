@@ -10,11 +10,11 @@
 				<view class="box-info-down">
 					<view class="user fl flex align-center">
 						<image class="userAvatar" :src="sticker.userDto.avatarUrl"></image>
-						<text class="box-userName text-hidden">{{sticker.userDto.nickname}}</text>
+						<text class="box-userName text-cut">{{sticker.userDto.nickname}}</text>
 					</view>
 					<view class="title fr flex align-center  text-bold">
 						<text class="cuIcon-notification"></text>
-						<text class="title-text text-hidden">{{sticker.title}}</text>
+						<text class="title-text text-cut">{{sticker.title}}</text>
 					</view>
 				</view>
 			</view>
@@ -45,8 +45,9 @@
 						<text class="bg-red"></text>
 					</view>
 				</view>
+				<c-comment :showInfo="false"></c-comment>
 				<!-- 评论 -->
-				<view class="cu-list menu-avatar comment solids-top padding-top-sm">
+				<!-- <view class="cu-list menu-avatar comment solids-top padding-top-sm">
 					<view class="cu-item" v-for="item in sticker.comments" :key="item.id" :id="item.id">
 						<image
 							class="cu-avatar round"
@@ -65,7 +66,7 @@
 							<view class="text-gray text-wrap text-df">{{item.content}}</view>
 						</view>
 					</view>
-				</view>
+				</view> -->
 			</view>
 		</c-scroll>
 		
@@ -78,12 +79,31 @@
 
 <script>
 
-
+import cComment from '@/components/conlove/c-comment.vue';
 export default {
+	components: {
+		cComment
+	},
 	data() {
 		return {
 			cardCur: 0,
-			sticker: {}, //帖子详情
+			sticker: {
+				school: '西安电子科技大学',
+				grade: '研一',
+				sex: 0,
+				age: '1998-10-28',
+				height: 170,
+				userDto: {
+					avatarUrl: '/static/image/default.jpeg',
+					nickname: '测试小助手'
+				},
+				title: '缘来~~~~',
+				images: [
+					'/static/image/view-1.jpg',
+					'/static/image/view-2.jpg',
+					'/static/image/view-3.jpg',
+				]
+			}, //帖子详情
 			imageList: [], //帖子图片对象
 			isMyPost: false, // 是否是自己发的帖子，如果是则不能点赞
 			isLike: false, // 用户是否点赞
@@ -92,7 +112,7 @@ export default {
 		};
 	},
 	onLoad(option) {
-		this.getData(option.id);
+		// this.getData(option.id);
 	},
 
 	methods: {
@@ -167,6 +187,8 @@ export default {
 	.user
 		max-width 45%
 		.box-userName
+			position relative
+			top 5rpx
 			margin-left 10rpx
 			max-width 70%
 	.title

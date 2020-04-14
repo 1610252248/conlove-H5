@@ -31,7 +31,7 @@
 		</view>
 		<view class="cu-form-group">
 			<view class="title">生日：</view>
-			<picker mode="date" :value="date" @change="dateChange" start="1985-01-01" end="2019-12-12">
+			<picker mode="date" :value="date" @change="dateChange" :start="startDate" :end="endDate">
 				<view class="picker">
 					{{date}}
 				</view>
@@ -71,7 +71,6 @@
 				sex: '请选择',
 				height: '',
 				phone: '',
-				date: '请选择',
 				sexIndex: 0,
 				sexPicker: ['男', '女'],
 				heightIndex: 0,
@@ -83,6 +82,9 @@
 				gradeIndex: 0,
 				gradePicker: ['已工作', '博士', '研三', '研二', '研一', '大四', '大三', '大二', '大一'],
 				imgList: [],
+				startDate:getDate('start'),
+				endDate:getDate('end'),
+				date: '请选择'
 			}
 		},
 		methods: {

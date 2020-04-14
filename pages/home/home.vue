@@ -11,11 +11,11 @@
 				<view class="box-info-down">
 					<view class="user fl flex align-center">
 						<image class="userAvatar" :src="item.userDto.avatarUrl"></image>
-						<text class="box-userName text-hidden">{{ item.userDto.nickname }}</text>
+						<text class="box-userName text-cut">{{ item.userDto.nickname }}</text>
 					</view>
 					<view class="title fr flex align-center">
 						<text class="cuIcon-notification"></text>
-						<text class="title-text text-hidden">{{ item.title }}</text>
+						<text class="title-text text-cut">{{ item.title }}</text>
 					</view>
 				</view>
 			</view>
@@ -31,14 +31,212 @@
 
 <script>
 
-/**
- * 使用混合 把data和menthods 的方法抽出来了
- */
-
 export default {
 	data() {
 		return {
-			listData: [], // 首页列表渲染的数据
+			listData: [
+				{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},
+				{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},
+				{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},
+				{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},
+				{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},
+				{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},{
+					id: 1,
+					images: [
+						'/static/image/home.jpg'
+					],
+					school: '西安电子科技大学',
+					grade: '研一',
+					sex: 0,
+					age: '1998-10-28',
+					height: 170,
+					userDto: {
+						avatarUrl: '/static/image/default.jpeg',
+						nickname: '测试小助手'
+					},
+					title: '缘来~~~~'
+				},
+			], // 首页列表渲染的数据
 			currentPage: 1, //当前请求页
 			totalPage: 0, // 帖子总页数
 			isShowDiv: false, //显示‘我是有界限的’
@@ -46,10 +244,11 @@ export default {
 		};
 	},
 	onLoad() {
-		this.init();
+		// this.init();
+		console.log(this.listData);
 	},
 	onPullDownRefresh() {
-		this.init();
+		// this.init();
 		setTimeout(() => {
 			uni.stopPullDownRefresh();
 		}, 1000);
@@ -136,7 +335,7 @@ export default {
 	box-shadow 0rpx 0rpx 20rpx 4rpx rgba(51, 51, 51, 0.15)
 .box-info-up
 	width 90%
-	font-size $uni-font-size-base
+	font-size 28rpx
 	color #333333
 	margin 30rpx auto 20rpx
 .box-info-down
@@ -145,7 +344,9 @@ export default {
 	.user
 		max-width 45%
 		.box-userName
-			font-size $uni-font-size-base
+			position relative
+			top 5rpx
+			font-size 28rpx
 			color #333333
 			margin-left 10rpx
 			max-width 70%

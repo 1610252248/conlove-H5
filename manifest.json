@@ -51,6 +51,7 @@
     "h5" : {
         "router" : {
             "mode" : "history"
-        }
+        },
+        "domain" : "conlove.xiaolongli.top"
     }
 }

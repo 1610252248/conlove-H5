@@ -841,7 +841,7 @@ button.cuIcon.lg {
 .cu-tag.badge {
 	border-radius: 200upx;
 	position: absolute;
-	top: -10upx;
+	bottom: -10upx;
 	right: -10upx;
 	font-size: 20upx;
 	padding: 0upx 10upx;
@@ -857,18 +857,26 @@ button.cuIcon.lg {
 	padding: 0upx;
 	width: 16upx;
 	height: 16upx;
-	top: -4upx;
+	bottom: -4upx;
 	right: -4upx;
 }
 
 .cu-tag[class*="cuIcon-"] {
-	/* width: 32upx;
-	height: 32upx */;
 	width: 28upx;
 	height: 28upx;
-	top: -4upx;
+	bottom: -4upx;
 	right: -4upx;
 }
+
+.cu-tag[class*="cuIcon-"].lg {
+	width: 44upx;
+	height: 44upx;
+	font-size: 34rpx;
+	padding: 0;
+	bottom: 0upx;
+	right: -4upx;
+}
+
 
 /* ==================
           头像
@@ -1966,6 +1974,10 @@ button.cuIcon.lg {
 	/* border-bottom-right-radius: 20rpx;
 	border-bottom-left-radius: 20rpx;	 */
 	/* border-radius: 20upx; */
+}
+
+.nav .cu-item.cur.sm {
+	border-bottom: 4upx solid;
 }
 
 /* ==================
@@ -3339,7 +3351,7 @@ scroll-view.cu-steps .cu-item {
 
 .line-red::after,
 .lines-red::after {
-	border-color: #e54d42;
+	border-color: #ff4a2d;
 }
 
 .line-orange::after,
@@ -3349,7 +3361,7 @@ scroll-view.cu-steps .cu-item {
 
 .line-yellow::after,
 .lines-yellow::after {
-	border-color: #fbbd08;
+	border-color: #ffb434;
 }
 
 .line-olive::after,
@@ -3369,7 +3381,7 @@ scroll-view.cu-steps .cu-item {
 
 .line-blue::after,
 .lines-blue::after {
-	border-color: #0081ff;
+	border-color: #3f91e3;
 }
 
 .line-purple::after,
@@ -3423,8 +3435,8 @@ scroll-view.cu-steps .cu-item {
 }
 
 .bg-yellow {
-	background-color: #fbbd08;
-	color: #333333;
+	background-color: #ffb434;
+	color: #ffffff;
 }
 
 .bg-olive {
@@ -3845,7 +3857,7 @@ scroll-view.cu-steps .cu-item {
 .text-yellow,
 .line-yellow,
 .lines-yellow {
-	color: #fbbd08;
+	color: #ffb434;
 }
 
 .text-olive,
@@ -3869,7 +3881,7 @@ scroll-view.cu-steps .cu-item {
 .text-blue,
 .line-blue,
 .lines-blue {
-	color: #0081ff;
+	color: #3f91e3;
 }
 
 .text-purple,

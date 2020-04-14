@@ -6,9 +6,19 @@
 			"enablePullDownRefresh": true
 		}
 	}, {
+		"path": "components/conlove/c-reply-comment",
+		"style": {
+			"navigationBarTitleText": "回复评论"
+		}
+	}, {
 		"path": "pages/square/square",
 		"style": {
 			"navigationStyle":"custom"
+		}
+	}, {
+		"path": "pages/user/userEdit",
+		"style": {
+			"navigationBarTitleText": "编辑资料"
 		}
 	}, {
 		"path": "pages/square/treeHoleDetail",
@@ -31,6 +41,11 @@
 		"path": "pages/square/creatTreeHole",
 		"style": {
 			"navigationStyle":"custom"
+		}
+	}, {
+		"path": "pages/message/chat",
+		"style": {
+			"navigationBarTitleText": "聊天"
 		}
 	}, {
 		"path": "pages/message/message",
