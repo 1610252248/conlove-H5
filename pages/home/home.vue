@@ -1,7 +1,7 @@
 <template>
 	<view class="page-content">
 		<c-scroll @scrolltolower="lower">
-			<view class="display-box solids-bottom" v-for="item in listData" :key="item.id" @click="navToHomeDetail(item.id)">
+			<view class="display-box solids-bottom" v-for="(item, index) in listData" :key="index" @click="navToHomeDetail(item.id)">
 				<image lazy-load class="box-image" :src="item.images[0]" mode="widthFix"></image>
 				<view class="box-info-up">
 					<text class="fl">{{ item.school + ' | ' + item.grade }}</text>
@@ -19,233 +19,51 @@
 					</view>
 				</view>
 			</view>
-			
-			<view class="box-no-data">
+			<view class="cu-load" :class="!isLoad?'loading':'over'"></view>
+			<!-- <view class="box-no-data">
 				<text v-show="isShowDiv">~~~~~~ 我是有界线的 ~~~~~~</text>
 				<text v-show="isNoData && listData.length" class="cuIcon-loading2">加载中...</text>
 				<text v-show="isNoData && !listData.length" class="cuIcon-loading2">出了点小问题，暂时没有数据</text>
-			</view>
+			</view> -->
 		</c-scroll>
 	</view>
 </template>
 
 <script>
-
+import { mapState } from 'vuex'
 export default {
+	computed: mapState([
+	  // 映射 this.newHome 为 store.state.newHome
+	  'newHome'
+	]),
 	data() {
 		return {
-			listData: [
-				{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},
-				{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},
-				{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},
-				{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},
-				{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},
-				{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},{
-					id: 1,
-					images: [
-						'/static/image/home.jpg'
-					],
-					school: '西安电子科技大学',
-					grade: '研一',
-					sex: 0,
-					age: '1998-10-28',
-					height: 170,
-					userDto: {
-						avatarUrl: '/static/image/default.jpeg',
-						nickname: '测试小助手'
-					},
-					title: '缘来~~~~'
-				},
-			], // 首页列表渲染的数据
+			listData: [], // 首页列表渲染的数据
 			currentPage: 1, //当前请求页
-			totalPage: 0, // 帖子总页数
+			totalPage: 5, // 帖子总页数
 			isShowDiv: false, //显示‘我是有界限的’
-			isNoData: false //延迟2s拿数据
+			isNoData: false, //延迟2s拿数据
+			newData: {
+				id: 2,
+				images: ['/static/image/home.jpg'],
+				school: '西安电子科技大学',
+				grade: '研一',
+				sex: 0,
+				age: '1998-10-28',
+				height: 170,
+				userDto: {
+					avatarUrl: '/static/image/default.jpeg',
+					nickname: '测试小助手'
+				},
+				title: '缘来~~~~'
+			},
+			isLoad: false,
+			loadCnt: 0,
 		};
 	},
 	onLoad() {
 		// this.init();
-		console.log(this.listData);
+		// console.log(this.listData);
 	},
 	onPullDownRefresh() {
 		// this.init();
@@ -253,7 +71,14 @@ export default {
 			uni.stopPullDownRefresh();
 		}, 1000);
 	},
-	
+	onShow() {
+		console.log(this.newHome);
+		this.listData = []
+		this.listData.push(...this.newHome)
+		this.listData.push(this.newData)
+		this.listData.push(this.newData)
+		console.log(this.listData);
+	},
 	methods: {
 		/**
 		 * 初始化拿数据,清空原数据之后请求
@@ -287,12 +112,22 @@ export default {
 		 * 页面触底，加载更多数据
 		 */
 		lower() {
-			this.currentPage++;
-			if (this.currentPage > this.totalPage) {
-				this.isShowDiv = true;
-				return;
-			}
-			this.getListData();
+			if(this.loadCnt > 0) return ;
+			if(this.isLoad) return ;
+			this.loadCnt++;
+			setTimeout(() => {
+				this.currentPage++;
+				if (this.currentPage <= this.totalPage) {
+					this.listData.push(this.newData);
+					this.listData.push(this.newData);
+					this.listData.push(this.newData);
+				} else {
+					this.isLoad = true;
+				}
+				this.loadCnt--;
+			},500)
+			
+			// this.getListData();
 		},
 
 		/**
@@ -358,7 +193,6 @@ export default {
 		font-weight 600
 		.title-text
 			margin-left 10upx
-
 .box-no-data
 	width 100%
 	height 40rpx

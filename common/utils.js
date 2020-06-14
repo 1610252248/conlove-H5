@@ -65,7 +65,7 @@ var dateUtils = {
 		'分钟': 60000,
 		'秒': 1000
 	},
-	humanize: function (milliseconds) {
+	humanize: function(milliseconds) {
 		var humanize = '';
 		for (var key in this.UNITS) {
 			if (milliseconds >= this.UNITS[key]) {
@@ -75,22 +75,55 @@ var dateUtils = {
 		}
 		return humanize || '刚刚';
 	},
-	format: function (dateStr) {
+	format: function(dateStr) {
 		var date = this.parse(dateStr)
 		var diff = Date.now() - date.getTime();
 		if (diff < this.UNITS['年']) {
 			return this.humanize(diff);
 		}
-		var _format = function (number) {
+		var _format = function(number) {
 			return (number < 10 ? ('0' + number) : number);
 		};
-		return date.getFullYear() + '/' + _format(date.getMonth() + 1) + '/' + _format(date.getDate()) + '-' +
+		return date.getFullYear() + '/' + _format(date.getMonth() + 1) + '/' + _format(date.getDate()) + ' ' +
 			_format(date.getHours()) + ':' + _format(date.getMinutes());
 	},
-	parse: function (str) { //将"yyyy-mm-dd HH:MM:ss"格式的字符串，转化为一个Date对象
+	parse: function(str) { //将"yyyy-mm-dd HH:MM:ss"格式的字符串，转化为一个Date对象
 		var a = str.split(/[^0-9]/);
 		return new Date(a[0], a[1] - 1, a[2], a[3], a[4], a[5]);
+	},
+	currentDate: function() {
+		var date = new Date();
+		var year = date.getFullYear(); //年 ,从 Date 对象以四位数字返回年份
+		var month = date.getMonth() + 1; //月 ,从 Date 对象返回月份 (0 ~ 11) ,date.getMonth()比实际月份少 1 个月
+		var day = date.getDate(); //日 ,从 Date 对象返回一个月中的某一天 (1 ~ 31)
+		var hours = date.getHours(); //小时 ,返回 Date 对象的小时 (0 ~ 23)
+		var minutes = date.getMinutes(); //分钟 ,返回 Date 对象的分钟 (0 ~ 59)
+		var seconds = date.getSeconds(); //秒 ,返回 Date 对象的秒数 (0 ~ 59)
+		//修改月份格式
+		if (month >= 1 && month <= 9) {
+			month = "0" + month;
+		}
+		//修改日期格式
+		if (day >= 0 && day <= 9) {
+			day = "0" + day;
+		}
+		//修改小时格式
+		if (hours >= 0 && hours <= 9) {
+			hours = "0" + hours;
+		}
+		//修改分钟格式
+		if (minutes >= 0 && minutes <= 9) {
+			minutes = "0" + minutes;
+		}
+		//修改秒格式
+		if (seconds >= 0 && seconds <= 9) {
+			seconds = "0" + seconds;
+		}
+		//格式(yyyy-mm-dd hh:mm:ss)
+		var currentFormatDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
+		return currentFormatDate;
 	}
+
 };
 
 module.exports = {

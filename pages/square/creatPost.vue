@@ -1,27 +1,27 @@
 <template>
 	<view>
-		<c-custom><block slot="center">发表说说</block></c-custom>
+		<c-custom @send="send"><block slot="center">发表说说</block></c-custom>
 		<view class="content">
 			<view class="cu-form-group margin-xs" >
-				<textarea style="min-height: 250rpx;"  @input="textareaInput" placeholder="此刻的想法..."></textarea>
+				<textarea style="min-height: 250rpx;" v-model="data.content"  placeholder="此刻的想法..."></textarea>
 			</view>
 			<view class="cu-bar bg-white margin-top solids-top">
 				<view class="action padding-left-xs">
 					上传图片
 				</view>
 				<view class="action padding-right-xs">
-					{{imgList.length}}/9
+					{{data.imageList.length}}/9
 				</view>
 			</view>
 			<view class="cu-form-group">
 				<view class="grid col-3 grid-square flex-sub">
-					<view class="bg-img" v-for="(item,index) in imgList" :key="index" @click="ViewImage" :data-url="imgList[index]">
-					 <image :src="imgList[index]" mode="aspectFill"></image>
+					<view class="bg-img" v-for="(item,index) in data.imageList" :key="index" @click="ViewImage" :data-url="data.imageList[index]">
+					 <image :src="item" mode="aspectFill"  @click="viewImage" :data-url="item"></image>
 						<view class="cu-tag bg-red" @click.stop="DelImg" :data-index="index">
 							<text class='cuIcon-close'></text>
 						</view>
 					</view>
-					<view class="solids" @click="ChooseImage" v-if="imgList.length<9">
+					<view class="solids" @click="ChooseImage" v-if="data.imageList.length<9">
 						<text class='cuIcon-cameraadd'></text>
 					</view>
 				</view>
@@ -32,25 +32,42 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
+	
 	data() {
 		return {
-			imgList: [],
-			textareaAValue: ''
+			data: {
+				user: {
+					avatar: '/static/image/default-2.jpeg',
+					userName: 'QAQ',
+					isFemale: true
+				},
+				createTime: '',
+				content: '',
+				imageList: [],
+				comments: []
+			},
 		}
 	},
 	methods: {
+		...mapMutations({
+			addNewPost: 'addNewPost'
+		}),
 		ChooseImage() {
 			uni.chooseImage({
 				success: (res) => {
-					this.imgList.push(...res.tempFilePaths);
+					this.data.imageList.push(...res.tempFilePaths);
+					
+					console.log(res.tempFiles);
+					// console.log(res.tempFilePaths);
 				}
 			});
 		},
 		ViewImage(e) {
 			console.log(e);
 			uni.previewImage({
-				urls: this.imgList,
+				urls: this.imageList,
 				current: e.currentTarget.dataset.url
 			});
 		},
@@ -61,13 +78,23 @@ export default {
 				confirmText: '确定',
 				success: res => {
 					if (res.confirm) {
-						this.imgList.splice(e.currentTarget.dataset.index, 1)
+						this.data.imageList.splice(e.currentTarget.dataset.index, 1)
 					}
 				}
 			})
 		},
-		textareaInput(e) {
-			this.textareaAValue = e.detail.value
+		send() {
+			this.data.createTime = this.$utils.dateUtils.currentDate();
+			this.addNewPost(this.data);
+			uni.switchTab({
+				url: '/pages/square/square'
+			})
+		},
+		viewImage(e) {
+			uni.previewImage({
+				urls: this.data.imageList,
+				current: e.currentTarget.dataset.url,
+			});
 		},
 	},
 	

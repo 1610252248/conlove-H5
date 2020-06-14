@@ -1,10 +1,10 @@
 <template>
 	<view class="post">
-		<view class="display-box solids-bottom" @click="navToPostDetail">
+		<view class="display-box solids-bottom" @click="navToPostDetail(false)">
 			<!-- 说说内容 -->
-			<post-info />
+			<post-info :data="postData"/>
 			<!-- 赞评论功能 -->
-			<c-info-bar showMode/>
+			<c-info-bar @click-message="clickMessage" showMode/>
 			<!-- 评论 至多展示三条评论 -->
 			<view class="post-comment margin-top-sm">
 				<view class="flex justify-start " v-for="(item, index) in comments" :key="index">
@@ -29,6 +29,14 @@ export default {
 	components: {
 		postInfo, cInfoBar
 	},
+	props: {
+		postData: {
+			type: Object,
+			default: () => ({
+				
+			})
+		},
+	},
 	data() {
 		return {
 			comments: [
@@ -48,10 +56,17 @@ export default {
 		};
 	},
 	methods: {
-		navToPostDetail() {
+		/**
+		 * @param {Object} isFocus 是否点击message 进去详情的
+		 * 跳转详情页面
+		 */
+		navToPostDetail(isFocus) {
 			uni.navigateTo({
-				url: '/pages/square/postDetail'
+				url: '/pages/square/postDetail?isFocus=' +  isFocus,
 			})
+		},
+		clickMessage() {
+			this.navToPostDetail(true);
 		}
 	},
 };

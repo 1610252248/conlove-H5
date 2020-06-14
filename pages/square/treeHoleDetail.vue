@@ -10,9 +10,9 @@
 				</text>
 			</view>
 			<view class="middle"></view>
-			<c-info-bar />
+			<c-info-bar @click-message="clickMessage" />
 		</view>
-		<c-comment class="margin-top-sm"/>
+		<c-comment ref="comment" @scroll-to-bottom="scrollToBottom" class="margin-top-sm" />
 	</c-scroll>
 </template>
 
@@ -24,7 +24,18 @@ export default {
 	name: 'treeHoleDetail',
 	components: {
 		cInfoBar,cComment,cScroll
-	}
+	},
+	methods: {
+		scrollToBottom() {
+			this.$refs.scroll.toBottom();
+		},
+		clickMessage() {
+			this.focusComment();
+		},
+		focusComment() {
+			this.$refs.comment.isFocus = true;
+		}
+	},
 };
 </script>
 <style lang="stylus">

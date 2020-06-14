@@ -1,22 +1,14 @@
 <template>
 	<view>
-		<view class="solids-bottom padding-bottom" @click="navToTreeHoleDetail">
-			<view class="flex padding justify-center">
-				<image class="cu-avatar xl round margin-left" src="https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg" mode="aspectFill"></image>
+		<view class="solids-bottom padding-bottom" @click="navToTreeHoleDetail(false)">
+			<!-- 头像 -->
+			<view class="flex padding justify-center"><image class="cu-avatar xl round margin-left" :src="data.avatar" mode="aspectFill"></image></view>
+			<!-- 树洞内容 -->
+			<view class="box-content radius margin-center" :style="{ backgroundColor: data.color }">
+				<text class="text-white text-bold text-df padding-lr-xs">{{ data.content }}</text>
 			</view>
-			<view class="box-content radius margin-center">
-				<text class="text-white  text-df padding-lr-xs">
-					span多行居中测试span多行span多行居中测试span多行span多行居中测试span多行span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试span多行居中测试
-				</text>
-			</view>
-			<c-info-bar />
-		</view>
-		<view class="solids-bottom padding-bottom">
-			<view class="flex padding justify-center">
-				<image class="cu-avatar xl round margin-left" src="https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg" mode="aspectFill"></image>
-			</view>
-			<view class="box-content radius margin-center"><text class="text-white text-bold text-df padding-lr-xs">span多行居中</text></view>
-			<c-info-bar />
+
+			<c-info-bar @click-message="clickMessage"/>
 		</view>
 	</view>
 </template>
@@ -29,21 +21,34 @@ export default {
 	components: {
 		cInfoBar
 	},
+	props: {
+		data: {
+			type: Object,
+			default: () => ({
+				avatar: '',
+				color: '',
+				content: ''
+			})
+		},
+	},
 	methods: {
-		navToTreeHoleDetail() {
+		navToTreeHoleDetail(isFocus) {
 			uni.navigateTo({
 				// url: '@/pages/square/treeHoleD'
-				url: '/pages/square/treeHoleDetail'
-			})
+				url: '/pages/square/treeHoleDetail?isFocus=' +  isFocus,
+			});
+		},
+		
+		clickMessage() {
+			this.navToTreeHoleDetail(true);
 		}
-	},
+	}
 };
 </script>
 
 <style lang="stylus">
 .box-content
 	width 90%
-	background-color #ffadad
 	padding 30% 0
 	margin-top -100rpx
 	margin-bottom 20rpx

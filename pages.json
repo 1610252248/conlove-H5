@@ -16,6 +16,11 @@
 			"navigationStyle":"custom"
 		}
 	}, {
+		"path": "pages/release/add",
+		"style": {
+			"navigationBarTitleText": "发布缘来"
+		}
+	}, {
 		"path": "pages/user/userEdit",
 		"style": {
 			"navigationBarTitleText": "编辑资料"
@@ -43,7 +48,8 @@
 			"navigationStyle":"custom"
 		}
 	}, {
-		"path": "pages/message/chat",
+		// "path": "pages/message/chat",
+		"path": "pages/message/HM-chat/HM-chat",
 		"style": {
 			"navigationBarTitleText": "聊天"
 		}
@@ -100,7 +106,7 @@
 			"selectedIconPath": "static/tabar-image/square-select.png",
 			"text": "小宇宙"
 		}, {
-			"pagePath": "pages/release/release",
+			"pagePath": "pages/release/add",
 			"iconPath": "static/tabar-image/jia.png",
 			"selectedIconPath": "static/tabar-image/jia.png"
 		}, {

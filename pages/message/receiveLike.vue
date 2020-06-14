@@ -1,30 +1,18 @@
 <template>
 	<view>
 		<view class="cu-list menu-avatar">
-			<view class="cu-item">
-				<view class="cu-avatar round lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);">
-					<view class="cu-tag badge" :class="index % 2 == 0 ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'"></view>
+			<view class="cu-item" v-for="(item, index) in list" :key="index">
+				<view class="cu-avatar round lg" :style="{'background-image':'url('+item.user.avatar+')'}">
+					<view class="cu-tag badge" :class="item.user.sex?'cuIcon-female bg-pink':'cuIcon-male bg-blue'"></view>
 				</view>
 				<view class="content">
-					<view class="text-black">Bobobobb</view>
+					<view class="text-black">{{item.user.name}}</view>
 					<view class="text-gray text-df">给你暗送秋波</view>
-					<view class="text-gray text-xs">来自 缘来动态</view>
+					<view class="text-grey text-xs">来自 {{item.from}}</view>
 				</view>
-				<view class="action">
-					<view class="text-grey text-xs">{{ $utils.dateUtils.format('2020-4-8 17:15:56') }}</view>
-				</view>
-			</view>
-			<view class="cu-item">
-				<view class="cu-avatar round lg" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg);">
-					<view class="cu-tag badge cuIcon-female bg-pink"></view>
-				</view>
-				<view class="content">
-					<view class="text-black">Bobobobb</view>
-					<view class="text-gray text-df">给你暗送秋波</view>
-					<view class="text-gray text-xs">来自 你的主页</view>
-				</view>
-				<view class="action">
-					<view class="text-grey text-xs">{{ $utils.dateUtils.format('2020-4-10 17:15:56') }}</view>
+				<view class="action ">
+					<button v-if="item.state" class="cu-btn round bg-blue shadow  sm" >同意</button>
+					<text v-else class="text-grey text-xs">已互送秋波</text>
 				</view>
 			</view>
 		</view>
@@ -35,7 +23,12 @@
 export default {
 	data() {
 		return {
-			key: value
+			list: [
+				{user: {name: 'Bobobobb', sex: 0, avatar: '/static/image/default.jpeg'}, from: '你的主页', state: 0},
+				{user: {name: '缘来小助手', sex: 0, avatar: '/static/image/default-2.jpeg'}, from: '缘来动态', state: 1},
+				{user: {name: '小姐姐', sex: 1, avatar: '/static/img/im/face/face_2.jpg'}, from: '你的主页', state: 1},
+				{user: {name: '小哥哥', sex: 0, avatar: '/static/img/im/face/face_13.jpg'}, from: '缘来动态', state: 0}
+			]
 		};
 	}
 };
@@ -44,9 +37,9 @@ export default {
 <style lang="stylus">
 .text-df
 	font-size 26rpx
-.badge
-	top 60rpx
-	width 40rpx
-	height 40rpx
-	font-size 30rpx
+.badge 
+	width 34rpx
+	padding-right 8rpx
+	height 34rpx
+	font-size 26rpx
 </style>

@@ -10,8 +10,8 @@
 			
 		</view>
 		<view class="fr">
-			<image class="image-sm" src="@/static/image/like.png"></image>
-			<image class="image-sm margin-left-sm margin-right-lg" src="@/static/image/chat-dot-round.png"></image>
+			<image @click.stop="changeLike" class="image-sm" :src="'/static/image/' + (isLike ? 'like-active.png' : 'like.png')"></image>
+			<image @click.stop="clickMessage" class="image-sm margin-left-sm margin-right-lg" src="@/static/image/chat-dot-round.png"></image>
 		</view>
 	</view>
 </template>
@@ -29,6 +29,25 @@
 				default: false
 			},
 		},
+		data() {
+			return {
+				isLike: false
+			}
+		},
+		methods: {
+			changeLike() {
+				let showTitle = '点赞成功';
+				if(this.isLike) showTitle = '取消点赞';
+				uni.showToast({
+					title: showTitle,
+					icon: 'none'
+				})
+				this.isLike = !this.isLike;
+			},
+			clickMessage() {
+				this.$emit('click-message');
+			}
+		}
 	}
 </script>
 

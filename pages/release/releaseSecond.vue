@@ -32,7 +32,7 @@
 				</button>
 			</view>
 			<view class="action">
-				<button class="cu-btn bg-red round" >
+				<button class="cu-btn bg-red round" @click="nextSec">
 					发布 <text class="cuIcon-right"></text>
 				</button>
 			</view>
@@ -57,7 +57,6 @@
 				});
 			},
 			ViewImage(e) {
-				console.log(e);
 				uni.previewImage({
 					urls: this.imgList,
 					current: e.currentTarget.dataset.url
@@ -76,7 +75,23 @@
 				})
 			},
 			nextSec() {
-				this.isLoading = true
+				if(this.imgList.length == 0) {
+					uni.showToast({
+						title: '请至少选择一张照片',
+						icon: 'none'
+					})
+					return ;
+				}
+				
+				uni.showLoading({
+				    title: '发布中'
+				});
+				
+				setTimeout(() => {
+				    uni.hideLoading();
+					this.$emit('next-sec', this.imgList)
+				}, 500);
+				
 			},
 			back() {
 				uni.showModal({

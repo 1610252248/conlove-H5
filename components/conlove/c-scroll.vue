@@ -1,30 +1,52 @@
 <template>
 	<view>
-		<scroll-view :class="scrollHight?'scroll-height':''"  class="scroll-view" scroll-y @scrolltolower="scrolltolower" scroll-with-animation @scroll="scroll" :scroll-top="scrollTop" show-scrollbar>
+		<scroll-view
+			:class="[maxHeight ? 'max-height' : '', midHeight ? 'mid-height' : '', minHeight ? 'min-height' : '']"
+			class="scroll-view"
+			scroll-y
+			@scrolltolower="scrolltolower"
+			@scroll="scroll"
+			:scroll-with-animation="isAnimation"
+			:scroll-top="scrollTop"
+			show-scrollbar
+		>
 			<slot></slot>
 		</scroll-view>
 
-		 <!-- 回顶部 -->
+		<!-- 回顶部 -->
 		<view class="goToTop" @click="goTop()" v-show="canGoTop"><image class="top-image" src="@/static/image/top.png" /></view>
 	</view>
 </template>
 
 <script>
-
-
 export default {
 	props: {
-		scrollHight: {
+		maxHeight: {
 			type: Boolean,
 			default: false
 		},
+		midHeight: {
+			type: Boolean,
+			default: false
+		},
+		minHeight: {
+			type: Boolean,
+			default: false
+		},
+		/**
+		 * 默认展示动画
+		 */
+		isAnimation: {
+			type: Boolean,
+			default: true
+		}
 	},
 	data() {
 		return {
 			canGoTop: false, //回顶部
 			canGoTopHeight: 2000, // 默认到2000高度出现回顶部图标
 			scrollTop: 0, // 滚动窗口位置
-			
+
 			old: {
 				scrollTop: 0
 			}
@@ -53,6 +75,16 @@ export default {
 				this.scrollTop = 0;
 			});
 			this.canGoTop = false;
+		},
+
+		/**
+		 * 去底部
+		 */
+		toBottom() {
+			this.scrollTop = this.old.scrollTop;
+			this.$nextTick(function() {
+				this.scrollTop = 99999999;
+			});
 		}
 	}
 };
@@ -66,10 +98,12 @@ export default {
 	/* #endif */
 	overflow scroll
 	width 100%
-
-.scroll-height
-	height 100vh!important
-
+.max-height
+	height 100vh !important
+.mid-height
+	height calc(100vh - 44px) !important
+.min-height
+	height calc(100vh - 84px) !important
 .goToTop
 	position fixed
 	bottom 55rpx

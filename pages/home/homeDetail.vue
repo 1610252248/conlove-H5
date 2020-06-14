@@ -1,6 +1,6 @@
 <template>
 	<view class="page-content">
-		<c-scroll v-if="Object.keys(sticker).length">
+		<c-scroll :isAnimation="false" ref="scroll" minHeight v-if="Object.keys(sticker).length">
 			<view class="user-info">
 				<view class="box-info-up">
 					<text class="fl">{{sticker.school + " | " + sticker.grade}}</text>
@@ -20,13 +20,13 @@
 			</view>
 			<view class="user-info-image">
 				<!-- 喜欢按钮 -->
-				<view class="like-box" v-if="!isMyPost">
+				<view class="like-box" v-if="!isMyPost" @click="likeClick">
 					<image class="like" :src="isLike ? '/static/image/pic-like-active.png' : '/static/image/pic-like-normal.png'"></image>
 				</view>
 				<!-- 图片轮播 -->
 				<swiper class="card-swiper square-dot" indicator-dots circular autoplay @change="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
-					<swiper-item v-for="(item, index) in sticker.images" :key="index" :class="cardCur == index ? 'cur' : ''">
-						<view class="swiper-item"><image :src="item" mode="aspectFill"></image></view>
+					<swiper-item v-for="(item, index) in sticker.images" :key="index" :class="cardCur == index ? 'cur' : ''" @click="viewImage" :data-url="item">
+						<view class="swiper-item"><image :src="item" mode="aspectFill" ></image></view>
 					</swiper-item>
 				</swiper>
 				<!-- 帖子详情 -->
@@ -45,35 +45,15 @@
 						<text class="bg-red"></text>
 					</view>
 				</view>
-				<c-comment :showInfo="false"></c-comment>
 				<!-- 评论 -->
-				<!-- <view class="cu-list menu-avatar comment solids-top padding-top-sm">
-					<view class="cu-item" v-for="item in sticker.comments" :key="item.id" :id="item.id">
-						<image
-							class="cu-avatar round"
-							:src="item.userDto !== null ? item.userDto.avatarUrl : '/static/avatar-default.png'"
-							@click="navToOtherUser(item.openid)"
-						></image>
-						<view class="content">
-							<view>
-								<view class="text-grey" @click="navToOtherUser(item.openid)">{{ item.userDto !== null ? item.userDto.nickname : '无名氏' }}</view>
-								<text v-for="(num, index) in hotNums" :key="index" v-if="item.likeNums >= num" class="cuIcon-hotfill text-red"/>
-								<view  class="on-right text-lg" :class="item.likeState !== 0 ? 'text-red' : 'text-grey'" @click="chageAppreciation(item.likeState, item.openid, item.id)">
-									<text class="cuIcon-appreciate"></text>
-									<text class="margin-left-xs">{{ item.likeNums }}</text>
-								</view>
-							</view>
-							<view class="text-gray text-wrap text-df">{{item.content}}</view>
-						</view>
-					</view>
-				</view> -->
+				<c-comment :showInfo="false" @scroll-to-bottom='scrollToBottom'></c-comment>
 			</view>
 		</c-scroll>
 		
-		<view class="cu-bar input input-fixed">
+		<!-- <view class="cu-bar input input-fixed">
 			<input  placeholder="请输入评论..."  @blur="InputBlur" :adjust-position="false" class="solid-bottom padding-left-sm solid" :focus="false" maxlength="300" cursor-spacing="10"></input>
 			<button class="cu-btn round bg-blue shadow-blur" @click="sendComment">发送</button>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -140,25 +120,32 @@ export default {
 			return require('@/static/image/' + (sex === 0 ? 'male.png' : 'female.png'));
 		},
 
-		ViewImage() {},
+		viewImage(e) {
+			uni.previewImage({
+				urls: this.sticker.images,
+				current: e.currentTarget.dataset.url,
+			});
+		},
 
 		// cardSwiper
 		cardSwiper(e) {
 			this.cardCur = e.detail.current;
 		},
 		
-		/**
-		 * 评论输入框失焦时触发，获取用户输入
-		 */
-		InputBlur(e) {
-			this.inputValue =  e.detail.value;
-		},
 		
+		likeClick(){
+			this.isLike = !this.isLike;
+			uni.showToast({
+				title: this.isLike ? "暗送秋波~" : "取消秋波",
+				icon: 'none'
+			})
+		},
 		/**
-		 * 发送评论事件
+		 * 发送评论之后回到最底部
 		 */
-		sendComment() {
-			console.log("发送的内容 ： " + this.inputValue);
+		scrollToBottom() {
+			// console.log('bbbbbbbbbbb');
+			this.$refs.scroll.toBottom();
 		}
 	}
 };
@@ -210,9 +197,9 @@ export default {
 		right 85rpx
 		z-index 99
 		.like
-			margin 20rpx 10rpx
-			width 60rpx
-			height 50rpx
+			margin 6rpx 6rpx
+			width 70rpx
+			height 70rpx
 			z-index 999
 .card-swiper
 	height 630rpx !important

@@ -1,15 +1,15 @@
 <template>
 	<view>
-		<c-custom><block slot="center">发表树洞</block></c-custom>
+		<c-custom @send="send"><block slot="center">发表树洞</block></c-custom>
 		<c-scroll scrollHight>
-			<view class="box-content radius margin-center" :style="'background-color:' + selectColor">
-				<textarea class="text-white  text-df padding-lr-xs" auto-height @input="textareaInput" placeholder="此刻的想法..."></textarea>
+			<view class="box-content radius margin-center" :style="{backgroundColor: data.color}">
+				<textarea class="text-white  text-df padding-lr-xs" auto-height v-model="data.content" placeholder="此刻的想法..."></textarea>
 			</view>
 			<view class="bgcSelect flex justify-center align-center">
 				<text style="color: #919799;">背景色:</text>
 				<text class="cu-avatar sm round  margin-xs" :style="'background-color:' + item.color"
 				 v-for="(item, index) in ColorList" :key="index" @click="changColor(index)">
-					<text v-if="selectIndexColor == index" class="cuIcon-check"></text>
+					<text v-if="data.selectIndexColor == index" class="cuIcon-check"></text>
 				</text>
 			</view>
 		</c-scroll>
@@ -17,12 +17,18 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
 	data() {
 		return {
-			textareaAValue: '',
-			selectIndexColor: 6,
-			selectColor: '#ffadad',
+			data: {
+				content: '',
+				color: '#ffadad',
+				selectIndexColor: 6,
+				avatar: '',
+				createTime: '',
+			},
+			
 			ColorList: [
 				{ color: '#f94c4c' },
 				{ color: '#ff6c55' },
@@ -37,12 +43,23 @@ export default {
 		};
 	},
 	methods: {
-		textareaInput(e) {
-			this.textareaAValue = e.detail.value;
-		},
+		...mapMutations({
+			addNewTreeHole: 'addNewTreeHole'
+		}),
+	
 		changColor(index) {
-			this.selectIndexColor = index;
-			this.selectColor = this.ColorList[index].color;
+			this.data.selectIndexColor = index;
+			this.data.color = this.ColorList[index].color;
+		},
+		send() {
+			// 随机头像
+			this.data.avatar = '/static/avatar-pool/avatar-' + Math.floor(Math.random()*6) + '.jpg';
+			this.data.createTime = this.$utils.dateUtils.currentDate();
+			console.log(this.data);
+			this.addNewTreeHole(this.data);
+			uni.switchTab({
+				url: '/pages/square/square'
+			})
 		}
 	}
 };

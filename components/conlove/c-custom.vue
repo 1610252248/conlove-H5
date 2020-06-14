@@ -10,7 +10,7 @@
 				</text>
 			</view>
 			<view class="fr margin-right">
-				<button class="cu-btn sm bg-red">发布</button>
+				<button class="cu-btn sm bg-red" @click="send">发布</button>
 			</view>
 		</view>
 	</view>
@@ -28,6 +28,9 @@
 					delta: 1
 				});
 				// history.back();
+			},
+			send() {
+				this.$emit('send');
 			}
 		},
 	}

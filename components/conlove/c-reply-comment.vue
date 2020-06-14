@@ -15,15 +15,6 @@
 						</view>
 					</view>
 					<view class="text-black text-content text-df">{{ item.content }}</view>
-					
-					<view class="text-sm text-gray" >
-						<text>{{$utils.dateUtils.format(item.createTime)}}</text>
-						<image class="dot" src="@/static/image/dot1.png"></image>
-						<text>回复</text>
-					</view>
-					<view class="reply" v-if="item.reply">
-						<view class="sm cu-btn bg-grey light round">{{item.reply + '个回复 >'}}</view>
-					</view>
 				</view>
 			</view>
 		</view>
@@ -49,7 +40,6 @@
 						content: "支持支持！！！评论区做得真的不错，厉害厉害，仿这QQ空间的~~",
 						likeNums: 19,
 						likeState: 0,
-						reply: 2,
 					},
 					{
 						userDto: {
@@ -60,7 +50,6 @@
 						content: "支持支持！！！",
 						likeNums: 6,
 						likeState: 0,
-						reply: 0,
 					},
 					{
 						userDto: {
@@ -71,7 +60,6 @@
 						content: "支持支持！！！",
 						likeNums: 3,
 						likeState: 0,
-						reply: 15,
 					}
 				],
 				hotNums: [5, 10], // 点赞每超过几个有热度图标，暂时2个
