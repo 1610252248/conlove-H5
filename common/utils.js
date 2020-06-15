@@ -122,9 +122,70 @@ var dateUtils = {
 		//格式(yyyy-mm-dd hh:mm:ss)
 		var currentFormatDate = year + "-" + month + "-" + day + " " + hours + ":" + minutes + ":" + seconds;
 		return currentFormatDate;
+	},
+	GetAge: function(strBirthday) {
+		var returnAge,
+			strBirthdayArr = strBirthday.split("-"),
+			birthYear = strBirthdayArr[0],
+			birthMonth = strBirthdayArr[1],
+			birthDay = strBirthdayArr[2],
+			d = new Date(),
+			nowYear = d.getFullYear(),
+			nowMonth = d.getMonth() + 1,
+			nowDay = d.getDate();
+		if (nowYear == birthYear) {
+			returnAge = 0; //同年 则为0周岁
+		} else {
+			var ageDiff = nowYear - birthYear; //年之差
+			if (ageDiff > 0) {
+				if (nowMonth == birthMonth) {
+					var dayDiff = nowDay - birthDay; //日之差
+					if (dayDiff < 0) {
+						returnAge = ageDiff - 1;
+					} else {
+						returnAge = ageDiff;
+					}
+				} else {
+					var monthDiff = nowMonth - birthMonth; //月之差
+					if (monthDiff < 0) {
+						returnAge = ageDiff - 1;
+					} else {
+						returnAge = ageDiff;
+					}
+				}
+			} else {
+				returnAge = -1; //返回-1 表示出生日期输入错误 晚于今天
+			}
+		}
+		return returnAge; //返回周岁年龄
+	},
+	getconstellation: function(strBirthday) {
+		var returnAge,
+			strBirthdayArr = strBirthday.split("-"),
+			month = strBirthdayArr[1],
+			day = strBirthdayArr[2];
+		var d = new Date(1999, month - 1, day, 0, 0, 0);
+		var arr = [];
+		arr.push(["魔羯座", new Date(1999, 0, 1, 0, 0, 0)])
+		arr.push(["水瓶座", new Date(1999, 0, 20, 0, 0, 0)])
+		arr.push(["双鱼座", new Date(1999, 1, 19, 0, 0, 0)])
+		arr.push(["牡羊座", new Date(1999, 2, 21, 0, 0, 0)])
+		arr.push(["金牛座", new Date(1999, 3, 21, 0, 0, 0)])
+		arr.push(["双子座", new Date(1999, 4, 21, 0, 0, 0)])
+		arr.push(["巨蟹座", new Date(1999, 5, 22, 0, 0, 0)])
+		arr.push(["狮子座", new Date(1999, 6, 23, 0, 0, 0)])
+		arr.push(["处女座", new Date(1999, 7, 23, 0, 0, 0)])
+		arr.push(["天秤座", new Date(1999, 8, 23, 0, 0, 0)])
+		arr.push(["天蝎座", new Date(1999, 9, 23, 0, 0, 0)])
+		arr.push(["射手座", new Date(1999, 10, 22, 0, 0, 0)])
+		arr.push(["魔羯座", new Date(1999, 11, 22, 0, 0, 0)])
+		for (var i = arr.length - 1; i >= 0; i--) {
+			if (d >= arr[i][1]) return arr[i][0];
+		}
 	}
-
 };
+
+
 
 module.exports = {
 	getAge: getAge,

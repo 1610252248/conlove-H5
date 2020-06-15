@@ -7,12 +7,14 @@ import store from './store'
 //把vuex定义成全局组件
 Vue.prototype.$store = store
 
-import cScroll from 'components/conlove/c-scroll.vue'
 import cCustom from 'components/conlove/c-custom.vue'
 Vue.component('c-custom',cCustom)
 
+import cScroll from 'components/conlove/c-scroll.vue'
 Vue.component("cScroll", cScroll)
 
+import cuCustom from './colorui/components/cu-custom.vue'
+Vue.component('cu-custom',cuCustom)
 
 Vue.prototype.$http = $http;
 Vue.prototype.$utils = $utils;

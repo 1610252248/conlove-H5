@@ -43,10 +43,12 @@ export default {
 					userName: 'QAQ',
 					isFemale: true
 				},
+				hidePost: false,
 				createTime: '',
 				content: '',
 				imageList: [],
-				comments: []
+				comments: [],
+				
 			},
 		}
 	},

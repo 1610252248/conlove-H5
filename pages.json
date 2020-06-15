@@ -31,7 +31,10 @@
 			"navigationBarTitleText": "树洞详情"
 		}
 	}, {
-		"path": "pages/user/user"
+		"path": "pages/user/user",
+		"style": {
+			"navigationBarTitleText": "我的主页"
+		}
 	}, {
 		"path": "pages/release/release",
 		"style": {
@@ -82,6 +85,11 @@
 		"path": "pages/square/postDetail",
 		"style": {
 			"navigationBarTitleText": "说说详情"
+		}
+	},{
+		"path": "pages/square/sub/userPost",
+		"style": {
+			"navigationStyle":"custom"
 		}
 	}],
 	"globalStyle": {

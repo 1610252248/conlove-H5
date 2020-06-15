@@ -56,12 +56,14 @@ export default {
 			loadCntPost: 0,
 			loadCntTreeHole: 0,
 
+			// 帖子信息
 			addNewPost: {
 				user: {
 					avatar: '/static/image/default.jpeg',
 					userName: 'Bobbobbb',
 					isFemale: false
 				},
+				hidePost: false,
 				content: '更新内容了，hhhhhhhhhhhhhhhh',
 				createTime: '2020-5-20 13:14:20',
 				imageList: [

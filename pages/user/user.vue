@@ -16,15 +16,16 @@
 							<view class="text-cut padding-top-xs text-sm">{{ user.sign }}</view>
 						</view>
 					</view>
+				    <!-- 用户4个标签 年龄、星座、城市、在校情况 -->
 					<view class="padding flex flex-wrap">
-						<!-- <view  class="cu-btn border-color-red" >{{ getAge(user.date) }}</view> -->
-						<view  class="cu-btn border-color-red" >23</view>
-						<view  class="cu-btn border-color-yellow" >{{ 2 }}</view>
-						<view  class="cu-btn border-color-blue" >{{ 2 }}</view>
-						<view  class="cu-btn border-color-blue" >{{ 2 }}</view>
+						<view class="cu-btn border-color-red" >{{getAge()}}</view>
+						<view class="cu-btn border-color-yellow" >{{ getConstellation() }}</view>
+						<view class="cu-btn border-color-blue" >{{ user.city }}</view>
+						<view class="cu-btn border-color-blue" >{{ getCurSchool() }}</view>
 					</view>
 				</view>
 			</view>
+			
 			<!-- 学校信息 -->
 			<view class="card">
 				<view class="margin-bottom-xs">学校信息</view>
@@ -40,7 +41,7 @@
 				
 					<view>
 						<text>年级</text>
-						<text class="text-gray margin-left">{{ getGrade(user.grade) }}</text>
+						<text class="text-gray margin-left">{{ getGrade() }}</text>
 					</view>
 				</view>
 			</view>
@@ -64,35 +65,34 @@
 				</view>
 			</view>
 
-			<!-- 个性展示 -->
-			<view class="card">
+			<!-- 缘来 -->
+			<view class="card ">
 				<view class="margin-bottom-xs" style="height: 46rpx;">
-					<view class="fl"><text>缘来</text></view>
-					<view class="fr text-gray text-lg">
-						<!-- <text class="cuIcon-attentionfill"></text> -->
-						<text class="cuIcon-attentionforbidfill"></text>
-					</view>
+					<view class="fl">缘来</view>
 				</view>
 				<view class="padding-left text-sm">
 					<view class="flex justify-start">
-						<view><image style="width: 220rpx" mode="widthFix" src="@/static/image/wyb.jpg"></image></view>
-						<view class="margin-left" style="width: 80%;">
-							<view>
-								<text class="cuIcon-notification margin-right-xs"></text>
-								<text>等一个人</text>
+						<view class="fl"><image style="width: 220rpx" mode="widthFix" src="@/static/image/wyb.jpg"></image></view>
+						<view class="margin-left fl" style="width: 50%;">
+							<view class="cuIcon-notification">
+								<text class="margin-left-xs">等一个人</text>
 							</view>
 							<view>
-								<text class="text-gray margin-right">20-4-11</text>
+								<text class="text-gray margin-right">2020-6-15</text>
 								<text class="cuIcon-likefill text-red">20</text>
 							</view>
 						</view>
-						<view class="text-gray text-lg"><text class="cuIcon-deletefill"></text></view>
+						<view class="fr text-gray text-lg">
+							<view class="cuIcon-deletefill"></view>
+							<view class="cuIcon-attentionfill"></view>
+							<view class="cuIcon-attentionforbidfill"></view>
+						</view>
 					</view>
 				</view>
 			</view>
 
 			<!-- 动态 -->
-			<view class="card">
+			<view class="card" @click="navToUserPost">
 				<view class="margin-bottom-xs"><text>动态</text></view>
 				<view class="flex justify-between flex-wrap text-sm">
 					<view class="dt-item">
@@ -107,10 +107,6 @@
 						<image class="dt-image" src="@/static/image/view-3.jpg"></image>
 						<view class="text-cut">谁的青春这么累谁的青春这么累</view>
 					</view>
-					<view class="dt-item">
-						<image class="dt-image" src="@/static/image/view-1.jpg"></image>
-						<view class="text-cut">谁的青春这么累谁的青春这么累</view>
-					</view>
 				</view>
 			</view>
 		</view>
@@ -121,11 +117,12 @@
 export default {
 	data() {
 		return {
+			// 用户信息
 			user: {
 				name: 'BobBobo',
 				avatar: '/static/img/face.jpg',
 				sex: '2',
-				date: '请选择',
+				date: '1998-10-28',
 				city: '西安',
 				sign: '我有我的奥妙',
 				school: '西安电子科技大学',
@@ -133,10 +130,13 @@ export default {
 				grade: '研一', //在校情况
 				introduce: '约桌游吗~'
 			},
+			//用户选择的标签
 			selectTagList: ['吃鸡', '腿特长', '王者荣耀', '工学类'],
-			isFemale: false,
-			ColorList: [{ color: 'red', content: '23岁' }, { color: 'yellow', content: '射手座' }, { color: 'blue', content: '西安' }, { color: 'blue', content: '硕士在读' }],
+			
+			//计算年级使用的映射
 			gradeList: {'一': 1,'二': 2,'三': 3,	'四': 4},
+			// 卡片展示情况， 0全部展示，1只展示缘来，2只展示动态
+			cardState: 0,
 		};
 	},
 
@@ -147,7 +147,8 @@ export default {
 			});
 		},
 		// 获取年级
-		getGrade(grade) {
+		getGrade() {
+			let grade = this.user.grade;
 			if(grade === '已工作') return grade;
 			let year = this.$utils.dateUtils.currentDate().split('-')[0] - this.gradeList[grade[1]];
 			let str = year + '级' + (grade[0] === '研' ? '硕士' : '本科');
@@ -171,9 +172,28 @@ export default {
 			return color;
 		},
 		// 获取年龄
-		getAge(date) {
-			// let year = 
+		getAge() {
+			return this.$utils.dateUtils.GetAge(this.user.date) + '岁';
+		},
+		// 获取星座
+		getConstellation() {
+			return this.$utils.dateUtils.getconstellation(this.user.date);
+		},
+		// 获取在校情况，本科在读、硕士在读、已工作
+		getCurSchool() {
+			let grade = this.user.grade;
+			if(grade === '已工作') return grade;
+			let str = (grade[0] === '研' ? '硕士' : '本科') + '在读';
+			return str;
+		},
+		//跳转用户动态
+		navToUserPost() {
+			console.log(1111);
+			uni.navigateTo({
+				url: '/pages/square/sub/userPost'
+			})
 		}
+		
 	}
 };
 </script>
@@ -192,7 +212,7 @@ export default {
 	margin-left 18rpx
 .card
 	width 86%
-	margin 40rpx auto 0
+	margin 40rpx auto
 	border 1rpx solid #a7a7a7
 	border-radius 15rpx
 	color black

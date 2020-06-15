@@ -1,34 +1,29 @@
 <template>
-	<view>
-		<c-scroll ref="scroll" :isAnimation="false" minHeight>
-			<post-info :data="addNewPost" style="padding-top: 30rpx;" />
-			<c-info-bar @click-message="clickMessage" />
-			<c-comment ref="comment" @scroll-to-bottom="scrollToBottom" class="margin-top-sm" />
-		</c-scroll>
-	</view>
+	<c-scroll midHeight>
+		<c-custom-mid>
+			<block slot="center"><text style="color: #000000;">Ta的动态</text></block>
+		</c-custom-mid>
+		<c-post dotsShow></c-post>
+	</c-scroll>
 </template>
 
 <script>
 import postInfo from '@/pages/square/postInfo.vue';
-import cComment from '@/components/conlove/c-comment.vue';
 import cInfoBar from '@/components/conlove/c-info-bar.vue';
+import cCustomMid from '@/components/conlove/c-custom-mid.vue';
+import cPost from '@/components/conlove/c-post.vue'
 export default {
-	components: { postInfo, cComment,  cInfoBar },
-	methods: {
-		scrollToBottom() {
-			this.$refs.scroll.toBottom();
-		},
-		clickMessage() {
-			this.focusComment();
-		},
-		focusComment() {
-			this.$refs.comment.isFocus = true;
-		}
+	name: 'post',
+	components: {
+		postInfo,
+		cInfoBar,
+		cCustomMid,
+		cPost
 	},
-	data() {
-		return {
-			isFocus: false,
-			addNewPost: {
+	props: {
+		postData: {
+			type: Object,
+			default: () => ({
 				user: {
 					avatar: '/static/image/default.jpeg',
 					userName: 'Bobbobbb',
@@ -58,16 +53,41 @@ export default {
 						content: 'wls bbbbbbbbbbbasdddddddddddddbb！！'
 					}
 				]
-			}
-		};
+			})
+		}
 	},
-	onReady() {
-		// 是否聚焦输入框
-		if (this.$route.query.isFocus == 'true') this.focusComment();
+	data() {
+		return {};
+	},
+	methods: {
+		/**
+		 * @param {Object} isFocus 是否点击message 进去详情的
+		 * 跳转详情页面
+		 */
+		navToPostDetail(isFocus) {
+			uni.navigateTo({
+				url: '/pages/square/postDetail?isFocus=' + isFocus
+			});
+		},
+		clickMessage() {
+			this.navToPostDetail(true);
+		}
 	}
 };
 </script>
 
 <style lang="stylus">
-
+.post
+	width 100%
+.display-box
+	margin-top 100rpx
+	padding 30rpx 0
+	width 100%
+.post-like
+	height 40rpx
+	line-height 40rpx
+.post-comment
+	width 92%
+	margin-left auto
+	margin-right auto
 </style>

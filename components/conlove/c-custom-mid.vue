@@ -1,17 +1,13 @@
 <template>
 	<view>
-		<view class="navBar">
-			<view class="fl">
-				<text class="margin-left text-icon" @click="BackPage">
-					<text class="text-icon cuIcon-back"></text>
-				</text>
-				<text class="margin-left-lg text-xl">
-					<slot name="center"></slot>
-				</text>
+		<view class="navBar cu-bar">
+			<view class="action margin-left " @click="BackPage">
+				<text class="text-icon"><text class="cuIcon-back"></text></text>
+				
 			</view>
-			<view class="fr margin-right">
-				<button class="cu-btn sm bg-red" @click="send">发布</button>
-			</view>
+			<view class="content text-bold">
+				<slot name="center"></slot>
+			</view>	
 		</view>
 	</view>
 </template>
@@ -43,13 +39,14 @@
 	width 100%
 	height 90rpx
 	line-height 90rpx
-	margin-bottom 90rpx
 	z-index 9999
 	background-color white
-.text-icon 
-	font-size 40rpx
+.cuIcon-back 
+	font-size 42rpx
 .cu-btn.sm
 	padding: 0 22upx;
 	font-size: 26upx;
 	height: 48upx;
+
+	
 </style>
