@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 评论 -->
-		<view class="cu-list menu-avatar comment solids-top padding-top-sm">
+		<view class="cu-list menu-avatar comment solids-top padding-tb-sm">
 			<view class="cu-item" v-for="(item, index) in comments" :key="index">
 				<!-- 头像 -->
 				<image class="cu-avatar round" :src="item.userDto.avatarUrl" />
@@ -67,7 +67,7 @@ export default {
 						avatarUrl: "https://qingtai-1257824184.cos.ap-chengdu.myqcloud.com/78dd067ca7af498d8f67fc5ac2529d571576734509715.jpg"
 					},
 					createTime: "2019.12.17 17:28:48",
-					content: "支持支持！！！评论区做得真的不错，厉害厉害，仿这QQ空间的~~",
+					content: "支持支持！！！评论区做得真的不错，厉害厉害~~",
 					likeNums: 19,
 					likeState: 0,
 					reply: 2,
@@ -131,11 +131,11 @@ export default {
 				})
 				return ;
 			}
-			
 			let newComment = {...this.newComment};
 			newComment.content = this.sendContent;
 			newComment.createTime = this.$utils.dateUtils.currentDate();
 			this.comments.push(newComment);
+			this.sendContent = ''
 			uni.showToast({
 				// title: '内容不能为空哦~',
 				icon: 'success'
@@ -172,6 +172,7 @@ export default {
 	top 6rpx
 	margin-left 10rpx
 	margin-right 10rpx
-
+.cu-item 
+	padding 20rpx 20rpx 20rpx 120rpx!important
 
 </style>

@@ -19,10 +19,10 @@
 			</view>
 		</view>
 		<!-- 内容 -->
-		<c-scroll @scrolltolower="lower" class="main-content">
+		<c-scroll @scrolltolower="lower">
 			<!-- 说说内容 -->
 			<view v-if="tabCur == 0">
-				<post v-for="(item, index) in postList" :key="index" :post-data="item" />
+				<c-post v-for="(item, index) in postList" :key="index" :post-data="item" />
 				<view class="cu-load" :class="!isLoadPost ? 'loading' : 'over'"></view>
 			</view>
 			<!-- 树洞内容 -->
@@ -35,11 +35,11 @@
 </template>
 
 <script>
-import post from '@/pages/square/post.vue';
+import cPost from '@/components/conlove/c-post.vue'
 import treeHole from '@/pages/square/treeHole.vue';
 import { mapState } from 'vuex'
 export default {
-	components: { post, treeHole },
+	components: { cPost, treeHole },
 	computed: mapState([
 	  // 映射 this.newPost 为 store.state.newPost
 	  'newPost', 'newTreeHole'
@@ -97,6 +97,7 @@ export default {
 			
 		};
 	},
+	
 	onShow() {
 		this.postList = []
 		this.postList.unshift(...this.newPost)
@@ -196,8 +197,6 @@ export default {
 	position fixed
 	right 40rpx
 	top 20rpx
-.main-content
-	width 100%
 .text-black
 	color #000000
 .radius

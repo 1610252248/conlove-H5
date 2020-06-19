@@ -50,7 +50,12 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex'
 	export default {
+		computed: mapState([
+		  // 映射 this.homeData 为 store.state.homeData
+		  'homeData'
+		]),
 		data() {
 			return {
 				data: {
@@ -73,6 +78,10 @@
 				gradePicker: ['已工作', '博士', '研三', '研二', '研一', '大四', '大三', '大二', '大一'],
 			}
 		},
+		mounted() {
+			this.data = this.homeData;
+			this.sex = this.sexPicker[this.data.sex];
+		},
 		methods: {
 			/* 数据绑定 */
 			gradeChange(e) {
@@ -85,17 +94,6 @@
 				this.data.sex = e.detail.value
 				this.sex = this.sexPicker[e.detail.value]
 			},
-			/* 绑定结束 */
-			// data: {
-			// 	title: '',
-			// 	sex: 0,
-			// 	school: '',
-			// 	grade: '请选择',
-			// 	age: '请选择',
-			// 	height: '',
-			// 	introduce: '',
-			// },
-			
 			
 			// 下一步
 			next() {

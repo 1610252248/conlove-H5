@@ -32,9 +32,16 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
+import { mapMutations,mapState } from 'vuex'
 export default {
-	
+	computed: mapState([
+	  // 映射 this.postData 为 store.state.postData
+	  'postData'
+	]),
+	mounted() {
+		console.log(this.postData);
+		this.data = this.postData;
+	},
 	data() {
 		return {
 			data: {
@@ -45,10 +52,10 @@ export default {
 				},
 				hidePost: false,
 				createTime: '',
+				hidePost: false,
 				content: '',
 				imageList: [],
 				comments: [],
-				
 			},
 		}
 	},

@@ -9,10 +9,9 @@
 			</view>
 			
 		</view>
-		<release-first @next="next" v-show="basics == 0"/>
+		<release-first  @next="next" v-show="basics == 0"/>
 		<release-second @back="back" @next-sec="nextSec" v-show="basics == 1"/>
 		<!-- <release-third  v-show="basics == 2"/> -->
-		
 		
 	</c-scroll>
 </template>
@@ -35,13 +34,12 @@ export default {
 			basics: 0,
 			data: {
 				userDto: {
-					avatarUrl: '/static/image/default-2.jpeg',
-					nickname: 'QAQ'
+					avatarUrl: '/static/img/face.jpg',
+					nickname: '祢豆子'
 				},
 			}
 		}
 	},
-	
 	methods: {
 		...mapMutations({
 			addNewHome: 'addNewHome'
@@ -50,10 +48,12 @@ export default {
 			this.basics++;
 			this.data = Object.assign(this.data, firstData);
 		},
-		nextSec(imgList) {
-			this.data.images = imgList
+		nextSec(images) {
+			this.data.images = images
 			this.data.id = Math.random() * 1000 + 1000;
 			this.addNewHome(this.data)
+			
+			console.log(this.data);
 			uni.switchTab({
 				url: '/pages/home/home'
 			})

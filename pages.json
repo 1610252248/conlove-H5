@@ -1,5 +1,10 @@
 {
 	"pages": [{
+		"path": "pages/home/index",
+		"style": {
+			"navigationStyle":"custom"
+		}
+	}, {
 		"path": "pages/home/home",
 		"style": {
 			"navigationBarTitleText": "缘来",
@@ -34,6 +39,11 @@
 		"path": "pages/user/user",
 		"style": {
 			"navigationBarTitleText": "我的主页"
+		}
+	}, {
+		"path": "pages/user/otherUser",
+		"style": {
+			"navigationBarTitleText": "Ta的主页"
 		}
 	}, {
 		"path": "pages/release/release",
@@ -87,9 +97,35 @@
 			"navigationBarTitleText": "说说详情"
 		}
 	},{
+		"path": "pages/user/setting",
+		"style": {
+			"navigationBarTitleText": "设置"
+		}
+	},{
 		"path": "pages/square/sub/userPost",
 		"style": {
 			"navigationStyle":"custom"
+		}
+	},{
+		"path": "pages/home/sub/userHome",
+		"style": {
+			"navigationBarTitleText": "Ta的缘来",
+			"enablePullDownRefresh": true
+		}
+	},{
+		"path": "pages/enter/login",
+		"style": {
+			"navigationBarTitleText": "用户登录"
+		}
+	},{
+		"path": "pages/enter/register",
+		"style": {
+			"navigationBarTitleText": "用户注册"
+		}
+	},{
+		"path": "pages/enter/serviceAgreement",
+		"style": {
+			"navigationBarTitleText": "缘来服务协议"
 		}
 	}],
 	"globalStyle": {

@@ -279,12 +279,13 @@ export default {
 
 <style lang="stylus">
 .card
+	box-shadow: 0px 2px 5px #EDEDED;
 	width 86%
-	margin 40rpx auto 0
-	border 1rpx solid #a7a7a7
+	margin 40rpx auto
+	border: 1px solid #cecece;
 	border-radius 15rpx
 	color black
-	padding 20rpx 20rpx 14rpx
+	padding 30rpx 20rpx
 	.title
 		height 44rpx
 		line-height 44rpx
@@ -354,8 +355,15 @@ uni-input
 	padding 5rpx 12rpx
 	margin 0 0 16rpx 20rpx
 	border-radius 10rpx
+// .bg-red, .tag-border, .bg-blue, .bg-yellow
+.bg-red
+	border 1px solid #ff4a2d
+.bg-blue
+	border 1px solid #3f91e3
+.bg-yellow
+	border 1px solid #ffb434
 .tag-border
-	border 1rpx solid #a7a7a7
+	border 1px solid #a7a7a7
 	border-radius 15rpx
 	color #595959
 .cu-btn

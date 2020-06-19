@@ -8,7 +8,7 @@
 					<text class="fr">{{$utils.getAge(sticker.age) + "岁 | " + sticker.height + "cm"}}</text>
 				</view>
 				<view class="box-info-down">
-					<view class="user fl flex align-center">
+					<view class="user fl flex align-center" @click.stop="navToOtherUser">
 						<image class="userAvatar" :src="sticker.userDto.avatarUrl"></image>
 						<text class="box-userName text-cut">{{sticker.userDto.nickname}}</text>
 					</view>
@@ -50,10 +50,7 @@
 			</view>
 		</c-scroll>
 		
-		<!-- <view class="cu-bar input input-fixed">
-			<input  placeholder="请输入评论..."  @blur="InputBlur" :adjust-position="false" class="solid-bottom padding-left-sm solid" :focus="false" maxlength="300" cursor-spacing="10"></input>
-			<button class="cu-btn round bg-blue shadow-blur" @click="sendComment">发送</button>
-		</view> -->
+		
 	</view>
 </template>
 
@@ -146,6 +143,13 @@ export default {
 		scrollToBottom() {
 			// console.log('bbbbbbbbbbb');
 			this.$refs.scroll.toBottom();
+		},
+		// 跳转用户资料
+		navToOtherUser() {
+			//当前统一跳转 其它用户
+			uni.navigateTo({
+				url: '/pages/user/otherUser'
+			})
 		}
 	}
 };

@@ -11,7 +11,7 @@
 					<view class="text-grey text-xs">来自 {{item.from}}</view>
 				</view>
 				<view class="action ">
-					<button v-if="item.state" class="cu-btn round bg-blue shadow  sm" >同意</button>
+					<button @click.stop="changeState(index)" v-if="item.state" class="cu-btn round bg-blue shadow  sm" >同意</button>
 					<text v-else class="text-grey text-xs">已互送秋波</text>
 				</view>
 			</view>
@@ -30,7 +30,12 @@ export default {
 				{user: {name: '小哥哥', sex: 0, avatar: '/static/img/im/face/face_13.jpg'}, from: '缘来动态', state: 0}
 			]
 		};
-	}
+	},
+	methods: {
+		changeState(idx) {
+			this.list[idx].state = this.list[idx].state ? 0 : 1;
+		}
+	},
 };
 </script>
 

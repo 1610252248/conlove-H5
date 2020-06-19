@@ -35,7 +35,7 @@
 							<text>删除动态</text>
 						</view>
 					</view>
-					<view class="cu-item">
+					<view class="cu-item" @click="modifyPost">
 						<view class="content">
 							<text class="cuIcon-edit margin-right"></text>
 							<text>修改动态</text>
@@ -51,6 +51,7 @@
 <script>
 import postInfo from '@/pages/square/postInfo.vue';
 import cInfoBar from '@/components/conlove/c-info-bar.vue';
+import { mapActions } from 'vuex'
 export default {
 	name: 'post',
 	components: {
@@ -104,6 +105,9 @@ export default {
 		};
 	},
 	methods: {
+		 ...mapActions([
+		  'setPostData', // 将 `this.increment()` 映射为 `this.$store.dispatch('increment')`
+		]),
 		/**
 		 * @param {Object} isFocus 是否点击message 进去详情的
 		 * 跳转详情页面
@@ -139,6 +143,14 @@ export default {
 				title: '删除动态成功',
 				icon: 'none'
 			})	
+		},
+		// 更新动态
+		modifyPost() {
+			console.log(this.postData);
+			this.setPostData(this.postData);
+			uni.navigateTo({
+				url: '/pages/square/creatPost'
+			})
 		}
 	}
 };
@@ -148,7 +160,6 @@ export default {
 .post
 	width 100%
 .display-box
-	margin-top 100rpx
 	padding 30rpx 0
 	width 100%
 .post-like

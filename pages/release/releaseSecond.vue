@@ -1,30 +1,30 @@
 <template>
 	<view class="box-display">
 		<view class="bg-white text-gray margin-left margin-bottom text-sm" >
-			<view class="text-height">
-				上传帖子的图片： {{imgList.length}}/6
+			<view class="text-height" >
+				上传帖子的图片：{{images.length}}/6
 			</view>
 			<view>
 				(第一张将作为封面展示，真实图片将优先获得曝光率~)
 			</view>
 		</view>
-	
-		<view style="height: 700rpx;">
+	 
+		<view style="height: 700rpx;" >
 			<view class="cu-form-group">
 				<view class="grid col-3 grid-square flex-sub">
-					<view class="bg-img" v-for="(item,index) in imgList" :key="index" @tap="ViewImage" :data-url="imgList[index]">
-						<image :src="imgList[index]" mode="aspectFill"></image>
+					<view class="bg-img"  v-for="(item,index) in images" :key="index" @tap="ViewImage" :data-url="images[index]">
+						<image :src="images[index]" mode="aspectFill"></image>
 						<view class="cu-tag bg-red" @tap.stop="DelImg" :data-index="index">
 							<text class='cuIcon-close'></text>
 						</view>
 					</view>
-					<view class="solids" @tap="ChooseImage" v-if="imgList.length<6">
+					<view class="solids" @tap="ChooseImage" v-if="images.length<6">
 						<text class='cuIcon-cameraadd'></text>
 					</view>
 				</view>
 			</view>
 		</view>
-		
+		 
 		<view class="cu-bar bg-white">
 			<view class="action">
 				<button class="cu-btn bg-red round" @click="back">
@@ -41,24 +41,32 @@
 </template>
 
 <script>
+	import { mapState } from 'vuex'
 	export default {
+		computed: mapState([
+		  // 映射 this.homeData 为 store.state.homeData
+		  'homeData'
+		]),
 		data() {
 			return {
-				imgList: [],
+				images: [],
 				isLoading: false,
 			}
+		},
+		mounted() {
+			this.images = this.homeData.images;
 		},
 		methods: {
 			ChooseImage() {
 				uni.chooseImage({
 					success: (res) => {
-						this.imgList.push(...res.tempFilePaths);
+						this.images.push(...res.tempFilePaths);
 					}
 				});
 			},
 			ViewImage(e) {
 				uni.previewImage({
-					urls: this.imgList,
+					urls: this.images,
 					current: e.currentTarget.dataset.url
 				});
 			},
@@ -69,13 +77,13 @@
 					confirmText: '确定',
 					success: res => {
 						if (res.confirm) {
-							this.imgList.splice(e.currentTarget.dataset.index, 1)
+							this.images.splice(e.currentTarget.dataset.index, 1)
 						}
 					}
 				})
 			},
 			nextSec() {
-				if(this.imgList.length == 0) {
+				if(!this.images || this.images.length == 0) {
 					uni.showToast({
 						title: '请至少选择一张照片',
 						icon: 'none'
@@ -89,7 +97,7 @@
 				
 				setTimeout(() => {
 				    uni.hideLoading();
-					this.$emit('next-sec', this.imgList)
+					this.$emit('next-sec', this.images)
 				}, 500);
 				
 			},

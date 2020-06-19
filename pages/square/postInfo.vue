@@ -2,10 +2,10 @@
 	<view class="post-info" v-if="Object.keys(data).length">
 		<view class="box-content">
 			<view class="flex justify-start align-center">
-				<view class="cu-avatar round" :style="[{ backgroundImage: 'url(' + data.user.avatar + ')' }]">
+				<view @click.stop="navToOtherUser" class="cu-avatar round" :style="[{ backgroundImage: 'url(' + data.user.avatar + ')' }]">
 					<view class="cu-tag badge" :class="data.user.isFemale ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'"></view>
 				</view>
-				<view class="margin-left-sm">
+				<view @click.stop="navToOtherUser" class="margin-left-sm">
 					<view class="box-userName text-hidden">{{ data.user.userName }}</view>
 					<view class="text-xs text-gray">{{ $utils.dateUtils.format(data.createTime) }}</view>
 				</view>
@@ -56,6 +56,13 @@ export default {
 		},
 		more() {
 			this.$emit('more');
+		},
+		// 跳转用户资料
+		navToOtherUser() {
+			//当前统一跳转 其它用户
+			uni.navigateTo({
+				url: '/pages/user/otherUser'
+			})
 		}
 	},
 	

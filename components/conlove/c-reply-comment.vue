@@ -1,10 +1,9 @@
 <template>
-	<view>
+	<c-scroll ref="scroll" :isAnimation="false">
 		<!-- 评论 -->
 		<view class="cu-list menu-avatar comment solids-top padding-top-sm">
 			<view class="cu-item" v-for="(item, index) in comments" :key="index">
 				<image class="cu-avatar round" :src="item.userDto.avatarUrl" />
-		
 				<view class="content">
 					<view>
 						<view class="text-grey">{{item.userDto.nickname}}</view>
@@ -18,12 +17,12 @@
 				</view>
 			</view>
 		</view>
-		<!-- 回复 -->
+		<!-- 发送评论 -->
 		<view class="cu-bar input input-fixed">
-			<input  placeholder="请输入评论..."  @blur="InputBlur" :adjust-position="false" class="solid-bottom padding-left-sm solid" :focus="false" maxlength="300" cursor-spacing="10"></input>
+			<input placeholder="请输入评论..." @blur="inputBlur" :focus="isFocus" v-model="sendContent" class="padding-left-sm solid"  maxlength="40" ></input>
 			<button class="cu-btn round bg-blue shadow-blur" @click="sendComment">发送</button>
 		</view>
-	</view>
+	</c-scroll>
 </template>
 
 <script>
@@ -63,6 +62,44 @@
 					}
 				],
 				hotNums: [5, 10], // 点赞每超过几个有热度图标，暂时2个
+				sendContent: '',
+				newComment: {
+					userDto: {
+						nickname: "缘来是你",
+						avatarUrl: '/static/image/default.jpeg'
+					},
+					createTime: "2019.12.17 17:28:48",
+					likeNums: 0,
+					likeState: 0,
+					reply: 0,
+				},
+				isFocus: false,
+			}
+		},
+		methods: {
+			sendComment() {
+				if(this.sendContent.length == 0) {
+					uni.showToast({
+						title: '内容不能为空哦~',
+						icon: 'none'
+					})
+					return ;
+				}
+				
+				let newComment = {...this.newComment};
+				newComment.content = this.sendContent;
+				newComment.createTime = this.$utils.dateUtils.currentDate();
+				this.comments.push(newComment);
+				this.sendContent = ''
+				uni.showToast({
+					// title: '内容不能为空哦~',
+					icon: 'success'
+				})
+				this.$refs.scroll.toBottom();
+				
+			},
+			inputBlur() {
+				this.isFocus = false;
 			}
 		},
 	}
