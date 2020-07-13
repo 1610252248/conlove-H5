@@ -7,14 +7,11 @@ import store from './store'
 //把vuex定义成全局组件
 Vue.prototype.$store = store
 
-import cCustom from 'components/conlove/c-custom.vue'
-Vue.component('c-custom',cCustom)
 
-import cScroll from 'components/conlove/c-scroll.vue'
-Vue.component("cScroll", cScroll)
+Vue.prototype.$eventBus = new Vue();//注册全局事件对象
 
-import cuCustom from './colorui/components/cu-custom.vue'
-Vue.component('cu-custom',cuCustom)
+import uView from "uview-ui";
+Vue.use(uView);
 
 Vue.prototype.$http = $http;
 Vue.prototype.$utils = $utils;
@@ -27,3 +24,4 @@ const app = new Vue({
 	...App
 })
 app.$mount()
+

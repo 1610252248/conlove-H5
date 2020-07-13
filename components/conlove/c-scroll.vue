@@ -9,10 +9,10 @@
 			:scroll-with-animation="isAnimation"
 			:scroll-top="scrollTop"
 			show-scrollbar
+			:scroll-into-view="scrollId"
 		>
 			<slot></slot>
 		</scroll-view>
-
 		<!-- 回顶部 -->
 		<view class="goToTop" @click="goTop()" v-show="canGoTop"><image class="top-image" src="@/static/image/top.png" /></view>
 	</view>
@@ -32,6 +32,10 @@ export default {
 		minHeight: {
 			type: Boolean,
 			default: false
+		},
+		scrollId: {
+			type: String,
+			default: ''
 		},
 		/**
 		 * 默认展示动画

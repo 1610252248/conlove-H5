@@ -27,7 +27,7 @@
 		 
 		<view class="cu-bar bg-white">
 			<view class="action">
-				<button class="cu-btn bg-red round" @click="back">
+				<button class="cu-btn bg-red round" @click="show = true">
 					上一步
 				</button>
 			</view>
@@ -37,32 +37,43 @@
 				</button>
 			</view>
 		</view>
+		
+		<u-modal v-model="show" title="哎呀" cancel-text="手滑手滑" show-cancel-button
+		content="信息还没保存，确定取消吗？" :mask-close-able="true" @confirm="confirm" />
 	</view>
 </template>
 
 <script>
-	import { mapState } from 'vuex'
 	export default {
-		computed: mapState([
-		  // 映射 this.homeData 为 store.state.homeData
-		  'homeData'
-		]),
+		props: {
+			data: {
+				type: Array,
+				default: ()=>{[]}
+			},
+		},
 		data() {
 			return {
 				images: [],
 				isLoading: false,
+				show: false,// model 显示
 			}
 		},
 		mounted() {
-			this.images = this.homeData.images;
+			setTimeout(() => {
+				this.images = []
+				let data = this._props.data;
+				for(let obj of data) {
+					this.images.push(obj.image)
+				}
+			}, 100)
 		},
 		methods: {
 			ChooseImage() {
-				uni.chooseImage({
-					success: (res) => {
-						this.images.push(...res.tempFilePaths);
+				this.$http.urlImgUpload('/fileUpload').then(res => {
+					for(let image of res) {
+						if(this.images.length < 6) this.images.push(image);
 					}
-				});
+				})
 			},
 			ViewImage(e) {
 				uni.previewImage({
@@ -101,20 +112,10 @@
 				}, 500);
 				
 			},
-			back() {
-				uni.showModal({
-					title: '哎呀',
-					content: '还没有完成，确定返回上一步吗？',
-					cancelText: '手滑手滑',
-					confirmText: '确定',
-					success: res => {
-						if (res.confirm) {
-							this.$emit("back");
-						}
-					}
-				})
-				
+			confirm() {
+				this.$emit("back");
 			}
+		
 		},
 	}
 </script>

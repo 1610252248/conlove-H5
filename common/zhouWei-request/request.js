@@ -229,7 +229,7 @@ export default class request {
 			var config = {
 				url: options.httpUrl,
 				filePath: files[i].path,
-				header: options.headers, //加入请求头
+				// header: options.headers, //加入请求头
 				name: options.name || "file",
 				success: (response) => {
 					response.data = JSON.parse(response.data);
@@ -240,7 +240,7 @@ export default class request {
 						//数据处理
 						var factoryInfo = _this.dataFactory(options, response);
 						if (factoryInfo.success) {
-							fileList.push(factoryInfo.result);
+							fileList.push(factoryInfo.result.data);
 							if (len <= i) {
 								callback(true, fileList);
 							} else {
@@ -250,7 +250,7 @@ export default class request {
 							callback(false, factoryInfo.result);
 						}
 					} else {
-						fileList.push(response.data);
+						fileList.push(response.data.data);
 						if (len <= i) {
 							callback(true, fileList);
 						} else {

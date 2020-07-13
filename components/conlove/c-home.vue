@@ -1,22 +1,22 @@
 <template>
-	<view>
-		<view class="display-box solids-bottom" v-for="(item, index) in listData" :key="index" @click="navToHomeDetail(item.id)">
-			<view>
+	<view v-if="lists.length">
+		<view class="display-box solids-bottom" v-for="(item, index) in lists" :key="index" @click="navToHomeDetail(item.id)">
+			<view v-if="dotsShow">
 				<!--是否隐藏动态 -->
-				<text v-if="hidePost" class="hidePost margin-left text-gray cuIcon-attentionforbid"></text>
-				<text v-show="dotsShow" :style="{'left':hidePost?'270rpx':'300rpx'}" @click.stop="showModal(index)" class="cuIcon-more"></text>
+				<text v-if="!item.isPublic" class="isPublic margin-left text-gray cuIcon-attentionforbid"></text>
+				<text v-show="dotsShow" :style="{'left':!item.isPublic?'270rpx':'300rpx'}" @click.stop="showModal(index)" class="cuIcon-more"></text>
 			</view>
-			<image lazy-load class="box-image" :src="item.images[0]" mode="widthFix"></image>
+			<image lazy-load class="box-image" :src="item.images[0].image" mode="widthFix"></image>
 			<view class="box-info-up">
 				<text class="fl">{{ item.school + ' | ' + item.grade }}</text>
 				<image class="sex-image fl" :src="getSexImage(item.sex)"></image>
-				<text class="fr">{{ $utils.getAge(item.age) + '岁 | ' + item.height + 'cm' }}</text>
+				<text class="fr">{{ $utils.getAge(item.birthDate) + '岁 | ' + item.height + 'cm' }}</text>
 			</view>
 			<view class="box-info-down">
 				<!-- 头像和用户名 -->
-				<view class="user fl flex align-center" @click.stop="navToOtherUser">
-					<image class="userAvatar" :src="item.userDto.avatarUrl"></image>
-					<text class="box-userName text-cut">{{ item.userDto.nickname }}</text>
+				<view class="user fl flex align-center" @click.stop="navToOtherUser(item.user.id)">
+					<image class="userAvatar" :src="item.user.avatar"></image>
+					<text class="box-userName text-cut">{{ item.user.nickName }}</text>
 				</view>
 				<!-- 标题 -->
 				<view class="title fr flex align-center">
@@ -29,40 +29,30 @@
 		
 		<!-- 更多菜单 -->
 		<view class="cu-modal bottom-modal" :class="bottomModal ? 'show' : ''" @tap="hideModal">
-			<view class="cu-dialog radius">
-				<view class="cu-list menu text-black">
-					<!-- 隐藏/公开动态 -->
-					<view class="cu-item" @click="changeHidePost">
-						<view class="content">
-							<text class="margin-right" :class="hidePost?'cuIcon-attention ':'cuIcon-attentionforbid'"></text>
-							<text>{{hidePost? '公开缘来' : '隐藏缘来'}}</text>
-						</view>
-					</view>
-					<!-- 删除动态 -->
-					<view class="cu-item" @click="deletePost">
-						<view class="content">
-							<text class="cuIcon-delete margin-right"></text>
-							<text>删除缘来</text>
-						</view>
-					</view>
-					<view class="cu-item" @click="modifyPost">
-						<view class="content">
-							<text class="cuIcon-edit margin-right"></text>
-							<text>修改缘来</text>
-						</view>
-					</view>
-					<view class="cu-item"><view class="content">取消</view></view>
+			<view class="cu-dialog">
+				<view class="cu-list menu">
+					<!-- 隐藏/公开缘来 -->
+					<c-text @click="changPublic" :title="!lists[idx].isPublic? '公开缘来' : '隐藏缘来'"
+					:icon="!lists[idx].isPublic?'cuIcon-attention ':'cuIcon-attentionforbid'" />
+					
+					<!-- 删除缘来 -->
+					<c-text @click="show=true" title="删除缘来" icon="cuIcon-delete" />
+					
+					<!-- 修改缘来 -->
+					<c-text @click="modify" title="修改缘来" icon="cuIcon-edit" />
+					<c-text class="c-border-top" title="取消" />
 				</view>
 			</view>
 		</view>
+		
+		<u-modal v-model="show"  show-cancel-button content="确定删除吗" :mask-close-able="true" @confirm="deletePost" />
 	</view>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 export default {
 	props: {
-		listData: {
+		lists: {
 			type: Array,
 			default: () => []
 		},
@@ -75,25 +65,18 @@ export default {
 			default: false
 		},
 	},
-	
 	data() {
 		return {
 			bottomModal: false,
-			hidePost: false,
-			
-			activeIndex: 0,
+			idx: 0, // 选中的下标
+			show: false, // 提示model
 		};
 	},
 
 	methods: {
-		...mapActions([
-		  'setHomeData', // 将 `this.setHomeData()` 映射为 `this.$store.dispatch('setHomeData')`
-		]),
-		/**
-		 * 获取性别图片地址
-		 */
+		//获取性别图片地址
 		getSexImage(sex) {
-			return require('@/static/image/' + (sex === 0 ? 'male.png' : 'female.png'));
+			return '/static/image/' + (sex == '男'? 'male.png' : 'female.png');
 		},
 		/**
 		 * 跳转首页详情
@@ -105,7 +88,7 @@ export default {
 		},
 		//显示modal
 		showModal(index) {
-			this.activeIndex = index;
+			this.idx = index;
 			this.bottomModal = true;
 		},
 		//关闭modal
@@ -113,33 +96,20 @@ export default {
 			this.bottomModal = false;
 		},
 		//改变隐藏动态
-		changeHidePost() {
-			this.hidePost = !this.hidePost;
-			uni.showToast({
-				title: this.hidePost ? '隐藏缘来成功' : '公开缘来成功',
-				icon: 'none'
-			})
+		changPublic() {
+			this.$emit('chang-public', this.idx);
 		},
 		//删除动态
 		deletePost() {
-			uni.showToast({
-				title: '删除缘来成功',
-				icon: 'none'
-			})	
+			this.$emit('delete', this.idx)
 		},
 		// 更新动态
-		modifyPost() {
-			this.setHomeData(this.listData[this.activeIndex]);
-			uni.navigateTo({
-				url: '/pages/release/release'
-			})
+		modify() {
+			this.$u.route('/pages/release/release', {id: this.lists[this.idx].id})
 		},
 		// 跳转用户资料
-		navToOtherUser() {
-			//当前统一跳转 其它用户
-			uni.navigateTo({
-				url: '/pages/user/otherUser'
-			})
+		navToOtherUser(id) {
+			this.$u.route('/pages/user/otherUser', {id})
 		}
 	}
 };
@@ -188,8 +158,10 @@ export default {
 	padding-right 20rpx
 	left 300rpx
 	bottom 20rpx
-.hidePost 
+.isPublic 
 	position relative
 	left 20rpx
 	bottom 20rpx
+.c-border-top 
+	border-top 6px solid #ececec;
 </style>

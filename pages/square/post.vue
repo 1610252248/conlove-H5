@@ -1,83 +1,88 @@
 <template>
-	<view class="post">
-		<view class="display-box solids-bottom" @click="navToPostDetail(false)">
-			<!-- 说说内容 -->
-			<post-info :data="postData"/>
-			<!-- 赞评论功能 -->
-			<c-info-bar @click-message="clickMessage" showMode/>
-			<!-- 评论 至多展示三条评论 -->
-			<view class="post-comment margin-top-sm">
-				<view class="flex justify-start " v-for="(item, index) in comments" :key="index">
-					<view class="text-grey text-nowrap">{{ item.userName + '：' }}</view>
-					<view class="text-black text-hidden">{{ item.content }}</view>
-				</view>
-			</view>
-			<view class="post-like margin-top-xs">
-				<view class="fl "><text class="text-gray margin-left-lg  text-xs">查看全部 13 条评论 >></text></view>
-			</view>
-		</view>
-		
-		
-	</view>
+	<c-scroll @scrolltolower="lower">
+		<c-post :lists="postList" :appreciateList="appreciateList"  
+			@chang-appreciate="changAppreciate" :isLoad="isLoad"  />
+	</c-scroll>
 </template>
 
 <script>
-import postInfo from '@/pages/square/postInfo.vue'
-import cInfoBar from '@/components/conlove/c-info-bar.vue'	
 
 export default {
-	name: 'post',
-	components: {
-		postInfo, cInfoBar
-	},
-	props: {
-		postData: {
-			type: Object,
-			default: () => ({
-				
-			})
-		},
-	},
 	data() {
 		return {
-			comments: [
-				{
-					userName: 'Abraxas',
-					content: '赞赞~asddddddddddddddddddddddad~~！！'
-				},
-				{
-					userName: '小冰 ',
-					content: 'wls bbbbbbbbbb！！'
-				},
-				{
-					userName: 'The shy',
-					content: 'wls bbbbbbbbbbbasdddddddddddddddddddddddddbbbbbbbbbbbb！！'
-				}
-			]
+			// 帖子数组
+			postList: [],
+			// 点赞帖子数组
+			appreciateList: [],
+			// 请求帖子参数
+			page: 1, //当前页
+			pageSize: 4, // 每页数量
+			totalPage: 0 ,// 总页数
+			// 加载更多
+			isLoad: false,
+			loadCnt: 0,
 		};
 	},
-	methods: {
-		/**
-		 * @param {Object} isFocus 是否点击message 进去详情的
-		 * 跳转详情页面
-		 */
-		navToPostDetail(isFocus) {
-			uni.navigateTo({
-				url: '/pages/square/postDetail?isFocus=' +  isFocus,
-			})
-		},
-		clickMessage() {
-			this.navToPostDetail(true);
-		}
+	mounted() {
+		// 初始化拿到数据
+		this.init();
+		// 监听新动态，重新拿到请求
+		this.$eventBus.$on('add-post', () => {
+			this.$nextTick(() => {
+				this.init();
+			});
+		});
 	},
+	methods: {
+		// 初始化函数
+		init() {
+			this.postList = []
+			this.page = 1;
+			this.getPost()
+			
+		},
+		// 请求帖子数据
+		getPost() {
+			this.$http.get('/getAllPost', { page: this.page, pageSize: this.pageSize }).then(res => {
+				res = res.data;
+				this.totalPage = res.pages;
+				if(this.page >= this.totalPage) this.isLoad = true;
+				this.postList.push(...res.list);
+				// 请求数据玩之后，在请求点赞数组，避免渲染过快
+				this.getPostLike()
+			});
+		},
+		// 请求点赞帖子
+		getPostLike() {
+			this.$http.get('/getPostAppreciate').then(res => {
+				this.appreciateList = res.data;
+			});
+		},
+		
+		// 动态改变点赞个数
+		changAppreciate(val, idx) {
+			this.postList[idx].appreciate += val;
+		},
+		
+		
+		// 页面触底，加载更多数据
+		lower() {
+			// 防止抖动
+			if (this.loadCnt > 0) return;
+			if (this.isLoad) return;
+			this.loadCnt++;
+			this.page++;
+			if (this.page <= this.totalPage) this.getPost();
+			else this.isLoad = true;
+			this.loadCnt--;
+		}
+	}
 };
 </script>
 
 <style lang="stylus">
-.post
-	width 100%
 .display-box
-	padding 30rpx 0
+	padding 30rpx 0 10rpx
 	width 100%
 .post-like
 	height 40rpx
@@ -86,5 +91,4 @@ export default {
 	width 92%
 	margin-left auto
 	margin-right auto
-
 </style>

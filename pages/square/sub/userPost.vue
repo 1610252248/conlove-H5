@@ -1,150 +1,117 @@
 <template>
-	<c-scroll @scrolltolower="lower" maxHeight>
-		<c-custom-mid>
-			<block slot="center"><text style="color: #000000;">Ta的动态</text></block>
-		</c-custom-mid>
-		<view style="height: 100rpx;"></view>
-		<c-post dotsShow v-for="(item, index) in postList" :key="index" :post-data="item" />
-		<view class="cu-load" :class="!isLoadPost ? 'loading' : 'over'"></view>
-	</c-scroll>
+	<view>
+		<c-custom-mid><block slot="center">
+			{{userDB.nickName + '的动态'}}
+		</block></c-custom-mid>
+		<c-scroll @scrolltolower="lower" midHeight>
+			<c-post :lists="postList" :appreciateList="appreciateList" :isLoad="isLoad" :dotsShow="dotsShow"
+				@chang-appreciate="changAppreciate"   @chang-public="changPublic"
+				@delete="deletePost"/>
+		</c-scroll>
+	</view>
 </template>
 
+
+
 <script>
-import cCustomMid from '@/components/conlove/c-custom-mid.vue';
-import cPost from '@/components/conlove/c-post.vue';
 import { mapState } from 'vuex';
 export default {
-	components: {
-		cCustomMid,
-		cPost
-	},
-	props: {
-		postData: {
-			type: Object,
-			default: () => ({
-				user: {
-					avatar: '/static/image/default.jpeg',
-					userName: 'Bobbobbb',
-					isFemale: false
-				},
-				content: '更新内容了，hhhhhhhhhhhhhhhh',
-				createTime: '2020-5-20 13:14:20',
-				imageList: [
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big81005.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big25002.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big25002.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
-				],
-				comments: [
-					{
-						userName: 'Abraxas',
-						content: '赞赞~asdddddddddddddddddad~~！！'
-					},
-					{
-						userName: '小冰 ',
-						content: 'wls bbbbbbbbbb！！'
-					},
-					{
-						userName: 'The shy',
-						content: 'wls bbbbbbbbbbbasdddddddddddddbb！！'
-					}
-				]
-			})
-		}
+	computed: {
+		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapState(['userDB'])
 	},
 	data() {
 		return {
+			// 帖子数组
 			postList: [],
-			isLoadPost: false,
-			loadCntPost: 0,
-			// 新增帖子信息
-			addNewPost: {
-				user: {
-					avatar: '/static/image/default.jpeg',
-					userName: 'Bobbobbb',
-					isFemale: false
-				},
-				hidePost: false,
-				content: '更新内容了，hhhhhhhhhhhhhhhh',
-				createTime: '2020-5-20 13:14:20',
-				imageList: [
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big10001.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big81005.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big25002.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big25002.jpg',
-					'https://ossweb-img.qq.com/images/lol/web201310/skin/big99008.jpg'
-				],
-				comments: [
-					{
-						userName: 'Abraxas',
-						content: '赞赞~asdddddddddddddddddad~~！！'
-					},
-					{
-						userName: '小冰 ',
-						content: 'wls bbbbbbbbbb！！'
-					},
-					{
-						userName: 'The shy',
-						content: 'wls bbbbbbbbbbbasdddddddddddddbb！！'
-					}
-				]
-			}
+			// 点赞帖子数组
+			appreciateList: [],
+			// 请求帖子参数
+			page: 1, //当前页
+			pageSize: 4, // 每页数量
+			totalPage: 0 ,// 总页数
+			// 加载更多
+			isLoad: false,
+			loadCnt: 0,
+			dotsShow: false,
 		};
 	},
-	computed: mapState([
-		// 映射 this.newPost 为 store.state.newPost
-		'newPost'
-	]),
-	onShow() {
-		this.postList = [];
-		this.postList.unshift(...this.newPost);
-		this.postList.push(this.addNewPost);
-		this.postList.push(this.addNewPost);
+	
+	onLoad({id}) {
+		// 初始化拿到数据
+		if(id == null) {
+			this.$u.toast('地址错误');
+			return ;
+		}
+		this.init(id);
+		// 监听新动态，重新拿到请求
+		this.$eventBus.$on('update-post', () => {
+			this.init(id);
+		});
+		if(this.userDB.id == id) {
+			this.dotsShow = true;
+		}
 	},
 	methods: {
-		/**
-		 * @param {Object} isFocus 是否点击message 进去详情的
-		 * 跳转详情页面
-		 */
-		navToPostDetail(isFocus) {
-			uni.navigateTo({
-				url: '/pages/square/postDetail?isFocus=' + isFocus
+		// 初始化函数
+		init(id) {
+			this.postList = []
+			this.page = 1;
+			this.getPost(id)
+
+		},
+		// 请求帖子数据
+		getPost(id) {
+			let data = {id, page: this.page, pageSize: this.pageSize }
+			this.$http.get('/user/getUserPost', data).then(res => {
+				res = res.data;
+				this.totalPage = res.pages;
+				this.postList.push(...res.list);
+				if(this.totalPage <= this.page) this.isLoad = true;
+				// 先数据，在点赞帖子，防止渲染过快
+				this.getPostLike(id)
 			});
 		},
-		clickMessage() {
-			this.setPostData(this.postData);
-			this.navToPostDetail(true);
+		// 请求点赞帖子
+		getPostLike(id) {
+			this.$http.get('/getPostAppreciate', {id}).then(res => {
+				this.appreciateList = res.data;
+			});
 		},
+		
+		// 动态改变点赞个数
+		changAppreciate(val, idx) {
+			this.postList[idx].appreciate += val;
+		},
+		// 公开/私有
+		changPublic(idx) {
+			this.postList[idx].isPublic ^= 1;
+			this.$http.post('/updatePost', {post: this.postList[idx]});
+		},
+		deletePost(idx) {
+			this.$http.post('/deletePost', this.postList[idx]).then(res => {
+				this.postList.splice(idx, 1);
+			})
+		},
+		
+		// 页面触底，加载更多数据
 		lower() {
-			this.loadPost();
-		},
-		loadPost() {
-			if (this.loadCntPost > 0) return;
-			if (this.isLoadPost) return;
-			this.loadCntPost++;
-			setTimeout(() => {
-				if (this.postList.length >= 10) {
-					this.isLoadPost = true;
-				} else {
-					this.postList.push(this.addNewPost);
-					this.postList.push(this.addNewPost);
-				}
-				this.loadCntPost--;
-			}, 500);
+			// 防止抖动
+			if (this.loadCnt > 0) return;
+			if (this.isLoad) return;
+			this.loadCnt++;
+			this.page++;
+			if (this.page <= this.totalPage) this.getPost();
+			else this.isLoad = true;
+			this.loadCnt--;
 		}
 	}
 };
 </script>
 
 <style lang="stylus">
-.post
-	width 100%
 .display-box
-	margin-top 100rpx
-	padding 30rpx 0
+	padding 30rpx 0 10rpx
 	width 100%
 .post-like
 	height 40rpx

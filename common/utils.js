@@ -57,6 +57,76 @@ function needLogin() {
 }
 
 var dateUtils = {
+	// 重要的执行方法
+	trans : function(date) {
+	  var d = this.parse(date)
+	  var t = new Date()
+	  var objd = {
+	    'Y': d.getFullYear(),
+	    'm': parseInt(d.getMonth()) + 1,
+	    'd': parseInt(d.getDate()),
+	    'w': d.getDay(),
+	    'H': d.getHours(),
+	    'i': d.getMinutes(),
+	    's': d.getSeconds(),
+	  }
+	  //分钟小于10 加一个0
+	  if(d.getMinutes()<10){
+	    objd.i = '0'+ objd.i
+	  }
+	  var objt = {
+	    'Y': t.getFullYear(),
+	    'm': parseInt(t.getMonth()) + 1,
+	    'd': parseInt(t.getDate()),
+	    'w': t.getDay(),
+	    'H': t.getHours(),
+	    'i': t.getMinutes(),
+	    's': t.getSeconds(),
+	  }
+	
+	  var timeStr = ''
+	  var dayPerMonthAddTime = this.getDayPerMonth(objd.Y)
+	  var week = ['周日','周一','周二','周三','周四','周五','周六']
+	
+		if(objd.H < 13) {
+		  // timeStr += '上午 '
+		  objd.H = '上午 ' + objd.H
+		} else {
+		  objd.H = '下午 '+ (objd.H - 12)
+		}
+	
+	  if(objd.Y == objt.Y && objd.m == objt.m && objd.d == objt.d) {
+	    //判断当天
+	    timeStr += objd.H + ':' + objd.i
+	
+	  } else if ((objd.Y == objt.Y && objd.m == objt.m && objd.d == objt.d - 1) || (objd.Y == objt.Y && objt.m - objd.m == 1 && dayPerMonthAddTime[objd.m] == objd.d && objt.d == 1) || (objt.Y - objd.Y == 1 && objd.m == 12 && objd.d == 31 && objt.m == 1 && objt.d == 1)) {
+	    //判断昨天
+	    timeStr += '昨天 ' + objd.H + ':' + objd.i + ' '
+	  } else if ((objd.Y == objt.Y && objd.m == objt.m && objt.d - objd.d < 7) || (objd.Y == objt.Y && objt.m - objd.m == 1 && dayPerMonthAddTime[objd.m] - objd.d + objt.d < 7|| (objt.Y - objd.Y == 1 && objd.m == 12 && objt.m == 1 && 31 - objd.d + objt.d < 7))) {
+	    //判断为七天内显示为周几
+	    timeStr += week[objd.w] + ' ' + objd.H + ':' + objd.i
+	
+	  } else {
+	    //直接展示年月日
+	    timeStr += objd.Y + '年' + objd.m + '月' + objd.d + '日 ' + objd.H + ':' + objd.i
+	  }
+	
+	// **#判断上下午，不要可以注释掉**
+	 
+	
+	  return timeStr
+	},
+	
+	//月份
+	getDayPerMonth: function(year) {
+	  var arr = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+	  //闰年
+	  if((year%4 == 0 && year%100 != 0) || (year%400 == 0)) {
+	    arr[2] = 29
+	  } 
+	  return arr
+	},
+	
 	UNITS: {
 		'年': 31557600000,
 		'月': 2629800000,
@@ -78,7 +148,7 @@ var dateUtils = {
 	format: function(dateStr) {
 		var date = this.parse(dateStr)
 		var diff = Date.now() - date.getTime();
-		if (diff < this.UNITS['年']) {
+		if (diff < this.UNITS['月']) {
 			return this.humanize(diff);
 		}
 		var _format = function(number) {
@@ -188,8 +258,8 @@ var dateUtils = {
 
 
 module.exports = {
-	getAge: getAge,
+	getAge,
 	// fromNow: fromNow,
-	needLogin: needLogin,
-	dateUtils: dateUtils
+	needLogin,
+	dateUtils
 }

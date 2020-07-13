@@ -20,15 +20,17 @@ const store = new Vuex.Store({
 		},
 		homeData: {
 			title: '',
-			sex: 0,
+			sex: '',
 			school: '',
-			grade: '请选择',
-			age: '请选择',
+			grade: '',
+			birthDate: '',
 			height: null,
 			introduce: '',
 			images: [],
 		},
-		isLogin: false,
+		token: uni.getStorageSync('token') ? uni.getStorageSync('token') : '',
+		userDB: uni.getStorageSync("user") ? JSON.parse(uni.getStorageSync("user")) : {},
+		loginRouterIndex: 0
 	},
     mutations: {
 		addNewPost({newPost}, payload) {
@@ -42,6 +44,21 @@ const store = new Vuex.Store({
 		},
 	},
     actions: {
+		set({state}, data) {
+		  
+		  state.userDB = data.user;
+		  if(data.token != null) {
+			  state.token = data.token;
+			  uni.setStorageSync('token', data.token);
+		  }
+		  uni.setStorageSync('user', JSON.stringify(data.user));
+		},
+		del({state}) {
+		  state.token = '';
+		  state.userDB = {};
+		  uni.removeStorageSync('token');
+		  uni.removeStorageSync('user');
+		},
 		setPostData({state}, payload) {
 			state.postData = payload;
 		},
@@ -49,8 +66,15 @@ const store = new Vuex.Store({
 			console.log(payload);
 			state.homeData = payload;
 		},
-		setIsLogin({state}, flag = true) {
-			state.isLogin = flag;
+		setloginRouterIndex({state}, payload) {
+			if(state.loginRouterIndex) {
+				state.loginRouterIndex = payload;
+			}
+		}
+	},
+	getters: {
+		isLogin(state) {
+		  return JSON.stringify(state.userDB) !== "{}";
 		}
 	}
 })

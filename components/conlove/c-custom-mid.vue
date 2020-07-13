@@ -9,6 +9,7 @@
 				<slot name="center"></slot>
 			</view>	
 		</view>
+		<view style="height: 90rpx;"></view>
 	</view>
 </template>
 
@@ -23,7 +24,6 @@
 				uni.navigateBack({
 					delta: 1
 				});
-				// history.back();
 			},
 			send() {
 				this.$emit('send');
@@ -39,7 +39,7 @@
 	width 100%
 	height 90rpx
 	line-height 90rpx
-	z-index 9999
+	z-index 111
 	background-color white
 .cuIcon-back 
 	font-size 42rpx

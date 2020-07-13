@@ -4,14 +4,14 @@
 		<view v-if="!this.isLogin">
 			<view class="bg-gray padding">
 				<view class="flex justify-start align-center ">
-					<view class="cu-avatar round xl margin-left" style="backgroundImage:url(/static/image/avatar-default.png)"></view>
-					<view @click="navToLogin" class="margin-left text-lg text-bold">点击登录</view>
+					<u-avatar class="margin-left" size="110" mode="circle"></u-avatar>
+					<view @click="navToLogin" class="margin-left-xl text-df text-bold">点击登录</view>
 				</view>
 			</view>
 			<view class="card">
 				<view class="flex justify-center flex-direction align-center" style="height: 60vh;">
 					<image style="width: 150upx;height: 150upx;" src="/static/image/pic-dataIsNone.png"></image>
-					<text  style="color:#bebebe">暂无数据</text>
+					<text style="color:#bebebe">暂无数据</text>
 				</view>
 			</view>
 		</view>
@@ -29,25 +29,30 @@
 						<view class="cu-avatar round xl margin-left" :style="{ backgroundImage: 'url(' + user.avatar + ')' }">
 							<view class="cu-tag lg badge" :class="!user.sex ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'"></view>
 						</view>
+
 						<view class="content margin-left text-black margin-top-sm">
 							<view class="text-bold">
-								<text>{{ user.name }}</text>
+								<text>{{ user.nickName }}</text>
 							</view>
-							<view class="text-cut padding-top-xs text-sm">{{ user.sign }}</view>
+							<view class="text-cut padding-top-xs text-sm">{{ user.sign == null ? '暂时没有介绍' : user.sign }}</view>
 						</view>
 					</view>
 					<view class="padding flex flex-wrap">
-						<view class="cu-btn border-color-red">{{ getAge() }}</view>
-						<view class="cu-btn border-color-yellow">{{ getConstellation() }}</view>
-						<view class="cu-btn border-color-blue">{{ user.city }}</view>
-						<view class="cu-btn border-color-blue">{{ getCurSchool() }}</view>
+						<view v-if="user.birthDate != null" class="cu-btn border-color-red">{{ getAge() }}</view>
+						<view v-if="user.birthDate != null" class="cu-btn border-color-yellow">{{ getConstellation() }}</view>
+						<view v-if="user.city != null" class="cu-btn border-color-blue">{{ user.city }}</view>
+						<view v-if="user.grade != null" class="cu-btn border-color-blue">{{ getCurSchool() }}</view>
 					</view>
 				</view>
 			</view>
 
 			<!-- 学校信息 -->
 			<view class="card">
-				<view class="margin-bottom-xs">学校信息</view>
+				<view class="margin-bottom-xs">
+					<text>学校信息</text>
+					<!-- <image class="identify" src="/static/image/identify.png"></image> -->
+					<!-- <text class="text-sm" style="color: #68dbdf;">已提交认证材料</text> -->
+				</view>
 				<view class="padding-left text-sm">
 					<view>
 						<text>学校</text>
@@ -57,7 +62,6 @@
 						<text>专业</text>
 						<text class="text-gray margin-left">{{ user.major }}</text>
 					</view>
-
 					<view>
 						<text>年级</text>
 						<text class="text-gray margin-left">{{ getGrade() }}</text>
@@ -71,10 +75,9 @@
 				<view class="padding-left text-sm">
 					<view class="flex justify-start">
 						<view class="text-nowrap"><text>关键词</text></view>
-
 						<!-- 已选标签 -->
 						<view class="flex flex-wrap margin-left-xs">
-							<view class="info-tag" :class="getTagColor(index)" v-for="(item, index) in selectTagList" :key="index">{{ item }}</view>
+							<view class="info-tag" :class="getTagColor(index)" v-for="(item, index) in selectTagList" :key="index">{{ item.name }}</view>
 						</view>
 					</view>
 					<view class="flex justify-start">
@@ -86,15 +89,19 @@
 
 			<!-- 缘来 -->
 			<view class="card" @click="navToUserHome">
-				<view class="margin-bottom-xs" style="height: 46rpx;"><view class="fl">缘来</view></view>
-				<view class="padding-left text-sm">
+				<u-section class="margin-bottom-sm" :bold="false" :show-line="false" :color="'#000000'" title="缘来" sub-title="更多" />
+				<view class="padding-left text-sm" v-for="item in stickers" :key="item.id">
 					<view class="flex justify-start">
-						<view class="fl"><image style="width: 220rpx" mode="widthFix" src="@/static/image/wyb.jpg"></image></view>
+						<view class="fl"><image class="sticker-image" :src="item.images[0].image" @click.stop="viewImage(item.images[0].image)" /></view>
 						<view class="margin-left fl" style="width: 60%;">
-							<view class="cuIcon-notification"><text class="margin-left-xs">等一个人 等二个人 等三个人 等四个人开黑</text></view>
-							<view>
-								<text class="text-gray margin-right">2020-6-15 14:27:26</text>
-								<text class="cuIcon-likefill text-red">20</text>
+							<view class="cuIcon-notification">
+								<text class="margin-left-xs">{{ item.title }}</text>
+							</view>
+							<view class="text-wrap text-gray">
+								<text>{{ item.introduce }}</text>
+							</view>
+							<view class="text-gray">
+								<text>{{ $utils.dateUtils.format(item.createTime) }}</text>
 							</view>
 						</view>
 					</view>
@@ -103,65 +110,100 @@
 
 			<!-- 动态 -->
 			<view class="card" @click="navToUserPost">
-				<view class="margin-bottom-xs"><text>动态</text></view>
+				<u-section class="margin-bottom-sm" :bold="false" :show-line="false" :color="'#000000'" title="动态" sub-title="更多" />
 				<view class="flex justify-between flex-wrap text-sm">
-					<view class="dt-item">
-						<image class="dt-image" src="@/static/image/view-1.jpg"></image>
-						<view class="text-cut">谁的青春这么累谁的青春这么累</view>
-					</view>
-					<view class="dt-item">
-						<image class="dt-image" src="@/static/image/view-2.jpg"></image>
-						<view class="text-cut">谁的青春这么累谁的青春这么累</view>
-					</view>
-					<view class="dt-item">
-						<image class="dt-image" src="@/static/image/view-3.jpg"></image>
-						<view class="text-cut">谁的青春这么累谁的青春这么累</view>
+					<view class="dt-item" v-for="item in posts" :key="item.id">
+						<view v-if="item.images.length > 0"><image class="dt-image" :src="item.images[0].image" @click.stop="viewImage(item.images[0].image)" /></view>
+						<view v-else class="dt-image dt-text">{{ item.content }}</view>
 					</view>
 				</view>
 			</view>
 		</view>
+		<u-top-tips ref="uTips" @edit-user="navToEditUser"></u-top-tips>
 	</c-scroll>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 export default {
-	computed: mapState([
-		// 映射 this.isLogin 为 store.state.isLogin
-		'isLogin'
-	]),
+	computed: {
+		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapGetters(['isLogin']),
+		...mapState(['userDB'])
+	},
 	data() {
 		return {
 			// 用户信息
-			user: {
-				name: 'BobBobo',
-				avatar: '/static/img/face.jpg',
-				sex: 2,
-				date: '1998-10-28',
-				city: '西安',
-				sign: '我有我的奥妙',
-				school: '西安电子科技大学',
-				major: '计算机专业',
-				grade: '研一', //在校情况
-				introduce: '约桌游吗~'
-			},
+			user: {},
 			//用户选择的标签
-			selectTagList: ['吃鸡', '腿特长', '王者荣耀', '工学类'],
+			selectTagList: [],
 
 			//计算年级使用的映射
 			gradeList: { 一: 1, 二: 2, 三: 3, 四: 4 },
-			// 卡片展示情况， 0全部展示，1只展示缘来，2只展示动态
-			cardState: 0
+
+			// 是否身份认证
+			isIdentity: true,
+
+			stickers: [],
+			posts: []
 		};
 	},
+	onReady() {
+		/* 只能密码是空，其它属性不为空，否则就提示信息不完整 */
+		let num = 0;
+		for (let obj in this.user) {
+			if (this.user[obj] == null) num++;
+		}
+		if (num > 3) {
+			this.$refs.uTips.show({
+				title: '完善信息之后，得到秋波几率更高哦~',
+				type: 'primary',
+				duration: '2300'
+			});
+		}
+	},
+	onLoad() {
+		this.init();
+		this.$eventBus.$on('login-success', () => {
+			this.init();
+		});
+		this.$eventBus.$on("update-user-info", () => {
+			this.init();
+		})
+	},
 	methods: {
-		navToEditUser() {
-			uni.navigateTo({
-				url: '/pages/user/userEdit'
+		/* 获取个性展示标签，缘来和动态 */
+		init() {
+			this.user = this.userDB;
+			this.getUserLabel();
+			this.getData();
+		},
+		viewImage(url) {
+			let images = [url];
+			uni.previewImage({ urls: images, current: url });
+		},
+		getUserLabel() {
+			this.$http
+				.get('/userLabel', { id: this.userDB.id })
+				.then(res => {
+					this.selectTagList = res.data;
+				})
+				.catch(err => err);
+		},
+		getData() {
+			let data = { id: this.userDB.id, page: 1, pageSize: 3 };
+			this.$http.get('/user/getUserPost', data).then(res => {
+				this.posts = res.data.list;
+			});
+			data.pageSize = 1;
+			this.$http.get('/user/getUserSticker', data).then(res => {
+				this.stickers = res.data.list;
 			});
 		},
+
 		// 获取年级
 		getGrade() {
+			if (this.user.grade == null) return null;
 			let grade = this.user.grade;
 			if (grade === '已工作') return grade;
 			let year = this.$utils.dateUtils.currentDate().split('-')[0] - this.gradeList[grade[1]];
@@ -187,41 +229,44 @@ export default {
 		},
 		// 获取年龄
 		getAge() {
-			return this.$utils.dateUtils.GetAge(this.user.date) + '岁';
+			if (this.user.birthDate == null) return null;
+
+			return this.$utils.dateUtils.GetAge(this.user.birthDate) + '岁';
 		},
 		// 获取星座
 		getConstellation() {
-			return this.$utils.dateUtils.getconstellation(this.user.date);
+			if (this.user.birthDate == null) return null;
+			return this.$utils.dateUtils.getconstellation(this.user.birthDate);
 		},
 		// 获取在校情况，本科在读、硕士在读、已工作
 		getCurSchool() {
 			let grade = this.user.grade;
+			if (grade == null) return null;
 			if (grade === '已工作') return grade;
 			let str = (grade[0] === '研' ? '硕士' : '本科') + '在读';
 			return str;
 		},
+
+		/*************** 跳转页面 ***************/
+		// 修改信息
+		navToEditUser() {
+			this.$u.route('/pages/user/userEdit');
+		},
 		//跳转用户动态
 		navToUserPost() {
-			uni.navigateTo({
-				url: '/pages/square/sub/userPost'
-			});
+			this.$u.route('/pages/square/sub/userPost', { id: this.user.id });
 		},
 		//跳转用户缘来页面
 		navToUserHome() {
-			uni.navigateTo({
-				url: '/pages/home/sub/userHome'
-			});
+			this.$u.route('/pages/home/sub/userHome', { id: this.user.id });
 		},
+		// 设置
 		navToSetting() {
-			uni.navigateTo({
-				url: '/pages/user/setting'
-			});
+			this.$u.route('/pages/user/setting');
 		},
 		// 登录跳转
 		navToLogin() {
-			uni.navigateTo({
-				url: '/pages/enter/login'
-			})
+			this.$u.route('/pages/enter/login');
 		}
 	}
 };
@@ -240,13 +285,13 @@ export default {
 	padding 6rpx 15rpx
 	margin-left 18rpx
 .card
-	box-shadow: 0px 2px 5px #EDEDED;
+	box-shadow 0px 2px 5px #EDEDED
 	width 86%
 	margin 40rpx auto
-	border: 1px solid #cecece;
+	border 1px solid #cecece
 	border-radius 15rpx
 	color black
-	padding 30rpx 20rpx
+	padding 20rpx
 	text
 		height 46rpx
 		line-height 46rpx
@@ -274,10 +319,24 @@ export default {
 	width 180rpx
 	height 180rpx
 	border-radius 20rpx
+.dt-text
+	padding 10rpx
+	background-color #f0f0f0
+	overflow hidden
 .text-gray
 	color #8b8b8b
 .userSetting
 	position absolute
 	top 44rpx
 	right 30rpx
+.identify
+	width 30rpx
+	height 30rpx
+	position relative
+	top 5rpx
+	margin 0 6rpx 0 20rpx
+.sticker-image
+	border-radius 20rpx
+	width 220rpx
+	height 220rpx
 </style>

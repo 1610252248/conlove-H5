@@ -1,19 +1,37 @@
 {
+	"easycom": {
+		"^u-(.*)": "@/node_modules/uview-ui/components/u-$1/u-$1.vue",
+		"^c-(.*)": "@/components/conlove/c-$1.vue",
+		"^cu-(.*)": "@/colorui/components/cu-$1.vue"
+	},
 	"pages": [{
 		"path": "pages/home/index",
 		"style": {
 			"navigationStyle":"custom"
 		}
+	},{
+		"path": "pages/enter/index"
+		
 	}, {
 		"path": "pages/home/home",
 		"style": {
 			"navigationBarTitleText": "缘来",
-			"enablePullDownRefresh": true
+			"enablePullDownRefresh": true,
+			"h5": {
+				"pullToRefresh": {
+					"offset":"50px"
+				}
+			}
 		}
 	}, {
-		"path": "components/conlove/c-reply-comment",
+		"path": "pages/square/reply/post-reply-comment",
 		"style": {
-			"navigationBarTitleText": "回复评论"
+			"navigationStyle":"custom"
+		}
+	}, {
+		"path": "pages/square/reply/tree-reply-comment",
+		"style": {
+			"navigationStyle":"custom"
 		}
 	}, {
 		"path": "pages/square/square",
@@ -23,7 +41,7 @@
 	}, {
 		"path": "pages/release/add",
 		"style": {
-			"navigationBarTitleText": "发布缘来"
+			"navigationStyle":"custom"
 		}
 	}, {
 		"path": "pages/user/userEdit",
@@ -43,7 +61,7 @@
 	}, {
 		"path": "pages/user/otherUser",
 		"style": {
-			"navigationBarTitleText": "Ta的主页"
+			"navigationStyle":"custom"
 		}
 	}, {
 		"path": "pages/release/release",
@@ -61,10 +79,9 @@
 			"navigationStyle":"custom"
 		}
 	}, {
-		// "path": "pages/message/chat",
 		"path": "pages/message/HM-chat/HM-chat",
 		"style": {
-			"navigationBarTitleText": "聊天"
+			"navigationStyle":"custom"
 		}
 	}, {
 		"path": "pages/message/message",
@@ -77,24 +94,24 @@
 			"navigationBarTitleText": "帖子详情"
 		}
 	}, {
-		"path": "pages/message/receiveAppreciate",
+		"path": "pages/message/rec-appreciate",
 		"style": {
 			"navigationBarTitleText": "收到的赞"
 		}
 	}, {
-		"path": "pages/message/receiveComment",
+		"path": "pages/message/rec-comment",
 		"style": {
 			"navigationBarTitleText": "收到的评论"
 		}
 	}, {
-		"path": "pages/message/receiveLike",
+		"path": "pages/message/rec-conlove",
 		"style": {
 			"navigationBarTitleText": "收到的秋波"
 		}
 	},{
 		"path": "pages/square/postDetail",
 		"style": {
-			"navigationBarTitleText": "说说详情"
+			"navigationBarTitleText": "动态详情"
 		}
 	},{
 		"path": "pages/user/setting",
@@ -109,8 +126,7 @@
 	},{
 		"path": "pages/home/sub/userHome",
 		"style": {
-			"navigationBarTitleText": "Ta的缘来",
-			"enablePullDownRefresh": true
+			"navigationStyle":"custom"
 		}
 	},{
 		"path": "pages/enter/login",
@@ -135,10 +151,11 @@
 		"backgroundColor": "#FFFFFF"
 	},
 	"tabBar": {
-		"color": "#111111",
-		"selectedColor": "#111111",
+		"color": "#606266",
+		"selectedColor": "#ff4a2d",
 		"borderStyle": "white",
-		"backgroundColor": "#e6e6e6",
+		// "backgroundColor": "#e6e6e6",
+		"backgroundColor": "#F3F4F6",
 		"list": [{
 			"pagePath": "pages/home/home",
 			"iconPath": "static/tabar-image/home.png",

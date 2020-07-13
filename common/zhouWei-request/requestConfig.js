@@ -1,5 +1,9 @@
 import request from "./request";
-let baseUrl = "https://www.conlove.cn/api";
+// let baseUrl = "https://www.conlove.cn/api";
+// let baseUrl = "http://localhost:8181/api";
+// let baseUrl = "http://192.168.0.101:8181/api";
+// let baseUrl = "http://47.93.9.196:8282/api";
+let baseUrl = "http://39.96.59.80:8282/api";
 //可以new多个request来支持多个域名请求
 let $http = new request({
 	//接口请求地址
@@ -16,7 +20,7 @@ let $http = new request({
 	//是否显示请求动画
 	load: false,
 	//是否使用处理数据模板
-	isFactory:  false,
+	isFactory:  true,
 	//列表接口是否有加载判断
 	loadMore:  false,
 });
@@ -28,15 +32,15 @@ $http.requestStart = function (options) {
 		uni.showNavigationBarLoading();
 		if (options.load) {
 			//打开加载动画
-			uni.showLoading({
-				title: '加载中',
-				mask: true
-			});
+			// uni.showLoading({
+			// 	title: '加载中',
+			// 	mask: true
+			// });
 		}
 	}
 	requestNum += 1;
 	//请求前加入token
-	// options.headers['token'] = "1234568";
+	options.headers['token'] = uni.getStorageSync('token') ? uni.getStorageSync('token') : '';
 	// console.log("请求开始前", options);
 	return options;
 }
@@ -45,10 +49,12 @@ $http.requestEnd = function (options, resolve) {
 	//判断当前接口是否需要加载动画
 	requestNum = requestNum - 1;
 	if (requestNum <= 0) {
-		uni.hideLoading();
+		// uni.hideLoading();
 		uni.hideNavigationBarLoading();
 	}
-	if (resolve.errMsg && (resolve.errMsg != "request:ok" || resolve.statusCode && resolve.statusCode != 200)) { 
+	let code = resolve.statusCode;
+	//请求失败、未登录或登录已失效
+	if (resolve.errMsg &&  code && code != 200 && code != 1000 && code != 1001) { 
 		uni.showToast({
 			title: "网络错误，请检查一下网络",
 			icon: "none"
@@ -59,7 +65,7 @@ $http.requestEnd = function (options, resolve) {
 let loginPopupNum = 0;
 //所有接口数据处理（可在接口里设置不调用此方法）
 $http.dataFactory = function (options, resolve) {
-	console.log("接口返回结果", resolve);
+	// console.log("接口返回结果", resolve);
 	//设置回调默认值
 	var callback = {
 		//success数据是否请求成功状态
@@ -68,10 +74,10 @@ $http.dataFactory = function (options, resolve) {
 		result: ""
 	};
 	//判断数据是否请求成功
-	if (resolve.data.success) {
+	if (resolve.statusCode == "200") {
 		callback.success = true;
-		callback.result = resolve.data.data;
-	} else if (resolve.data.code == "1000" || resolve.data.code == "1001") {
+		callback.result = resolve.data;
+	} else if (resolve.statusCode == "1000" || resolve.statusCode == "1001") {
 		//未登录或登录已失效
 		if (loginPopupNum <= 0) {
 			loginPopupNum++;
@@ -80,30 +86,30 @@ $http.dataFactory = function (options, resolve) {
 				content: '此时此刻需要您登录喔~',
 				confirmText: "去登录",
 				cancelText: "再逛会",
-				success: function (res) {
+				success: (res) => {
 					loginPopupNum--;
 					if (res.confirm) {
 						uni.navigateTo({
-							url:"'/pages/login"
+							url:'/pages/enter/login'
 						});
 					}
 				}
 			});
 		}
-	} else { //其他错误提示
+	} 
+	else { //其他错误提示
 		//设置可以提示的时候
 		if (options.isPrompt) {
-			setTimeout(function () {
-				//提示后台接口抛出的错误信息
-				uni.showToast({
-					title: resolve.data.info,
-					icon: "none",
-					duration: 3000
-				});
-			}, 500);
+			//提示后台接口抛出的错误信息
+			uni.showToast({
+				title: '接口有错误'+resolve.data.msg,
+				icon: "none",
+			});
 		}
 		callback.result = resolve.data;
 	}
 	return callback;
 };
+$http.SUCCESS = 1
+$http.ERROR = 0
 export default $http;

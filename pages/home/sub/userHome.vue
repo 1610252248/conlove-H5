@@ -1,126 +1,90 @@
 <template>
 	<view>
-		<!-- <c-custom-mid style="margin-bottom: 90rpx;">
-			<block slot="center"><text style="color: #000000;">Ta的缘来</text></block>
-		</c-custom-mid> -->
-		<c-scroll @scrolltolower="lower" midHeight>
-			<c-home dotsShow :listData="listData" :isLoad="isLoad"></c-home>
+		<c-custom-mid><block slot="center">
+			{{userDB.nickName + '的缘来'}}
+		</block></c-custom-mid>
+		<c-scroll @scrolltolower="lower" midHeight >
+			<c-home :lists="list" :isLoad="isLoad" :dotsShow="isMy" 
+			 @chang-public="changPublic" @delete="deleteSticker"
+			 />
 		</c-scroll>
 	</view>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import cHome from '@/components/conlove/c-home.vue'
-import cCustomMid from '@/components/conlove/c-custom-mid.vue';
+import { mapState } from 'vuex';
 export default {
-	components: {
-		cHome, cCustomMid
+	computed: {
+		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapState(['userDB'])
 	},
-	
-	computed: mapState([
-	  // 映射 this.newHome 为 store.state.newHome
-	  'newHome'
-	]),
 	data() {
 		return {
-			listData: [], // 首页列表渲染的数据
-			currentPage: 1, //当前请求页
-			totalPage: 5, // 帖子总页数
+			list: [], // 首页列表渲染的数据
 			isNoData: false, //延迟2s拿数据
-			newData: {
-				id: 2,
-				images: ['/static/image/home.jpg'],
-				school: '西安电子科技大学',
-				grade: '研一',
-				hidePost: false,
-				sex: 0,
-				age: '1998-10-28',
-				height: 170,
-				userDto: {
-					avatarUrl: '/static/image/default.jpeg',
-					nickname: '测试小助手'
-				},
-				title: '缘来~~~~'
-			},
 			isLoad: false,
 			loadCnt: 0,
+			page: 1, //当前请求页
+			pageSize: 4, // 每页数量
+			totalPage: 0, // 总页数
+			isMy: false,
 		};
 	},
-	onLoad() {
-		// this.init();
-		// console.log(this.listData);
+	
+	onLoad({id}) {
+		this.init(id);
+		if(id == this.userDB.id) this.isMy = true;
+		this.$eventBus.$on('update-sticker', ()=>{
+			this.init(id)
+		})
 	},
-	onPullDownRefresh() {
-		// this.init();
-		setTimeout(() => {
-			uni.stopPullDownRefresh();
-		}, 1000);
-	},
-	onShow() {
-		this.listData = []
-		this.listData.push(...this.newHome)
-		this.listData.push(this.newData)
-		this.listData.push(this.newData)
-	},
+
 	methods: {
 		/**
 		 * 初始化拿数据,清空原数据之后请求
 		 */
-		init() {
-			this.currentPage = 1;
-			this.listData = [];
-			this.getListData();
-			// 延迟获取数据
-			this.isNoData = false;
-			setTimeout(() => {
-				this.isNoData = true;
-			}, 5000);
+		init(id) {
+			this.list = [];
+			this.page = 1;
+			this.getListData(id);
 		},
-	
+
 		/**
 		 * 获取首页列表的数据
 		 */
-		getListData() {
-			this.$http
-				.get('/homepage/getSticker', {
-					page: this.currentPage
-				})
-				.then(res => {
-					this.listData.push(...res.data.stickers);
-					this.totalPage = res.data.totalPage;
-				});
+		getListData(id) {
+			let data = {id, page: this.page, pageSize: this.pageSize}
+			this.$http.get('/user/getUserSticker', data).then(res => {
+				res = res.data;
+				this.totalPage = res.pages;
+				this.list.push(...res.list);
+				if(this.totalPage <= this.page) {
+					this.isLoad = true;
+				}
+			})
 		},
-	
+
 		/**
 		 * 页面触底，加载更多数据
 		 */
 		lower() {
+			// loadCnt 防止划多次
 			if(this.loadCnt > 0) return ;
 			if(this.isLoad) return ;
 			this.loadCnt++;
-			setTimeout(() => {
-				this.currentPage++;
-				if (this.currentPage <= this.totalPage) {
-					this.listData.push(this.newData);
-					this.listData.push(this.newData);
-					this.listData.push(this.newData);
-				} else {
-					this.isLoad = true;
-				}
-				this.loadCnt--;
-			},500)
-			
-			// this.getListData();
+			this.page++;
+			if (this.page <= this.totalPage) this.getListData();
+			else this.isLoad = true;
+			this.loadCnt--;
 		},
-	
+
 		/**
 		 * 获取性别图片地址
 		 */
 		getSexImage(sex) {
 			return require('@/static/image/' + (sex === 0 ? 'male.png' : 'female.png'));
 		},
-	
+
 		/**
 		 * 跳转首页详情
 		 */
@@ -128,9 +92,26 @@ export default {
 			uni.navigateTo({
 				url: '/pages/home/homeDetail?id=' + id
 			});
+		},
+		
+		// 公开/私有 
+		changPublic(idx) {
+			this.list[idx].isPublic ^= 1;
+			this.$http.post('/updateSticker', {sticker: this.list[idx]});
+		},
+		
+		// 删除帖子
+		deleteSticker(idx) {
+			this.$http.post('/deleteSticker',this.list[idx]).then(res => {
+				this.list.splice(idx, 1);
+			})
 		}
+		
+			
 	}
-}
+};
 </script>
 
-<style></style>
+<style lang="stylus">
+
+</style>

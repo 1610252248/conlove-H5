@@ -1,66 +1,64 @@
 <template>
 	<view>
-		<c-custom @send="send"><block slot="center">发表树洞</block></c-custom>
+		<c-custom @send="send"><block slot="center">发布树洞</block></c-custom>
 		<c-scroll scrollHight>
-			<view class="box-content radius margin-center" :style="{backgroundColor: data.color}">
+			<view class="box-content radius margin-center" :style="{ backgroundColor: data.bgColor }">
 				<textarea class="text-white  text-df padding-lr-xs" auto-height v-model="data.content" placeholder="此刻的想法..."></textarea>
 			</view>
 			<view class="bgcSelect flex justify-center align-center">
 				<text style="color: #919799;">背景色:</text>
-				<text class="cu-avatar sm round  margin-xs" :style="'background-color:' + item.color"
-				 v-for="(item, index) in ColorList" :key="index" @click="changColor(index)">
-					<text v-if="data.selectIndexColor == index" class="cuIcon-check"></text>
+				<text class="cu-avatar sm round  margin-xs" :style="'background-color:' + item" v-for="(item, index) in ColorList" :key="index" @click="changColor(index)">
+					<text v-if="activeIndex == index" class="cuIcon-check"></text>
 				</text>
 			</view>
 		</c-scroll>
+		<u-modal v-model="show" content="确定要发布吗？" :mask-close-able="true" @confirm="confirm" />
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
 export default {
 	data() {
 		return {
 			data: {
 				content: '',
-				color: '#ffadad',
-				selectIndexColor: 6,
+				bgColor: '#ffadad',
 				avatar: '',
-				createTime: '',
 			},
-			
-			ColorList: [
-				{ color: '#f94c4c' },
-				{ color: '#ff6c55' },
-				{ color: '#ffd259' },
-				{ color: '#9ad683' },
-				{ color: '#81c2eb' },
-				{ color: '#cd9fe0' },
-				{ color: '#ffadad' },
-				{ color: '#adabae' },
-				{ color: '#515151' }
-			]
+			show: false,
+			activeIndex: 6,
+			ColorList: ['#f94c4c', '#ff6c55', '#ffd259', '#9ad683', '#81c2eb', '#cd9fe0', '#ffadad', '#adabae', '#515151']
 		};
 	},
 	methods: {
-		...mapMutations({
-			addNewTreeHole: 'addNewTreeHole'
-		}),
-	
 		changColor(index) {
-			this.data.selectIndexColor = index;
-			this.data.color = this.ColorList[index].color;
+			this.data.activeIndex = index;
+			this.data.bgColor = this.ColorList[index];
 		},
 		send() {
+			if(this.data.content.length == 0) {
+				this.$u.toast('内容不能为空');
+				return ;
+			}
+			this.show = true;
+		},
+		confirm() {
 			// 随机头像
-			this.data.avatar = '/static/avatar-pool/avatar-' + Math.floor(Math.random()*6) + '.jpg';
-			this.data.createTime = this.$utils.dateUtils.currentDate();
-			console.log(this.data);
-			this.addNewTreeHole(this.data);
-			uni.switchTab({
-				url: '/pages/square/square'
+			this.data.avatar = '/static/avatar-pool/avatar-' + Math.floor(Math.random() * 6) + '.jpg';
+			
+			this.$http.post('/addTreeHole', this.data).then(res => {
+				// 全局事件 表明有新的数据，让树洞刷新
+				this.$eventBus.$emit("add-tree-hole");
+				this.$refs.uToast.show({
+					title: res.msg,
+					type: 'success',
+					isTab: true,
+					url: '/pages/square/square'
+				});
 			})
-		}
+			
+		},
 	}
 };
 </script>

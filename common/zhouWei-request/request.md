@@ -56,7 +56,7 @@ let data = await this.$http.post(
 
 # 本地服务器图片上传（支持多张上传）
 ```
-let data = await this.$http.urlImgUpload('flie/upload',{
+let data = await this.$http.urlImgUpload('file/upload',{
 	name:"后台接受文件key名称", //默认 file
 	count:"最大选择数",//默认 9
 	sizeType:"选择压缩图原图，默认两个都选",//默认 ['original', 'compressed']

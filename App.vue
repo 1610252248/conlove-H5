@@ -5,11 +5,12 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+	@import "node_modules/uview-ui/index.scss";
 	@import "colorui/main.css";
 	@import "colorui/icon.css";
 	@import "my.css";
-	
+
 	page {
 		background-color: #ffffff;
 		width: 100%;
@@ -17,6 +18,5 @@ export default {
 		margin: 0;
 		overflow: hidden;
 	}
-	
 	
 </style>

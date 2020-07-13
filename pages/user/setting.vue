@@ -12,6 +12,7 @@
 			<view class="title">退出登录</view>
 			<text class="cuIcon-right text-black"></text>
 		</view>
+		<u-toast ref="uToast" />
 	</c-scroll>
 </template>
 
@@ -27,20 +28,19 @@ export default {
 
 	methods: {
 		...mapActions([
-			'setIsLogin' // 将 `this.setIsLogin()` 映射为 `this.$store.dispatch('setIsLogin')`
+			'del' // 将 `this.del()` 映射为 `this.$store.dispatch('del')`
 		]),
 		Switch(e) {
 			this.isSwitch = e.detail.value;
 		},
 		logout() {
-			this.setIsLogin(false);
-			uni.showToast({
+			this.del();
+			this.$refs.uToast.show({
 				title: '退出登录成功',
-				icon: 'none'
+				type: 'primary',
+				url: '/pages/user/user',
+				isTab: true
 			})
-			setTimeout(()=>{
-				uni.navigateBack();
-			}, 1000);
 		}
 	}
 };

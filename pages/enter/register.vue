@@ -1,66 +1,124 @@
 <template>
-	<view class="zai-box">
-		<image src="/static/image/pic-login-head.png" mode="aspectFit" class="zai-logo"></image>
-		<view class="zai-form">
-			<input class="zai-input" v-model="user.userName" maxlength="10" placeholder="请输入用户名" />
-			<input class="zai-input" v-model="user.password" password placeholder="请输入密码" />
-			<input class="zai-input" v-model="user.checkPass" @blur="diffPassword = user.password != user.checkPass" password placeholder="请再输入一次密码" />
-			<input class="zai-input" v-model="user.inviteCode" placeholder="请输入注册邀请码" />
-			<radio-group class="margin-top-xm">
-				<label class="margin-sm">
-					<radio value="0" class="scale" color="#3F91E3" />
-					<text>男</text>
-				</label>
-				<label class="margin-sm">
-					<radio value="1" class="scale" color="#FF4A2D"  />
-					<text>女</text>
-				</label>
-			</radio-group>
-			<checkbox-group  @change="changRadio2">
-				<label class="flex align-center margin-xs">
-					<checkbox class='round blue scale' :class="isAgree?'checked':''" color="#FF4A2D"/>
-					已同意
-					<text class="text-black" style="text-decoration: underline;" @click="navToAgreement">《缘来服务协议》</text>
-				</label>
-				
-			</checkbox-group>
-			<button class="zai-btn">立即注册</button>
-			<view class="flex justify-center margin-top-xl" style="color: #94afce;">
-				<view>已有账号，</view>
-				<view @click="navToLogin" class="text-bold" style="text-decoration: underline;">点此登录</view>
-			</view>
+	<c-scroll midHeight>
+		<view class="zai-box">
+			<image src="/static/image/pic-login-head.png" mode="aspectFit" class="zai-logo"></image>
+			<!-- 表单 + 验证，规则是ruler，错误提示使用 toast -->
+			<u-form :label-width="0" class="zai-form" :model="form" ref="uForm" :errorType="['toast']">
+				<u-form-item required :label-width="0" prop="userName" :border-bottom="false"><input v-model="form.userName"  placeholder="请输入账号" /></u-form-item>
+				<u-form-item required :label-width="0" prop="password" :border-bottom="false"><input v-model="form.password" password placeholder="请输入密码" /></u-form-item>
+				<u-form-item required :label-width="0" prop="checkPass" :border-bottom="false">
+					<input v-model="form.checkPass" @blur="diffPassword = form.password != form.checkPass" password placeholder="请再输入一次密码" />
+				</u-form-item>
+				<u-form-item required :label-width="0" prop="nickName" :border-bottom="false"><input v-model="form.nickName" placeholder="请输入昵称" /></u-form-item>
+				<u-form-item required :label-width="0" prop="email" :border-bottom="false"><input v-model="form.email" placeholder="请输入邮箱" /></u-form-item>
+				<!-- 			<u-form-item required :label-width="0" prop="inviteCode" :border-bottom="false">
+					<input   v-model="form.inviteCode" placeholder="请输入注册邀请码" />
+				</u-form-item> -->
+				<u-form-item required :label-width="0" prop="sex" :border-bottom="false">
+					<u-radio-group v-model="form.sex">
+						<u-radio name="男" shape="circle">男</u-radio>
+						<u-radio name="女" shape="circle" active-color="#FF4A2D">女</u-radio>
+					</u-radio-group>
+				</u-form-item>
+				<u-form-item required :label-width="0" prop="isAgree" :border-bottom="false">
+					<u-checkbox-group>
+						<u-checkbox shape="circle" v-model="form.isAgree">
+							已同意
+							<u-link href="/pages/enter/serviceAgreement" color="#333333" under-line>《缘来服务协议》</u-link>
+						</u-checkbox>
+					</u-checkbox-group>
+				</u-form-item>
+				<!-- 按钮水波纹 -->
+				<u-button class="btn" :ripple="true" @click="register">立即注册</u-button>
+				<view class="margin-tb-xl" style="color: #94afce;">
+					已有账号，
+					<span @click="$u.route('/pages/enter/login')" class="navJump">点此登录</span>
+				</view>
+			</u-form>
+			<u-toast ref="uToast" />
 		</view>
-	</view>
+	</c-scroll>
 </template>
 
 <script>
 export default {
 	data() {
 		return {
-			user: {
+			form: {
 				userName: '',
 				password: '',
 				checkPass: '',
-				inviteCode: ''
+				nickName: '',
+				email: '',
+				inviteCode: '',
+				sex: '',
+				isAgree: false
 			},
-			diffPassword: false,
-			isAgree: false,
+			// 表单验证规则
+			rules: {
+				userName: [
+					{ required: true, message: '请输入账号' },
+					{ pattern: /^([a-zA-Z0-9]|[_]){3,12}$/, message: '账号只能有字母和数字、“_”，长度在3-12之间' }
+				],
+				password: [{ required: true, message: '请输入密码' }, { min: 6, max: 12, message: '密码长度在6-12之间' }],
+				checkPass: [
+					{ required: true, message: '请重新输入密码' },
+					{
+						validator: (rule, value) => {
+							return value === this.form.password;
+						},
+						message: '两次输入的密码不相等'
+					}
+				],
+				nickName: [{ required: true, message: '请输入昵称' }],
+				email: [
+					{ required: true, message: '请输入邮箱' },
+					{
+						validator: (rule, value) => {
+							return this.$u.test.email(value);
+						},
+						message: '请输入正确的邮箱'
+					}
+				],
+				sex: [{ required: true, message: '请选择性别' }],
+				isAgree: [
+					{
+						validator: (rule, value) => {
+							return value;
+						},
+						message: '请同意《缘来服务协议》'
+					}
+				]
+			}
 		};
 	},
+	// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
+	onReady() {
+		this.$refs.uForm.setRules(this.rules);
+	},
 	methods: {
-		navToLogin() {
-			uni.navigateTo({
-				url: '/pages/enter/login'
+		// 注册
+		register() {
+			this.$refs.uForm.validate(valid => {
+				// 表单验证成功
+				if (valid) {
+					console.log(this.form);
+					this.$http.post('/register', this.form).then(res => {
+						if(res.status == this.$http.SUCCESS) {
+							this.$refs.uToast.show({
+								title: res.msg,
+								type: 'success',
+								url: '/pages/enter/login'
+							})
+						} else {
+							this.$refs.uToast.show({
+								title: res.msg,
+								type: 'warning',
+							})
+						}
+					});
+				}
 			});
-		},
-		navToAgreement() {
-			uni.navigateTo({
-				url: '/pages/enter/serviceAgreement'
-			})
-		},
-		// 同意协议
-		changRadio2() {
-			this.isAgree = !this.isAgree;
 		}
 	}
 };
@@ -87,11 +145,9 @@ export default {
 	flex-direction column
 	justify-content center
 	align-items center
-.zai-input
+uni-input
 	background #ffffff
 	border 1px solid #a7b6d0
-	/* margin-top: 30upx; */
-	margin-bottom 30upx
 	border-radius 100upx
 	padding 14upx 40upx
 	height 76upx
@@ -99,30 +155,17 @@ export default {
 	font-size 30upx
 .input-placeholder, .zai-input
 	color #94afce
-.zai-label
-	padding 36upx 0
-	text-align center
+.btn
+	color #ffffff !important
+	background-color #ff4a2d !important
+	border-radius 1000px
 	font-size 30upx
-	color #a7b6d0
-.zai-btn
-	background #FF4A2D
-	width 61%
-	color #FFFFFF
-	border-radius 100upx
-	font-size 32upx
-.zai-btn-disable
-	background #ff65a3
-	width 98%
-	color #fff
-	border 0
-	border-radius 100upx
-	font-size 36upx
-.zai-btn:after
-	border 0
-/* 按钮点击效果 */
-.zai-btn.button-hover
-	transform translate(1upx, 1upx)
+	padding 0 100rpx
 .scale
 	transform scale(0.7)
-
+.navJump
+	font-weight 600
+	color #94afce
+	padding 1px
+	border-bottom 0.5px solid #859eb8;
 </style>

@@ -9,15 +9,14 @@
 			</view>
 			
 		</view>
-		<release-first  @next="next" v-show="basics == 0"/>
-		<release-second @back="back" @next-sec="nextSec" v-show="basics == 1"/>
+		<release-first :data="data"  @next="next" v-show="basics == 0"/>
+		<release-second :data="data.images" @back="back" @next-sec="nextSec" v-show="basics == 1"/>
 		<!-- <release-third  v-show="basics == 2"/> -->
-		
+		<u-toast ref="uToast" />
 	</c-scroll>
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
 import releaseFirst from '@/pages/release/releaseFirst.vue'
 import releaseSecond from '@/pages/release/releaseSecond.vue'
 export default {
@@ -33,30 +32,66 @@ export default {
 			],
 			basics: 0,
 			data: {
-				userDto: {
-					avatarUrl: '/static/img/face.jpg',
-					nickname: '祢豆子'
-				},
-			}
+				title: '',
+				sex: '',
+				school: '',
+				grade: '',
+				birthDate: '',
+				height: '',
+				introduce: '',
+				images: []
+			},
+			id: -1, // 表明不是修改页面过来的
 		}
 	},
-	methods: {
-		...mapMutations({
-			addNewHome: 'addNewHome'
-		}),
-		next(firstData) {
-			this.basics++;
-			this.data = Object.assign(this.data, firstData);
-		},
-		nextSec(images) {
-			this.data.images = images
-			this.data.id = Math.random() * 1000 + 1000;
-			this.addNewHome(this.data)
-			
-			console.log(this.data);
+	onBackPress() {
+		if(this.id == -1) {
 			uni.switchTab({
 				url: '/pages/home/home'
 			})
+			return true;
+		} 
+	},
+	onLoad({id}) {
+		if(id != null) {
+			this.id = id;
+			this.getSticker(id);
+		}
+	},
+	methods: {
+		getSticker(id) {
+			this.$http.get('/getModify/sticker/', {id}).then(res => {
+				this.data = res.data;
+			})
+		},
+		next(firstData) {
+			this.basics++;
+			this.data = firstData;
+		},
+		nextSec(images) {
+			// 修改
+			if(this.id != -1) {
+				this.$http.post('/updateSticker', {sticker: this.data, images}).then(res => {
+					this.$refs.uToast.show({
+						title: res.msg,
+						type: 'success',
+						back: true
+					})
+					this.$eventBus.$emit('update-sticker');
+				})
+			} else {
+				this.data.images = images
+				this.$http.post('/addSticker', this.data).then(res => {
+					this.$refs.uToast.show({
+						title: res.msg,
+						type: 'success',
+						url: '/pages/home/home',
+						isTab: true
+					})
+					this.$eventBus.$emit('add-sticker')
+				})
+			}
+			
 		},
 		back() {
 			this.basics--;

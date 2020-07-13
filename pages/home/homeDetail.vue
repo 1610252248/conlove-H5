@@ -1,32 +1,35 @@
 <template>
-	<view class="page-content">
-		<c-scroll :isAnimation="false" ref="scroll" minHeight v-if="Object.keys(sticker).length">
+	<view>
+		<c-scroll :scrollId="scrollId" :isAnimation="false" minHeight v-if="Object.keys(sticker).length" @scrolltolower="lower">
+			<!-- 用户信息 -->
 			<view class="user-info">
 				<view class="box-info-up">
-					<text class="fl">{{sticker.school + " | " + sticker.grade}}</text>
+					<text class="fl">{{ sticker.school + ' | ' + sticker.grade }}</text>
 					<image class="sex-image fl" :src="getSexImage(sticker.sex)"></image>
-					<text class="fr">{{$utils.getAge(sticker.age) + "岁 | " + sticker.height + "cm"}}</text>
+					<text class="fr">{{ $utils.getAge(sticker.birthDate) + '岁 | ' + sticker.height + 'cm' }}</text>
 				</view>
 				<view class="box-info-down">
-					<view class="user fl flex align-center" @click.stop="navToOtherUser">
-						<image class="userAvatar" :src="sticker.userDto.avatarUrl"></image>
-						<text class="box-userName text-cut">{{sticker.userDto.nickname}}</text>
+					<view class="user fl flex align-center" @click.stop="navToOtherUser(sticker.user.id)">
+						<image class="userAvatar" :src="sticker.user.avatar"></image>
+						<text class="box-userName text-cut">{{ sticker.user.nickName }}</text>
 					</view>
 					<view class="title fr flex align-center  text-bold">
 						<text class="cuIcon-notification"></text>
-						<text class="title-text text-cut">{{sticker.title}}</text>
+						<text class="title-text text-cut">{{ sticker.title }}</text>
 					</view>
 				</view>
 			</view>
 			<view class="user-info-image">
 				<!-- 喜欢按钮 -->
-				<view class="like-box" v-if="!isMyPost" @click="likeClick">
+				<view class="like-box" v-if="!isMySticker" @click="likeClick">
 					<image class="like" :src="isLike ? '/static/image/pic-like-active.png' : '/static/image/pic-like-normal.png'"></image>
 				</view>
 				<!-- 图片轮播 -->
 				<swiper class="card-swiper square-dot" indicator-dots circular autoplay @change="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
-					<swiper-item v-for="(item, index) in sticker.images" :key="index" :class="cardCur == index ? 'cur' : ''" @click="viewImage" :data-url="item">
-						<view class="swiper-item"><image :src="item" mode="aspectFill" ></image></view>
+					<swiper-item v-for="(item, index) in sticker.images" :key="index" :class="cardCur == index ? 'cur' : ''" >
+						<view class="swiper-item"  @click="viewImage(item.image)" >
+							<image :src="item.image" mode="aspectFill"/>
+						</view>
 					</swiper-item>
 				</swiper>
 				<!-- 帖子详情 -->
@@ -46,81 +49,91 @@
 					</view>
 				</view>
 				<!-- 评论 -->
-				<c-comment :showInfo="false" @scroll-to-bottom='scrollToBottom'></c-comment>
+				<c-comment id="comment"  :comments="comments" @change-like="changLike" :showInfo="false" />
 			</view>
+			<view class="cu-load" :class="!isLoad ? 'loading' : 'over'"/>
+			<u-toast ref="uToast" />
 		</c-scroll>
-		
-		
+		<c-input @send-comment="sendComment" />
 	</view>
 </template>
 
 <script>
-
-import cComment from '@/components/conlove/c-comment.vue';
+import { mapState } from 'vuex';
 export default {
-	components: {
-		cComment
+	computed: {
+		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapState(['userDB'])
 	},
 	data() {
 		return {
 			cardCur: 0,
-			sticker: {
-				school: '西安电子科技大学',
-				grade: '研一',
-				sex: 0,
-				age: '1998-10-28',
-				height: 170,
-				userDto: {
-					avatarUrl: '/static/image/default.jpeg',
-					nickname: '测试小助手'
-				},
-				title: '缘来~~~~',
-				images: [
-					'/static/image/view-1.jpg',
-					'/static/image/view-2.jpg',
-					'/static/image/view-3.jpg',
-				]
-			}, //帖子详情
-			imageList: [], //帖子图片对象
-			isMyPost: false, // 是否是自己发的帖子，如果是则不能点赞
-			isLike: false, // 用户是否点赞
+			sticker: {}, //帖子详情
+			isMySticker: false, // 是否是自己发的帖子，如果是则不能点赞
+			isLike: null, // 用户是否点赞
 			hotNums: [5, 10], // 点赞每超过几个有热度图标，暂时2个
-			inputValue: '' //用户评论的内容
+			page: 1,
+			pageSize: 8,
+			totalPage: 0,
+			stickerLike: {},
+			// 评论列表
+			comments: [],
+			// 用户赞过的评论
+			isLoad: false,
+			loadCnt: 0,
+			scrollId: '',
 		};
 	},
-	onLoad(option) {
-		// this.getData(option.id);
+	onLoad({ id }) {
+		this.getInfo(id);
+		this.comments = [];
+		this.getComments(id);
 	},
-
 	methods: {
 		/**
-		 * 获取请求
+		 * 获取帖子详情
 		 */
-		getData(stickerId) {
-			this.$http
-				.get('/homepage/getStickerById', {
-					stickerId: stickerId,
-					openid: '24f932581ad54fcc9a6aef8b09738a28'
-				})
-				.then(res => {
-					this.sticker = res.data.sticker;
-					this.imageList = this.sticker.images;
-					this.swiperList = this.sticker.images;
-					console.log(res);
-				});
+		getInfo(id) {
+			this.$http.get('/sticker', { id }).then(res => {
+				this.sticker = res.data.sticker;
+				// 是否对当前帖子用户发送秋波
+				if(res.data.friend != null) this.isLike = true
+				if (this.sticker.user.id == this.userDB.id) this.isMySticker = true;
+			});
 		},
-
+		getComments(id) {
+			let data = { id: id, page: this.page, pageSize: this.pageSize };
+			this.$http.get('/stickerComment', data).then(res => {
+				this.totalPage = res.data.pages;
+				if (this.page >= this.totalPage) this.isLoad = true;
+				this.getAppreciate(res.data.list);
+				console.log(this.comments);
+			});
+		},
+		getAppreciate(list) {
+			
+			this.$http.get('/sticker/commentAppreciate').then(res => {
+				let appreciateList = res.data;
+				for(let obj of list) {
+					let idx = appreciateList.findIndex(item => item.commentId == obj.id)
+					obj.isAppreciate = (idx == -1 ? false : true);
+					this.comments.push(obj)
+				}
+			});
+		},
 		/**
 		 * 获取性别图片地址
 		 */
 		getSexImage(sex) {
-			return require('@/static/image/' + (sex === 0 ? 'male.png' : 'female.png'));
+			return require('@/static/image/' + (sex === '男' ? 'male.png' : 'female.png'));
 		},
 
-		viewImage(e) {
+		viewImage(url) {
+			let images = [];
+			for(let obj of this.sticker.images) images.push(obj.image)
 			uni.previewImage({
-				urls: this.sticker.images,
-				current: e.currentTarget.dataset.url,
+				urls: images,
+				current: url
 			});
 		},
 
@@ -128,41 +141,59 @@ export default {
 		cardSwiper(e) {
 			this.cardCur = e.detail.current;
 		},
+
 		
+		/**
+		 * @param {Object} id 评论id
+		 * @param {Object} isLike 是否点赞
+		 */
+		changLike(id, isLike) {
+			if (!isLike) { 
+				this.$http.post('/sticker/addCommentLike', { commentId: id });
+			} else {
+				this.$http.get('/sticker/delCommentLike', { id});
+			}
+		},
 		
-		likeClick(){
-			this.isLike = !this.isLike;
-			uni.showToast({
-				title: this.isLike ? "暗送秋波~" : "取消秋波",
-				icon: 'none'
+		likeClick() {
+			this.$http.post('/changFriend', {userId: this.userDB.id, friendId: this.sticker.user.id}).then(res => {
+				this.isLike = !this.isLike;
 			})
+		},
+
+		// 跳转用户资料
+		navToOtherUser(id) {
+			this.$u.route('/pages/user/otherUser', {id})
+		},
+		// 发送评论
+		sendComment(content) {
+			this.scrollId = '';
+			this.$http.post('/sticker/sendComment', { content, stickerId: this.sticker.id }).then(res => {
+				let comment = res.data;
+				comment.user = this.userDB;
+				this.comments.unshift(comment);
+				this.$refs.uToast.show({ title: res.msg, type: 'success' });
+				this.scrollId = 'comment';
+			});
 		},
 		/**
-		 * 发送评论之后回到最底部
+		 * 页面触底，加载更多数据
 		 */
-		scrollToBottom() {
-			// console.log('bbbbbbbbbbb');
-			this.$refs.scroll.toBottom();
-		},
-		// 跳转用户资料
-		navToOtherUser() {
-			//当前统一跳转 其它用户
-			uni.navigateTo({
-				url: '/pages/user/otherUser'
-			})
+		lower() {
+			// loadCnt 防止划多次
+			if (this.loadCnt > 0) return;
+			if (this.isLoad) return;
+			this.loadCnt++;
+			this.page++;
+			if (this.page <= this.totalPage) this.getComments(this.sticker.id);
+			else this.isLoad = true;
+			this.loadCnt--;
 		}
 	}
 };
 </script>
 
 <style lang="stylus">
-.scroll-view
-	height 100vh
-	/* #ifdef  H5 */
-	height calc(100vh - 80px)
-	/* #endif */
-	overflow scroll
-	width 100%
 .user-info
 	width 100%
 	color #333333
@@ -209,11 +240,10 @@ export default {
 	height 630rpx !important
 	.praise-wall
 		width 100%
-
 .on-right
 	margin-left auto
 	margin-right 0
-.input-fixed 
+.input-fixed
 	position fixed
 	bottom 0
 	width 100%

@@ -10,23 +10,28 @@
 				</text>
 			</view>
 			<view class="fr margin-right">
-				<button class="cu-btn sm bg-red" @click="send">发布</button>
+				<button class="cu-btn sm bg-red" @click="send">{{sendName}}</button>
 			</view>
 		</view>
+		<view style="height: 90rpx;" />
 	</view>
 </template>
 
 <script>
 	export default {
+		props: {
+			sendName: {
+				type: String,
+				default: '发布'
+			},
+		},
 		methods: {
 			BackPage() {
-				if(getCurrentPages().length == 1) {
+				if(getCurrentPages() && getCurrentPages().length == 1) {
 					history.back();
 					return ;
 				} 
-				uni.navigateBack({
-					delta: 1
-				});
+				uni.navigateBack();
 				// history.back();
 			},
 			send() {
@@ -43,8 +48,7 @@
 	width 100%
 	height 90rpx
 	line-height 90rpx
-	margin-bottom 90rpx
-	z-index 9999
+	z-index 111
 	background-color white
 .text-icon 
 	font-size 40rpx

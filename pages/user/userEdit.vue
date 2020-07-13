@@ -10,15 +10,16 @@
 					</view>
 					<view class="title">
 						<text class="left-text ">昵称</text>
-						<view class="margin-left flex"><input class="input-weight" type="text" v-model="user.name" /></view>
+						<view class="margin-left flex">
+							<input  placeholder="请输入昵称" class="input-weight" type="text" v-model="user.nickName" />
+						</view>
 					</view>
 					<view class="title">
 						<text class="left-text">性别</text>
 						<view class="margin-left title">
 							<picker @change="sexChange" :range="sexPicker">
 								<view class="input-border input-weight">
-									<text v-if="user.sex == 2">请选择</text>
-									<text v-else>{{ user.sex ? '女' : '男' }}</text>
+									{{user.sex}}
 									<text class="cuIcon-triangledownfill fr"></text>
 								</view>
 							</picker>
@@ -29,7 +30,7 @@
 						<view class="margin-left title">
 							<picker mode="date" @change="dateChange" :start="startDate" :end="endDate">
 								<view class="input-border input-weight">
-									{{ user.date }}
+									<text :class="user.birthDate == null ? 'text-placeholder' : ''">{{user.birthDate == null ? '请选择' : user.birthDate}}</text>
 									<text class="cuIcon-triangledownfill fr"></text>
 								</view>
 							</picker>
@@ -37,12 +38,12 @@
 					</view>
 					<view class="title">
 						<text class="left-text">常住地</text>
-						<view class="margin-left"><input class="input-weight" type="text" v-model="user.city" /></view>
+						<view class="margin-left"><input placeholder="请输入常住地" class="input-weight" type="text" v-model="user.city" /></view>
 					</view>
 					<view class="flex" style="margin-top: 6rpx;">
 						<text class="left-text">个性签名</text>
-						<textarea placeholder="介绍自己的个性签名吧~~" class="textarea-border" maxlength="30" v-model="user.sign" />
-						<text class="totalNum">{{ introduce.length }}/30</text>
+						<textarea placeholder-class="text-placeholder" placeholder="介绍自己的个性签名吧~~" class="textarea-border" maxlength="30" v-model="user.sign" />
+						<text class="totalNum">{{user.introduce == null ? 0 : user.introduce.length }}/30</text>
 					</view>
 				</view>
 			</view>
@@ -52,18 +53,20 @@
 				<view class="padding-left text-sm">
 					<view class="title">
 						<text class="left-text">学校</text>
-						<view class="margin-left"><input class="input-weight" type="text" :value="user.school" /></view>
+						<view class="margin-left">
+							<input placeholder="请输入学校" class="input-weight" type="text" v-model="user.school" />
+							</view>
 					</view>
 					<view class="title">
 						<text class="left-text">专业</text>
-						<view class="margin-left"><input class="input-weight" type="text" :value="user.major" /></view>
+						<view class="margin-left"><input placeholder="请输入专业" class="input-weight" type="text" v-model="user.major" /></view>
 					</view>
 					<view class="title">
 						<text class="left-text">在校情况</text>
 						<view class="margin-left title">
 							<picker @change="gradeChange" :range="gradePicker">
 								<view class="input-border input-weight">
-									{{ user.grade }}
+									<text :class="user.grade == null ? 'text-placeholder' : ''">{{user.grade == null ? '请选择' : user.grade}}</text>
 									<text class="cuIcon-triangledownfill fr"></text>
 								</view>
 							</picker>
@@ -77,7 +80,7 @@
 				<!-- 关键词导航栏 -->
 				<view class="text-sm">
 					<view class="card-item">关键词</view>
-					<view class="card-item" :class="index == TabCur ? 'cur' : ''" v-for="(item, index) in infoList" :key="index" @tap="tabSelect(index)">{{ item.name }}</view>
+					<view class="card-item" :class="index == TabCur ? 'cur' : ''" v-for="(item, index) in infoList" :key="index" @tap="TabCur=index">{{ item.name }}</view>
 				</view>
 				<!-- 关键词内容 -->
 				<view class="text-sm margin-top-sm">
@@ -103,7 +106,7 @@
 					<text class="title text-nowrap margin-right-xs margin-left">已选</text>
 					<view class="text-sm">
 						<view class="flex flex-wrap">
-							<view class="info-tag" :class="getTagColor(index)" v-for="(item, index) in selectTagList" :key="index">{{ item }}</view>
+							<view class="info-tag" :class="getTagColor(index)" v-for="(item, index) in selectTagList" :key="index">{{ item.name }}</view>
 						</view>
 					</view>
 				</view>
@@ -113,39 +116,39 @@
 					<!-- <text class="totalNum">{{introduce.length}}/30</text> -->
 				</view>
 			</view>
-			<view class="flex  padding-top-xl margin-top justify-center"><button class="cu-btn bg-red round" @click="save">保存</button></view>
-			<view class="flex margin-top margin-bottom justify-center"><button class="cu-btn bg-grey round" @click="back">取消</button></view>
+			<view class="flex padding-top-xl margin-top justify-center">
+				<u-button class="btn bg-redd " :ripple="true" @click="save">保存</u-button>
+			</view>
+			<view class="flex margin-top margin-bottom justify-center">
+				<u-button class="btn bg-greyy" :ripple="true" @click="show = true">取消</u-button>
+			</view>
 		</c-scroll>
+		<u-modal v-model="show" title="哎呀" cancel-text="手滑手滑" show-cancel-button
+		content="信息还没保存，确定取消吗？" :mask-close-able="true" @confirm="confirm" />
+		<u-toast ref="uToast" />
 	</view>
 </template>
 
 <script>
+import { mapState, mapActions } from 'vuex';
 export default {
+	computed: {
+		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapState(['userDB'])
+	},
 	data() {
 		return {
 			//个人资料
-			user: {
-				name: 'BobBobo',
-				avatar: '/static/img/face.jpg',
-				sex: '2',
-				date: '请选择',
-				city: '西安',
-				sign: '我有我的奥妙',
-				school: '西安电子科技大学',
-				major: '计算机专业',
-				grade: '研一', //在校情况
-				introduce: '约桌游吗~'
-			},
-			introduce: '',
+			user: {},
 			isFemale: false,
-			sexIndex: 0,
 			sexPicker: ['男', '女'],
 			startDate: '1985-01-01',
 			endDate: '2100-01-01',
-			gradeIndex: 0,
 			gradePicker: ['已工作', '博士', '研三', '研二', '研一', '大四', '大三', '大二', '大一'],
 			TabCur: 0,
-			selectTagList: ['吃鸡', '王者荣耀', '工学类'],
+			show: false,
+			selectTagList: [],
+			colorList: ['bg-red', 'bg-yellow', 'bg-blue'],
 			infoList: [
 				{
 					name: '专业',
@@ -179,19 +182,29 @@ export default {
 			]
 		};
 	},
+	onLoad() {
+		// 加载数据
+		this.init();
+	},
 	methods: {
+		...mapActions([
+			'set' // 将 `this.setIsLogin()` 映射为 `this.$store.dispatch('setIsLogin')`
+		]),
+		init() {
+			this.user = this.userDB;
+			// 获取用户标签
+			this.$http.get('/userLabel', { id: this.user.id }).then(res => {
+				this.selectTagList = res.data;
+			});
+		},
 		sexChange(e) {
-			this.user.sex = e.detail.value;
-			this.sex = this.sexPicker[e.detail.value];
+			this.user.sex = this.sexPicker[e.detail.value];
 		},
 		dateChange(e) {
-			this.user.date = e.detail.value;
+			this.user.birthDate = e.detail.value;
 		},
 		gradeChange(e) {
 			this.user.grade = this.gradePicker[e.detail.value];
-		},
-		tabSelect(index) {
-			this.TabCur = index;
 		},
 		// 换一批 个性展示
 		changeList() {
@@ -200,89 +213,65 @@ export default {
 			//
 			if (info.index + 1 < info.list.length) info.index++;
 			else {
-				uni.showToast({
-					title: '没有其他标签了',
-					icon: 'none'
-				});
+				this.$u.toast('没有其他标签了');
 				info.index = 0;
 			}
 		},
 		//获取导航栏选中的 颜色
 		getTabColor(tab) {
-			if (this.selectTagList.find(item => item === tab)) {
+			if (this.selectTagList.find(item => item.name === tab)) {
 				return this.getTagColor(this.TabCur);
 			}
 			return 'tag-border';
 		},
 		// 获取选中标签的 颜色
 		getTagColor(idx) {
-			idx %= 3;
-			let color = '';
-			switch (idx) {
-				case 0:
-					color = 'bg-red';
-					break;
-				case 1:
-					color = 'bg-yellow';
-					break;
-				case 2:
-					color = 'bg-blue';
-					break;
-			}
-			return color;
+			return this.colorList[idx%3];
 		},
 		// 选中/取消 标签
-		changeTag(tab) {
-			let idx = this.selectTagList.findIndex(item => item === tab);
-			if (idx != -1) {
-				this.selectTagList.splice(idx, 1);
-			} else {
-				this.selectTagList.push(tab);
-			}
+		changeTag(label) {
+			let idx = this.selectTagList.findIndex(item => item.name === label);
+
+			let obj = { name: label, userId: this.userDB.id };
+			// 后端修改
+			this.$http.post('/updateLabel', obj);
+
+			if (idx != -1) this.selectTagList.splice(idx, 1);
+			else this.selectTagList.push(obj);
 		},
 		// 更新头像
 		updateAvatar() {
-			uni.chooseImage({
-				success: res => {
-					this.user.avatar = res.tempFilePaths[0];
-				}
-			});
+			this.$http.urlImgUpload('/fileUpload').then(res => {
+				this.user.avatar = res[0];
+			})
 		},
 		save() {
-			uni.showLoading();
-			setTimeout(() => {
-				uni.hideLoading();
-				uni.showToast({
-					title: '用户已保存信息',
-					icon: 'none'
-				});
-			}, 500);
-			console.log(this.user);
-		},
-		back() {
-			uni.showModal({
-				title: '哎呀',
-				content: '信息还没保存，确定取消吗？',
-				cancelText: '手滑手滑',
-				success: function(res) {
-					if (res.confirm) {
-						console.log('用户点击确定');
-					} else if (res.cancel) {
-						console.log('用户点击取消');
-					}
+			this.$http.post('/updateUserInfo', this.user).then(res => {
+				if(res.status == this.$http.SUCCESS) {
+					this.set({user:this.user});
+					this.$refs.uToast.show({
+						title: res.msg,
+						type: 'success',
+						url: '/pages/user/user',
+						isTab: true
+					})
+					this.$eventBus.$emit("update-user-info");
 				}
-			});
-		}
+			})
+		},
+		confirm() {
+			console.log('用户点击确定');
+		},
 	}
 };
 </script>
 
 <style lang="stylus">
 .card
-	box-shadow: 0px 2px 5px #EDEDED;
+	box-shadow 0px 2px 5px #EDEDED
 	width 86%
 	margin 40rpx auto
-	border: 1px solid #cecece;
+	border 1px solid #cecece
 	border-radius 15rpx
 	color black
 	padding 30rpx 20rpx
@@ -311,7 +300,7 @@ export default {
 uni-input
 	padding 0 20rpx
 	font-size 24rpx
-	color #8b8b8b
+	color #414141;
 	border-radius 15rpx
 	border 1rpx solid #a7a7a7
 .input-weight
@@ -321,7 +310,7 @@ uni-input
 .input-border
 	height 1.4em
 	line-height 1.4em
-	color #8b8b8b
+	color #414141;
 	font-size 24rpx
 	padding 0 20rpx
 	border-radius 15rpx
@@ -331,7 +320,7 @@ uni-input
 .textarea-border
 	width 380rpx
 	max-height 120rpx !important
-	color #8b8b8b
+	color #414141;
 	font-size 24rpx
 	margin 0 0 0 30rpx
 	padding 0 20rpx
@@ -369,4 +358,19 @@ uni-input
 .cu-btn
 	padding 0 80rpx
 	height 64rpx
+.text-placeholder,.uni-input-placeholder,.input-placeholder
+	color: rgb(192, 196, 204);
+.btn
+	border-radius 1000px
+	font-size 30upx
+	height 70rpx
+	padding 0 90rpx
+.bg-redd 
+	color #ffffff !important
+	background-color #ff4a2d !important
+.bg-greyy 
+	background-color: #8799a3!important
+	color: #ffffff!important
+
+	
 </style>
