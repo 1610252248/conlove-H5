@@ -13,6 +13,8 @@
 				<view class="action text-grey text-xs">{{ $utils.dateUtils.format(item.time) }}</view>
 			</view>
 		</view>
+		<!-- 没有更多数据 -->
+		<view class="cu-load over"  />
 	</view>
 </template>
 

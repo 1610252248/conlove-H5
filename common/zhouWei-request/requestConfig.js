@@ -1,9 +1,10 @@
 import request from "./request";
+import store from '@/store'
 // let baseUrl = "https://www.conlove.cn/api";
 // let baseUrl = "http://localhost:8181/api";
-// let baseUrl = "http://192.168.0.101:8181/api";
-// let baseUrl = "http://47.93.9.196:8282/api";
-let baseUrl = "http://39.96.59.80:8282/api";
+// let baseUrl = "http://192.168.0.102:8181/api";
+// let baseUrl = "http://47.93.9.196:8282/api"; // 1核
+let baseUrl = "http://39.96.59.80:8282/api"; // 2核 服务器
 //可以new多个request来支持多个域名请求
 let $http = new request({
 	//接口请求地址
@@ -61,6 +62,7 @@ $http.requestEnd = function (options, resolve) {
 		});
 	}
 }
+
 //登录弹窗次数
 let loginPopupNum = 0;
 //所有接口数据处理（可在接口里设置不调用此方法）
@@ -80,6 +82,7 @@ $http.dataFactory = function (options, resolve) {
 	} else if (resolve.statusCode == "1000" || resolve.statusCode == "1001") {
 		//未登录或登录已失效
 		if (loginPopupNum <= 0) {
+			store.dispatch('del')
 			loginPopupNum++;
 			uni.showModal({
 				title: '温馨提示',

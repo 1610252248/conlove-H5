@@ -29,27 +29,7 @@
 			</view>
 		
 			<!-- 学校信息 -->
-			<view class="card">
-				<view class="margin-bottom-xs">
-					<text>学校信息</text>
-					<image class="identify" src="/static/image/identify.png"></image>
-					<text class="text-sm" style="color: #68dbdf;">已提交认证材料</text>
-				</view>
-				<view class="padding-left text-sm">
-					<view>
-						<text>学校</text>
-						<text class="text-gray margin-left">{{ user.school }}</text>
-					</view>
-					<view>
-						<text>专业</text>
-						<text class="text-gray margin-left">{{ user.major }}</text>
-					</view>
-					<view>
-						<text>年级</text>
-						<text class="text-gray margin-left">{{ getGrade() }}</text>
-					</view>
-				</view>
-			</view>
+			<c-school :user="user"  />
 		
 			<!-- 个性展示 -->
 			<view class="card">
@@ -111,7 +91,7 @@
 </template>
 
 <script>
-import { mapState} from 'vuex';
+import { mapState } from 'vuex';
 export default {
 	computed: {
 		// 使用对象展开运算符将 getter 混入 computed 对象中

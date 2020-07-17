@@ -45,29 +45,9 @@
 					</view>
 				</view>
 			</view>
-
+			
 			<!-- 学校信息 -->
-			<view class="card">
-				<view class="margin-bottom-xs">
-					<text>学校信息</text>
-					<!-- <image class="identify" src="/static/image/identify.png"></image> -->
-					<!-- <text class="text-sm" style="color: #68dbdf;">已提交认证材料</text> -->
-				</view>
-				<view class="padding-left text-sm">
-					<view>
-						<text>学校</text>
-						<text class="text-gray margin-left">{{ user.school }}</text>
-					</view>
-					<view>
-						<text>专业</text>
-						<text class="text-gray margin-left">{{ user.major }}</text>
-					</view>
-					<view>
-						<text>年级</text>
-						<text class="text-gray margin-left">{{ getGrade() }}</text>
-					</view>
-				</view>
-			</view>
+			<c-school :user="user" @nav-to-school="navToSchool" />
 
 			<!-- 个性展示 -->
 			<view class="card">
@@ -138,8 +118,7 @@ export default {
 			//用户选择的标签
 			selectTagList: [],
 
-			//计算年级使用的映射
-			gradeList: { 一: 1, 二: 2, 三: 3, 四: 4 },
+			
 
 			// 是否身份认证
 			isIdentity: true,
@@ -201,15 +180,7 @@ export default {
 			});
 		},
 
-		// 获取年级
-		getGrade() {
-			if (this.user.grade == null) return null;
-			let grade = this.user.grade;
-			if (grade === '已工作') return grade;
-			let year = this.$utils.dateUtils.currentDate().split('-')[0] - this.gradeList[grade[1]];
-			let str = year + '级' + (grade[0] === '研' ? '硕士' : '本科');
-			return str;
-		},
+	
 		// 获取选中标签的 颜色
 		getTagColor(idx) {
 			idx %= 3;
@@ -267,6 +238,10 @@ export default {
 		// 登录跳转
 		navToLogin() {
 			this.$u.route('/pages/enter/login');
+		},
+		// 学校信息跳转
+		navToSchool() {
+			this.$u.route('/pages/user/school', {id: this.user.id})
 		}
 	}
 };
@@ -329,12 +304,7 @@ export default {
 	position absolute
 	top 44rpx
 	right 30rpx
-.identify
-	width 30rpx
-	height 30rpx
-	position relative
-	top 5rpx
-	margin 0 6rpx 0 20rpx
+
 .sticker-image
 	border-radius 20rpx
 	width 220rpx

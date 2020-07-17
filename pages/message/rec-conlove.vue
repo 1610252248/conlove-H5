@@ -20,6 +20,8 @@
 				</view>
 			</view>
 		</view>
+		<!-- 没有更多数据 -->
+		<view class="cu-load over"  />
 		<u-toast ref="uToast" />
 	</view>
 </template>

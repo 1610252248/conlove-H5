@@ -2954,7 +2954,7 @@ scroll-view.cu-steps .cu-item {
 .grid.grid-square>view {
 	margin-right: 10upx;
 	margin-bottom: 10upx;
-	/* border-radius: 6upx; */
+	border-radius: 6upx;
 	position: relative;
 	overflow: hidden;
 }

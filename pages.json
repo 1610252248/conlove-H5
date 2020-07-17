@@ -49,6 +49,21 @@
 			"navigationBarTitleText": "编辑资料"
 		}
 	}, {
+		"path": "pages/user/modify-school",
+		"style": {
+			"navigationBarTitleText": "学校信息"
+		}
+	}, {
+		"path": "pages/user/view-school",
+		"style": {
+			"navigationBarTitleText": "学校信息"
+		}
+	}, {
+		"path": "pages/user/school",
+		"style": {
+			"navigationBarTitleText": "学校信息"
+		}
+	}, {
 		"path": "pages/square/treeHoleDetail",
 		"style": {
 			"navigationBarTitleText": "树洞详情"
