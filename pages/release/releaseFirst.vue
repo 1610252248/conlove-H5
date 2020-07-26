@@ -4,18 +4,20 @@
 			<u-form-item label="标题" prop="title">
 				<u-input inputAlign="right" v-model="form.title" placeholder="请输入发帖的标题(最多14个字)" maxlength="14" />
 			</u-form-item>
-			<u-form-item label="学校" prop="school"><u-input inputAlign="right"  v-model="form.school" placeholder="请输入学校"></u-input></u-form-item>
+			<u-form-item label="学校" prop="school">
+				<u-input inputAlign="right" type="select" v-model="form.school" placeholder="请选择学校" @click="$refs.schoolPicker.show()"/>
+			</u-form-item>
 			<u-form-item label="性别" prop="sex">
-				<u-input inputAlign="right" type="select"  v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"></u-input>
+				<u-input inputAlign="right" type="select" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true"/>
 			</u-form-item>
 			<u-form-item label="年级" prop="grade">
-				<u-input inputAlign="right" type="select"  v-model="form.grade" placeholder="请选择年级" @click="gradeShow = true"></u-input>
+				<u-input inputAlign="right" type="select" v-model="form.grade" placeholder="请选择年级" @click="gradeShow = true"/>
 			</u-form-item>
 			<u-form-item label="生日" prop="birthDate">
-				<u-input inputAlign="right" type="select"  v-model="form.birthDate" placeholder="请选择生日" @click="dateShow = true"></u-input>
+				<u-input inputAlign="right" type="select" v-model="form.birthDate" placeholder="请选择生日" @click="dateShow = true"/>
 			</u-form-item>
 			<u-form-item label="身高" prop="height">
-				<u-input inputAlign="right" type="number" v-model="form.height" placeholder="请输入身高"></u-input>
+				<u-input inputAlign="right" type="number" v-model="form.height" placeholder="请输入身高"/>
 			</u-form-item>
 			<u-form-item label="关于你" labelWidth="120" prop="introduce">
 				<u-input type="textarea"  placeholder="介绍下你自己, 收到的秋波的可能性更高哦~ (最少10个字)" v-model="form.introduce" />
@@ -24,6 +26,7 @@
 		<u-select v-model="sexShow" :list="sexPicker" @confirm="sexChange"></u-select>
 		<u-select v-model="gradeShow" :list="gradePicker" @confirm="gradeChange"></u-select>
 		<u-picker v-model="dateShow" mode="time" @confirm="dataChange"></u-picker>
+		<schoolPicker themeColor="#097fff" ref="schoolPicker" @onConfirm="onConfirm" />
 		
 		<view class="flex padding-top-xl margin-top justify-center"><u-button class="btn" :ripple="true" @click="next">下一步</u-button></view>
 	</c-scroll>
@@ -96,6 +99,19 @@ export default {
 	},
 	// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
 	methods: {
+		/**
+		 * 确认学校选择
+		 */
+		onConfirm(e) {
+			const school = e.label.split("-")[2];
+			// console.log(`源数据:${JSON.stringify(e)}`);
+			if (school === '暂未收录') {
+				return;
+			} else {
+				this.form.school = school;
+				// console.log(`学校:${school}`);
+			}
+		},
 		/* 数据绑定 */
 		gradeChange(e) {
 			this.form.grade = e[0].label;

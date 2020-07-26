@@ -8,6 +8,8 @@ export default {
 		this.$http.get('/user/refreshUser').then(res => {
 			if(res.status == this.$http.SUCCESS) {
 				this.set({user: res.data});
+			} else {
+				this.del()
 			}
 		})
 	},
@@ -17,7 +19,7 @@ export default {
 	},
 	methods: {
 		...mapActions([
-			'set' // 将 `this.setIsLogin()` 映射为 `this.$store.dispatch('setIsLogin')`
+			'set', 'del' // 将 `this.setIsLogin()` 映射为 `this.$store.dispatch('setIsLogin')`
 		])
 	}
 };

@@ -42,19 +42,6 @@ function getAge(strBirthday) {
 	return returnAge; //返回周岁年龄
 }
 
-// 一级登录验证
-function needLogin() {
-	uni.showToast({
-		title: '请登录后操作',
-		icon: "none",
-		duration: 2000,
-		success: () => {
-			uni.navigateTo({
-				url: '/pages/index/login'
-			})
-		}
-	})
-}
 
 var dateUtils = {
 	// 重要的执行方法
@@ -255,11 +242,16 @@ var dateUtils = {
 	}
 };
 
+function viewImage(url) {
+	uni.previewImage({
+		urls: [url],
+		current: url
+	})
+}
 
 
 module.exports = {
 	getAge,
-	// fromNow: fromNow,
-	needLogin,
-	dateUtils
+	dateUtils,
+	viewImage
 }

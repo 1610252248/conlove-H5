@@ -60,7 +60,6 @@ export default {
 		getMessage() {
 			this.$http.get('/getMessage').then(res => {
 				res = res.data;
-				console.log(res);
 				this.lists[0].tag = res.conlove;
 				this.lists[1].tag = res.comment;
 				this.lists[2].tag = res.appreciate;
@@ -68,7 +67,6 @@ export default {
 		},
 		getFriend() {
 			this.$http.get('/message/getFriend').then(res => {
-				console.log(res);
 				this.friends = res.data;
 			})
 		},

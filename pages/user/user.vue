@@ -26,8 +26,9 @@
 						<view @click="navToSetting" class="padding-xs cuIcon-settings"></view>
 					</view>
 					<view class="flex justify-start align-center padding-top">
-						<view class="cu-avatar round xl margin-left" :style="{ backgroundImage: 'url(' + user.avatar + ')' }">
-							<view class="cu-tag lg badge" :class="!user.sex ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'"></view>
+						<view class="cu-avatar round xl margin-left" @click="$utils.viewImage(user.avatar)"
+						 :style="{ backgroundImage: 'url(' + user.avatar + ')' }">
+							<view class="cu-tag lg badge" :class="user.sex == '女' ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'"></view>
 						</view>
 
 						<view class="content margin-left text-black margin-top-sm">
@@ -118,8 +119,6 @@ export default {
 			//用户选择的标签
 			selectTagList: [],
 
-			
-
 			// 是否身份认证
 			isIdentity: true,
 
@@ -153,7 +152,7 @@ export default {
 	methods: {
 		/* 获取个性展示标签，缘来和动态 */
 		init() {
-			this.user = this.userDB;
+			this.user = this.$u.deepClone(this.userDB);
 			this.getUserLabel();
 			this.getData();
 		},
@@ -201,7 +200,6 @@ export default {
 		// 获取年龄
 		getAge() {
 			if (this.user.birthDate == null) return null;
-
 			return this.$utils.dateUtils.GetAge(this.user.birthDate) + '岁';
 		},
 		// 获取星座

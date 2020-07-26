@@ -57,6 +57,7 @@ export default {
 			this.id = id;
 			this.getSticker(id);
 		}
+		this.$http.get('/verifyLogin')
 	},
 	methods: {
 		getSticker(id) {

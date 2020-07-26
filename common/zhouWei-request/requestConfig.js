@@ -95,6 +95,10 @@ $http.dataFactory = function (options, resolve) {
 						uni.navigateTo({
 							url:'/pages/enter/login'
 						});
+					} else {
+						uni.switchTab({
+							url: '/pages/home/home'
+						})
 					}
 				}
 			});

@@ -54,8 +54,19 @@
 					<view class="title">
 						<text class="left-text">学校</text>
 						<view class="margin-left">
-							<input placeholder="请输入学校" class="input-weight" type="text" v-model="user.school" />
+							<!-- <input placeholder="请输入学校" class="input-weight" type="text" v-model="user.school" /> -->
+							<view class="input-border input-weight" @click="$refs.schoolPicker.show()">
+								<block v-if="user.school.length == 0" >
+									<text class="text-placeholder">请选择学校</text>
+								</block>
+								<block v-else>
+									{{user.school }}
+								</block>
+								<text class="cuIcon-triangledownfill fr"></text>
 							</view>
+						</view>
+						
+							
 					</view>
 					<view class="title">
 						<text class="left-text">专业</text>
@@ -83,7 +94,7 @@
 					<view class="card-item" :class="index == TabCur ? 'cur' : ''" v-for="(item, index) in infoList" :key="index" @tap="TabCur=index">{{ item.name }}</view>
 				</view>
 				<!-- 关键词内容 -->
-				<view class="text-sm margin-top-sm">
+				<view class="text-sm margin-top-sm " style="min-height: 180rpx;">
 					<view class="flex flex-wrap ">
 						<view
 							class="info-tag"
@@ -120,9 +131,13 @@
 				<u-button class="btn bg-redd " :ripple="true" @click="save">保存</u-button>
 			</view>
 			<view class="flex margin-top margin-bottom justify-center">
-				<u-button class="btn bg-greyy" :ripple="true" @click="show = true">取消</u-button>
+				<u-button class="btn bg-greyy" :ripple="true" @click="cancel">取消</u-button>
 			</view>
 		</c-scroll>
+		
+		<schoolPicker themeColor="#097fff" ref="schoolPicker" @onConfirm="onConfirm" />
+	
+		
 		<u-modal v-model="show" title="哎呀" cancel-text="手滑手滑" show-cancel-button
 		content="信息还没保存，确定取消吗？" :mask-close-able="true" @confirm="confirm" />
 		<u-toast ref="uToast" />
@@ -136,6 +151,7 @@ export default {
 		// 使用对象展开运算符将 getter 混入 computed 对象中
 		...mapState(['userDB'])
 	},
+	
 	data() {
 		return {
 			//个人资料
@@ -179,21 +195,48 @@ export default {
 					list: [],
 					index: 0
 				}
-			]
+			],
+			changUser: false, // 改变信息
 		};
 	},
-	onLoad() {
+	onShow() {
 		// 加载数据
 		this.init();
+	},	
+	onBackPress() {
+		for(let key in this.user) {
+			if(this.user[key] !== this.userDB[key]) {
+				this.changUser = true; 
+				break;
+			}
+		}
+		if(this.changUser) {
+			this.show = true
+			return true
+		}
 	},
 	methods: {
 		...mapActions([
 			'set' // 将 `this.setIsLogin()` 映射为 `this.$store.dispatch('setIsLogin')`
 		]),
+		/**
+		 * 确认学校选择
+		 */
+		onConfirm(e) {
+			const school = e.label.split("-")[2];
+			// console.log(`源数据:${JSON.stringify(e)}`);
+			if (school === '暂未收录') {
+				return;
+			} else {
+				this.user.school = school;
+				// console.log(`学校:${school}`);
+			}
+		},
 		init() {
-			this.user = this.userDB;
+			this.user =  this.$u.deepClone(this.userDB);
 			// 获取用户标签
 			this.$http.get('/userLabel', { id: this.user.id }).then(res => {
+				this.selectTagList = []
 				this.selectTagList = res.data;
 			});
 		},
@@ -230,11 +273,10 @@ export default {
 		},
 		// 选中/取消 标签
 		changeTag(label) {
+			this.changUser = true;
 			let idx = this.selectTagList.findIndex(item => item.name === label);
 
 			let obj = { name: label, userId: this.userDB.id };
-			// 后端修改
-			this.$http.post('/updateLabel', obj);
 
 			if (idx != -1) this.selectTagList.splice(idx, 1);
 			else this.selectTagList.push(obj);
@@ -245,8 +287,12 @@ export default {
 				this.user.avatar = res[0];
 			})
 		},
+		cancel() {
+			uni.navigateBack();
+		},
 		save() {
-			this.$http.post('/updateUserInfo', this.user).then(res => {
+			// 后端修改
+			this.$http.post('/updateUserInfo', {user: this.user, label: this.selectTagList}).then(res => {
 				if(res.status == this.$http.SUCCESS) {
 					this.set({user:this.user});
 					this.$refs.uToast.show({
@@ -260,7 +306,9 @@ export default {
 			})
 		},
 		confirm() {
-			console.log('用户点击确定');
+			uni.switchTab({
+				url: '/pages/user/user'
+			})
 		},
 	}
 };
@@ -371,6 +419,5 @@ uni-input
 .bg-greyy 
 	background-color: #8799a3!important
 	color: #ffffff!important
-
 	
 </style>

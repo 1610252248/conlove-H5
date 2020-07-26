@@ -76,8 +76,9 @@ export default {
 	methods: {
 		//获取性别图片地址
 		getSexImage(sex) {
-			return '/static/image/' + (sex == '男'? 'male.png' : 'female.png');
+			return require('@/static/image/' + (sex === '男' ? 'male.png' : 'female.png'));
 		},
+		
 		/**
 		 * 跳转首页详情
 		 */

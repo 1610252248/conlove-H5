@@ -3,6 +3,12 @@
 		<c-scroll @scrolltolower="lower">
 			<c-home :lists="list" :isLoad="isLoad"></c-home>
 		</c-scroll>
+		<!-- <view class="bottom-bar">
+			<view class="content">
+				<view>登录解锁更多功能哦</view>
+				<u-button class="btn" :ripple="true" @click="navToModify">前往登录</u-button>
+			</view>
+		</view> -->
 	</view>
 </template>
 
@@ -31,7 +37,7 @@ export default {
 			let lastId = this.list[0].id;
 			for(let obj of res.data.list) {
 				// 如果是更新的
-				if(obj.id != lastId) list.push(obj)
+				if(obj.id > lastId) list.push(obj)
 			}
 			this.list.push(...list);
 			
@@ -63,6 +69,7 @@ export default {
 				this.page = res.pageNum;
 				if(this.page >= this.totalPage) this.isLoad = true
 				this.list.push(...res.list);
+				console.log(this.list);
 			})
 		},
 
@@ -100,5 +107,29 @@ export default {
 </script>
 
 <style lang="stylus">
-
+// .bottom-bar 
+// 	border-radius 10rpx
+// 	color #FFFFFF
+// 	background-color #600b7c;
+// 	opacity: 0.9;
+	
+// 	position absolute
+// 	bottom 0
+// 	width 100%
+// 	.content 
+// 		display flex
+// 		height 70rpx
+// 		line-height 70rpx
+// 		width 80%
+// 		margin 0 auto
+	
+// .btn
+// 	color #ffffff !important
+// 	background-image linear-gradient(135deg, #ff924d, #fc696e)
+// 	border-radius 1000px
+// 	font-size 26upx
+// 	margin auto 0 auto auto
+// 	height 60rpx
+// 	line-height 60rpx
+// 	width 200rpx
 </style>

@@ -6,11 +6,10 @@
 			<image src="/static/image/title.png" mode="aspectFit" class="head-title"></image>
 
 			<u-form class="zai-form" :model="form" ref="uForm" :errorType="['toast']">
-				<u-form-item :label-width="0" prop="userName" :border-bottom="false"><input class="zai-input" v-model="form.userName" placeholder="请输入账号" /></u-form-item>
+				<u-form-item :label-width="0" prop="userName" :border-bottom="false"><input class="zai-input" v-model="form.userName" placeholder="账号 / 邮箱" /></u-form-item>
 				<u-form-item :label-width="0" prop="password" :border-bottom="false">
-					<input class="zai-input" v-model="form.password" password placeholder="请输入密码" />
+					<input class="zai-input" v-model="form.password" password placeholder="密码" />
 				</u-form-item>
-				<!-- <view class="zai-label">忘记密码？</view> -->
 				<!-- <view url="/pages/index/register" hover-class="none" class="zai-label" v-if="illegal">
 				<span style="color:red;font-weight: 600;">由于你之前的违规，请自觉离开本平台</span>
 			</view> -->
@@ -18,9 +17,9 @@
 					<u-button class="btn" :ripple="true" @click="navToIndex">随便看看</u-button>
 					<u-button class="btn" :ripple="true" @click="login">立即登录</u-button>
 				</view>
-				<view class="text-center margin-tb-xl" style="color: #94afce;">
-					还没有账号？
-					<span @click="$u.route('/pages/enter/register')" class="navJump">点此注册</span>
+				<view class="margin-tb-xl flex justify-between padding-lr" style="color: #87a1bc;">
+					<view @click="$u.route('/pages/enter/forget')">忘记密码？</view>
+					<view @click="$u.route('/pages/enter/register')">立即注册</view>
 				</view>
 			</u-form>
 		</view>
@@ -44,9 +43,12 @@ export default {
 				password: ''
 			},
 			rules: {
-				userName: [{ required: true, message: '请输入账号' }],
+				userName: [{ required: true, message: '请输入账号或邮箱' }],
 				password: [{ required: true, message: '请输入密码' }]
-			}
+			},
+			routes: [
+				'register', 'login', 'forget'
+			]
 		};
 	},
 	onShow() {
@@ -71,40 +73,48 @@ export default {
 			});
 		},
 		login() {
+			console.log('login');
 			this.$refs.uForm.validate(valid => {
-				if (valid) {
-					this.$http.post('/login', this.form).then(res => {
-						if (res.status == this.$http.SUCCESS) {
-							
-							let pages = getCurrentPages(), len = pages.length, delta = 1;
-							while(len > 0 && (pages[len-1].route.indexOf('register')!=-1 || pages[len-1].route.indexOf('login')!=-1)) {
-								delta++;
-								len--;
-							}
-							if(len==0) {
-								this.$refs.uToast.show({
-									title: res.msg,
-									type: 'success',
-									url: '/pages/home/home',
-									isTab: true,
-									duration: 1500
-								});
-							} else {
-								this.$refs.uToast.show({
-									title: res.msg,
-									type: 'success'
-								});
-								setTimeout(() => {
-									uni.navigateBack({delta})
-								}, 1500)
-							}
-							this.set(res.data);
-							// 全局事件 登陆成功
-							this.$eventBus.$emit('login-success');
-						} else {
-							this.$u.toast(res.msg)
-						}
-					});
+				console.log(valid);
+				if (valid)  {
+					this._login()
+				}
+			});
+		},
+		_login() {
+			this.$http.post('/login', this.form).then(res => {
+				if (res.status == this.$http.SUCCESS) {
+					
+					let pages = getCurrentPages(), len = pages.length, delta = 1;
+					while(len > 0 && this.routes.findIndex(item => pages[len-1].route.indexOf(item) != -1) != -1) {
+						delta++;
+						len--;
+					}
+					if(len==0) {
+						this.$refs.uToast.show({
+							title: res.msg,
+							type: 'success',
+							url: '/pages/home/home',
+							isTab: true,
+							duration: 1500
+						});
+					} else {
+						this.$refs.uToast.show({
+							title: res.msg,
+							type: 'success'
+						});
+						setTimeout(() => {
+							uni.navigateBack({delta})
+						}, 1500)
+					}
+					this.set(res.data);
+					// 全局事件 登陆成功
+					this.$eventBus.$emit('login-success');
+				} else {
+					this.$refs.uToast.show({
+						title: res.msg,
+						type: 'warning',
+					})
 				}
 			});
 		}
@@ -140,9 +150,4 @@ export default {
 	border-radius 1000px
 	font-size 30upx
 	padding 0 38rpx
-.navJump
-	font-weight 600
-	color #94afce
-	padding 1px
-	border-bottom 0.5px solid #859eb8;
 </style>

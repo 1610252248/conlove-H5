@@ -58,7 +58,7 @@ export default {
 			rules: {
 				userName: [
 					{ required: true, message: '请输入账号' },
-					{ pattern: /^([a-zA-Z0-9]|[_]){3,12}$/, message: '账号只能有字母和数字、“_”，长度在3-12之间' }
+					{ pattern: /^([A-Za-z0-9_]){3,12}$/, message: '账号只能有字母和数字、“_”，长度在3-12之间' }
 				],
 				password: [{ required: true, message: '请输入密码' }, { min: 6, max: 12, message: '密码长度在6-12之间' }],
 				checkPass: [

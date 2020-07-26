@@ -44,6 +44,24 @@
 			"navigationStyle":"custom"
 		}
 	}, {
+		"path": "pages/enter/verify",
+		"style": {
+			"navigationStyle":"custom",
+			"navigationBarTitleText": "验证邮箱"
+		}
+	}, {
+		"path": "pages/enter/forget",
+		"style": {
+			// "navigationStyle":"custom",
+			"navigationBarTitleText": "修改密码"
+		}
+	},{
+		"path": "pages/user/sub/modify-password",
+		"style": {
+			// "navigationStyle":"custom",
+			"navigationBarTitleText": "修改密码"
+		}
+	}, {
 		"path": "pages/user/userEdit",
 		"style": {
 			"navigationBarTitleText": "编辑资料"

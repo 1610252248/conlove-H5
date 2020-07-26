@@ -17,8 +17,8 @@
 		<view class="content image-info">
 			<view class="text-sm margin-bottom-sm">已提交材料信息</view>
 			<view class="flex">
-				<view>
-					<u-image width="350rpx" height="280rpx" :src="userDB.identifyImage"></u-image>
+				<view @click="$utils.viewImage(userDB.identifyImage)">
+					<u-image width="350rpx" height="280rpx" :src="userDB.identifyImage"  ></u-image>
 				</view>
 				<view >
 					<view style="height: 246rpx;"></view>

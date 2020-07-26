@@ -1,25 +1,52 @@
 <template>
-	<c-scroll midHeight>
-		<view class="cu-form-group">
+	<c-scroll midHeight >
+		<!-- <view class="cu-form-group">
 			<view class="title">在个人主页展示缘来贴</view>
 			<switch class="red scale" @change="Switch" :class="isSwitch ? 'checked' : ''" :checked="isSwitch ? true : false"></switch>
-		</view>
-		<view class="cu-form-group">
-			<view class="title">黑名单</view>
-			<text class="cuIcon-right text-black"></text>
-		</view>
-		<view class="cu-form-group" @click="logout">
-			<view class="title">退出登录</view>
-			<text class="cuIcon-right text-black"></text>
+		</view> -->
+		<view class="b-top">
+			
+			<view class="vertical-space"/>
+				
+			
+			<view class="cu-form-group">
+				<view class="title">账号</view>
+				<u-input placeholderStyle="color:#939393" :placeholder="userDB.userName" disabled input-align="right" />
+			</view>
+			<view class="cu-form-group" >
+				<view class="title">邮箱</view>
+				<u-input placeholderStyle="color:#939393" :placeholder="userDB.email" disabled input-align="right" />
+			</view>
+			<view class="cu-form-group" @click="navToPassword">
+				<view class="title">修改密码</view>
+				<text class="cuIcon-right text-gray" />
+			</view>
+			<view class="vertical-space"/>
+				
+			
+			<view class="cu-form-group">
+				<view class="title">黑名单</view>
+				<text class="cuIcon-right text-gray" />
+			</view>
+			
+			<view class="vertical-space"/>
+			<view class="cu-form-group" @click="logout">
+				<view class="title">退出登录</view>
+				<text class="cuIcon-right text-gray"/>
+			</view>
 		</view>
 		<u-toast ref="uToast" />
+		
 	</c-scroll>
 </template>
 
 <script>
-import {mapActions } from 'vuex';
+import { mapState, mapActions } from 'vuex';
 export default {
-	
+	computed: {
+		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapState(['userDB'])
+	},
 	data() {
 		return {
 			isSwitch: true
@@ -41,16 +68,22 @@ export default {
 				url: '/pages/user/user',
 				isTab: true
 			})
+		},
+		navToPassword() {
+			this.$u.route('/pages/user/sub/modify-password')
 		}
 	}
 };
 </script>
 
 <style lang="stylus">
-.cu-form-group
-	min-height 80rpx !important
-	.title
-		min-width calc(4em + 15px)
+
 .scale
 	transform scale(0.7)
+.b-top 
+	background-color #F5F5F5
+	height 100%
+	width 100%
+.vertical-space 
+	height 40rpx
 </style>

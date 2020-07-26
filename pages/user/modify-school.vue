@@ -3,7 +3,7 @@
 		
 		<!-- 材料示意图 -->
 		<view class="margin-tb-sm title ">材料示意图</view>
-		<u-image width="100%" height="650rpx" src="/static/image/shool-card.jpg"></u-image>
+		<u-image width="100%" height="650rpx" @click="$utils.viewImage('/static/image/shool-card.jpg')" src="/static/image/shool-card.jpg"></u-image>
 		<view class="margin-tb-sm tips-text ">
 			<view>请确保上传材料中学校名称或logo清晰有效</view>
 			<view>材料在学校信息可见，请注意遮挡隐私</view>
@@ -42,7 +42,7 @@ export default {
 		getImage(type) {
 			this.$http.urlImgUpload('/fileUpload', {sourceType: [type], count: 1}).then(res => {
 				this.$http.get('/identifySchool', {image: res[0]}).then(msg => {
-					let user = this.userDB;
+					let user = this.$u.deepClone(this.userDB);
 					user.identifyImage = res[0];
 					this.set({user})
 					this.$refs.uToast.show({
