@@ -93,6 +93,7 @@ export default {
 			//  把height 转一下字符串，不然会报错，不知道为什么
 			this._props.data.height = this._props.data.height +''
 			this.form = this._props.data;
+			console.log(this.form);
 		}, 100)
 		
 		this.$refs.uForm.setRules(this.rules);

@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view >
 		<c-scroll midHeight>
 			<!-- 基础资料 -->
 			<view class="card">
@@ -56,7 +56,7 @@
 						<view class="margin-left">
 							<!-- <input placeholder="请输入学校" class="input-weight" type="text" v-model="user.school" /> -->
 							<view class="input-border input-weight" @click="$refs.schoolPicker.show()">
-								<block v-if="user.school.length == 0" >
+								<block v-if="!user.school || user.school.length == 0" >
 									<text class="text-placeholder">请选择学校</text>
 								</block>
 								<block v-else>
@@ -70,7 +70,8 @@
 					</view>
 					<view class="title">
 						<text class="left-text">专业</text>
-						<view class="margin-left"><input placeholder="请输入专业" class="input-weight" type="text" v-model="user.major" /></view>
+						<view class="margin-left">
+							<input placeholder="请输入专业" class="input-weight" type="text" v-model="user.major" /></view>
 					</view>
 					<view class="title">
 						<text class="left-text">在校情况</text>

@@ -45,7 +45,7 @@ export default {
 	},
 	onShow() {
 		if(!this.isLogin) {
-			this.$http.get('/verifyLogin')
+			this.$http.get('/verifyLogin').catch( err => {})
 		}
 	},
 	methods: {

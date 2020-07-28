@@ -62,9 +62,9 @@
 							<view class="left"><image :src="row.user.avatar"></image></view>
 							<!-- 右-用户名称-时间-消息 -->
 							<view class="right">
-								<view class="username">
+								<!-- <view class="username">
 									<view class="name">{{ row.user.nickName }}</view>
-								</view>
+								</view> -->
 								<!-- 文字消息 -->
 								<view v-if="row.msgType == 'text'" class="bubble"><rich-text :nodes="row.content"></rich-text></view>
 								<!-- 图片消息 -->

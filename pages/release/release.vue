@@ -39,7 +39,7 @@ export default {
 			data: {
 				title: '',
 				sex: '',
-				school: '',
+				school: '西安电子科技大学',
 				grade: '',
 				birthDate: '',
 				height: '',
@@ -63,7 +63,7 @@ export default {
 			this.getSticker(id);
 		}
 		if(!this.isLogin) {
-			this.$http.get('/verifyLogin')
+			this.$http.get('/verifyLogin').catch( err => {})
 		}
 			
 		
@@ -103,6 +103,7 @@ export default {
 			}
 			
 		},
+		
 		back() {
 			this.basics--;
 		}

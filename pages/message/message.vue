@@ -11,7 +11,7 @@
 				</view>
 			</view>
 		
-			<view class="cu-item" @click="navToChat(item.id, item.user.nickName)" v-for="(item, index) in friends" :key="item.id">
+			<view class="cu-item" @click="navToChat(item.id, item.friend.nickName)" v-for="(item, index) in friends" :key="item.id">
 				<view class="cu-avatar round lg" :style="{'background-image':'url('+item.friend.avatar+')'}" >
 					<view class="cu-tag badge" :class="index%2==0?'cuIcon-female bg-pink':'cuIcon-male bg-blue'"></view>
 				</view>

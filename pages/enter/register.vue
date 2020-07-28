@@ -11,9 +11,10 @@
 				</u-form-item>
 				<u-form-item required :label-width="0" prop="nickName" :border-bottom="false"><input v-model="form.nickName" placeholder="请输入昵称" /></u-form-item>
 				<u-form-item required :label-width="0" prop="email" :border-bottom="false"><input v-model="form.email" placeholder="请输入邮箱" /></u-form-item>
-				<!-- 			<u-form-item required :label-width="0" prop="inviteCode" :border-bottom="false">
-					<input   v-model="form.inviteCode" placeholder="请输入注册邀请码" />
-				</u-form-item> -->
+				<u-form-item style="width: 84%;" required :label-width="0" prop="code" :border-bottom="false">
+					<input class="zai-input" v-model="form.code" placeholder="验证码" />
+					<u-button slot="right" type="success" size="mini" @click="getCode">{{ codeTips }}</u-button>
+				</u-form-item>
 				<u-form-item required :label-width="0" prop="sex" :border-bottom="false">
 					<u-radio-group v-model="form.sex">
 						<u-radio name="男" shape="circle">男</u-radio>
@@ -35,6 +36,7 @@
 					<span @click="$u.route('/pages/enter/login')" class="navJump">点此登录</span>
 				</view>
 			</u-form>
+			<u-verification-code seconds="60" ref="uCode" @change="codeChange"></u-verification-code>
 			<u-toast ref="uToast" />
 		</view>
 	</c-scroll>
@@ -44,6 +46,8 @@
 export default {
 	data() {
 		return {
+			codeTips: '',
+			verifyCode: '',
 			form: {
 				userName: '',
 				password: '',
@@ -52,6 +56,7 @@ export default {
 				email: '',
 				inviteCode: '',
 				sex: '',
+				code: '',
 				isAgree: false
 			},
 			// 表单验证规则
@@ -70,6 +75,7 @@ export default {
 						message: '两次输入的密码不相等'
 					}
 				],
+				
 				nickName: [{ required: true, message: '请输入昵称' }],
 				email: [
 					{ required: true, message: '请输入邮箱' },
@@ -80,6 +86,7 @@ export default {
 						message: '请输入正确的邮箱'
 					}
 				],
+				code: [{ required: true, message: '请输入验证码' }],
 				sex: [{ required: true, message: '请选择性别' }],
 				isAgree: [
 					{
@@ -98,25 +105,85 @@ export default {
 	},
 	methods: {
 		// 注册
+		codeChange(text) {
+			this.codeTips = text;
+		},
+		// 获取验证码
+		getCode() {
+			if(this.form.email == '') {
+				this.$u.toast('邮箱不能为空');
+				return ;
+			}
+			// 检测邮箱 是否存在
+			this.$http.get('/check/email', {email: this.form.email}).then(res => {
+				if (res.status == this.$http.SUCCESS) {
+					this.sendCode();
+				} else {
+					this.$u.toast('邮箱已存在，请换个邮箱试试');
+				}
+			})
+		},
+		sendCode() {
+			if(this.$refs.uCode.canGetCode) {
+				uni.showLoading({
+					title: '正在获取验证码',
+					mask: true
+				})
+				this.$http.get('/sendRegisterCode', {email: this.form.email}).then(res => {
+					uni.hideLoading();
+					this.$refs.uCode.start();
+					if (res.status == this.$http.SUCCESS) {
+						this.verifyCode = res.data
+						// 这里此提示会被this.start()方法中的提示覆盖
+						this.$refs.uToast.show({
+							title: res.msg,
+							type: 'success'
+						})
+						// 通知验证码组件内部开始倒计时
+					} else {
+						this.$refs.uToast.show({
+							title: res.msg,
+							type: 'warning'
+						})
+					}
+				})
+			} else {
+				this.$refs.uToast.show({
+					title: '倒计时结束后再发送',
+					type: 'warning'
+				})
+			}
+		},
 		register() {
 			this.$refs.uForm.validate(valid => {
 				// 表单验证成功
 				if (valid) {
-					console.log(this.form);
-					this.$http.post('/register', this.form).then(res => {
-						if(res.status == this.$http.SUCCESS) {
-							this.$refs.uToast.show({
-								title: res.msg,
-								type: 'success',
-								url: '/pages/enter/login'
-							})
+					this.$http.get('/judgeVerifyCode', {code: this.form.code, verifyCode: this.verifyCode}).then(res => {
+						if (res.status == this.$http.SUCCESS) {
+							this._register()
 						} else {
 							this.$refs.uToast.show({
 								title: res.msg,
-								type: 'warning',
+								type: 'warning'
 							})
 						}
-					});
+					})
+				}
+			});
+		},
+		_register() {
+			this.$http.post('/register', this.form).then(res => {
+				if(res.status == this.$http.SUCCESS) {
+					this.$refs.uToast.show({
+						title: res.msg,
+						type: 'success',
+						url: '/pages/enter/login'
+					})
+				} else {
+					this.$refs.uToast.show({
+						title: res.msg,
+						type: 'warning',
+					})
 				}
 			});
 		}
@@ -153,7 +220,15 @@ uni-input
 	height 76upx
 	width 100%
 	font-size 30upx
-.input-placeholder, .zai-input
+.input-placeholder
+	color #94afce
+.zai-input
+	border 1px solid #a7b6d0
+	width 100%
+	border-radius 100upx
+	padding 0 40rpx
+	height 80upx
+	font-size 30upx
 	color #94afce
 .btn
 	color #ffffff !important
