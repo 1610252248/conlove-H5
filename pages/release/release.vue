@@ -19,7 +19,12 @@
 <script>
 import releaseFirst from '@/pages/release/releaseFirst.vue'
 import releaseSecond from '@/pages/release/releaseSecond.vue'
+import { mapGetters } from 'vuex';
 export default {
+	computed: {
+		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapGetters(['isLogin'])
+	},
 	components: {
 		releaseFirst, releaseSecond
 	},
@@ -57,7 +62,11 @@ export default {
 			this.id = id;
 			this.getSticker(id);
 		}
-		this.$http.get('/verifyLogin')
+		if(!this.isLogin) {
+			this.$http.get('/verifyLogin')
+		}
+			
+		
 	},
 	methods: {
 		getSticker(id) {

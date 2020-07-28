@@ -1,7 +1,7 @@
 <template>
 	<c-scroll>
 		<!-- 没有登陆 -->
-		<view v-if="!this.isLogin">
+		<view v-if="!isLogin">
 			<view class="bg-gray padding">
 				<view class="flex justify-start align-center ">
 					<u-avatar class="margin-left" size="110" mode="circle"></u-avatar>
@@ -141,7 +141,10 @@ export default {
 		}
 	},
 	onLoad() {
-		this.init();
+		// 登录之后在请求
+		if(this.isLogin) {
+			this.init();
+		}
 		this.$eventBus.$on('login-success', () => {
 			this.init();
 		});

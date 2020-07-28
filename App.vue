@@ -1,22 +1,26 @@
 <script>
 import pageAnimation from '@/components/page-animation';
-import { mapState, mapActions } from 'vuex';
+import { mapState, mapActions, mapGetters } from 'vuex';
 export default {
-	
-	mixins: [pageAnimation],
-	onShow() {
-		this.$http.get('/user/refreshUser').then(res => {
-			if(res.status == this.$http.SUCCESS) {
-				this.set({user: res.data});
-			} else {
-				this.del()
-			}
-		})
-	},
 	computed: {
 		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapGetters(['isLogin']),
 		...mapState(['userDB'])
 	},
+	mixins: [pageAnimation],
+	onShow() {
+		// 登录
+		if(this.isLogin) {
+			this.$http.get('/user/refreshUser').then(res => {
+				if(res.status == this.$http.SUCCESS) {
+					this.set({user: res.data});
+				} else {
+					this.del()
+				}
+			})
+		}
+	},
+	
 	methods: {
 		...mapActions([
 			'set', 'del' // 将 `this.setIsLogin()` 映射为 `this.$store.dispatch('setIsLogin')`

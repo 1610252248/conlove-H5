@@ -57,6 +57,7 @@ export default {
 				this.$refs.cInput.focusInput()
 			});
 		}
+		this.$http.get('/verifyLogin')
 		this.getPost(id);
 		this.getComments(id);
 		this.getPostAppreciate(id);

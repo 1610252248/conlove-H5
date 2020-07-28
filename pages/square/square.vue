@@ -28,8 +28,14 @@
 <script>
 import treeHole from '@/pages/square/treeHole.vue';
 import post from '@/pages/square/post.vue'
+import { mapGetters } from 'vuex';
 export default {
+	computed: {
+		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapGetters(['isLogin'])
+	},
 	components: { treeHole, post },
+
 	data() {
 		return {
 			tabCur: 0,
@@ -37,7 +43,11 @@ export default {
 			bottomModal: false,
 		};
 	},
-
+	onShow() {
+		if(!this.isLogin) {
+			this.$http.get('/verifyLogin')
+		}
+	},
 	methods: {
 		//  导航切换["说说", "树洞"]
 		tabSelect(index) {

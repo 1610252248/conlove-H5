@@ -45,10 +45,7 @@ export default {
 			rules: {
 				userName: [{ required: true, message: '请输入账号或邮箱' }],
 				password: [{ required: true, message: '请输入密码' }]
-			},
-			routes: [
-				'register', 'login', 'forget'
-			]
+			}
 		};
 	},
 	onShow() {
@@ -84,29 +81,13 @@ export default {
 		_login() {
 			this.$http.post('/login', this.form).then(res => {
 				if (res.status == this.$http.SUCCESS) {
-					
-					let pages = getCurrentPages(), len = pages.length, delta = 1;
-					while(len > 0 && this.routes.findIndex(item => pages[len-1].route.indexOf(item) != -1) != -1) {
-						delta++;
-						len--;
-					}
-					if(len==0) {
-						this.$refs.uToast.show({
-							title: res.msg,
-							type: 'success',
-							url: '/pages/home/home',
-							isTab: true,
-							duration: 1500
-						});
-					} else {
-						this.$refs.uToast.show({
-							title: res.msg,
-							type: 'success'
-						});
-						setTimeout(() => {
-							uni.navigateBack({delta})
-						}, 1500)
-					}
+					this.$refs.uToast.show({
+						title: res.msg,
+						type: 'success',
+						url: '/pages/user/user',
+						isTab: true,
+						duration: 1500
+					});
 					this.set(res.data);
 					// 全局事件 登陆成功
 					this.$eventBus.$emit('login-success');

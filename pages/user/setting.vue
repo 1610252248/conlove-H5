@@ -11,11 +11,11 @@
 			
 			<view class="cu-form-group">
 				<view class="title">账号</view>
-				<u-input placeholderStyle="color:#939393" :placeholder="userDB.userName" disabled input-align="right" />
+				<u-input placeholderStyle="color:#939393" :placeholder="user.userName" disabled input-align="right" />
 			</view>
 			<view class="cu-form-group" >
 				<view class="title">邮箱</view>
-				<u-input placeholderStyle="color:#939393" :placeholder="userDB.email" disabled input-align="right" />
+				<u-input placeholderStyle="color:#939393" :placeholder="user.email" disabled input-align="right" />
 			</view>
 			<view class="cu-form-group" @click="navToPassword">
 				<view class="title">修改密码</view>
@@ -49,10 +49,13 @@ export default {
 	},
 	data() {
 		return {
-			isSwitch: true
+			isSwitch: true,
+			user: {}
 		};
 	},
-
+	onLoad() {
+		this.user = this.$u.deepClone(this.userDB);
+	},
 	methods: {
 		...mapActions([
 			'del' // 将 `this.del()` 映射为 `this.$store.dispatch('del')`
