@@ -2,7 +2,7 @@
 	<view>
 		<view  class="display-box solids-bottom" v-for="(item, index) in lists" :key="item.id" @click="navToPostDetail(false, item.id)">
 			<!-- 说说内容 -->
-			<post-info :data="item" :dotsShow="dotsShow" @more="showModal(index)"/>
+			<post-info :data="item" :dotsShow="item.user.id==userDB.id" @more="showModal(index)"/>
 			<!-- 赞和评论 -->
 			<post-info-bar :data="item" showMode :isAppreciate="isAppreciate(item.id)" 
 			@change-appreciate="changAppreciate($event, index)" 
@@ -49,7 +49,13 @@
 <script>
 import postInfo from '@/pages/square/sub/postInfo.vue';
 import postInfoBar from '@/pages/square/sub/post-info-bar.vue';
+import { mapState } from 'vuex';
+	
 export default {
+	computed: {
+		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapState(['userDB'])
+	},
 	components: {
 		postInfo,
 		postInfoBar
@@ -66,10 +72,6 @@ export default {
 		isLoad: {
 			type: Boolean,
 			type: false,
-		},
-		dotsShow: {
-			type: Boolean,
-			default: false
 		}
 	},
 	data() {

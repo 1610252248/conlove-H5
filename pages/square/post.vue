@@ -1,7 +1,8 @@
 <template>
 	<c-scroll @scrolltolower="lower">
 		<c-post :lists="postList" :appreciateList="appreciateList"  
-			@chang-appreciate="changAppreciate" :isLoad="isLoad"  />
+			@chang-appreciate="changAppreciate" :isLoad="isLoad"  @chang-public="changPublic"
+			@delete="deletePost"/>
 	</c-scroll>
 </template>
 
@@ -75,7 +76,17 @@ export default {
 			if (this.page <= this.totalPage) this.getPost();
 			else this.isLoad = true;
 			this.loadCnt--;
-		}
+		},
+		// 公开/私有
+		changPublic(idx) {
+			this.postList[idx].isPublic ^= 1;
+			this.$http.post('/updatePost', {post: this.postList[idx]});
+		},
+		deletePost(idx) {
+			this.$http.post('/deletePost', this.postList[idx]).then(res => {
+				this.postList.splice(idx, 1);
+			})
+		},
 	}
 };
 </script>

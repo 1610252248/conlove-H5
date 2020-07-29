@@ -39,6 +39,9 @@
             },
             "ios" : {},
             "sdkConfigs" : {}
+        },
+        "uniStatistics" : {
+            "enable" : true
         }
     },
     "quickapp" : {},
@@ -46,6 +49,9 @@
         "appid" : "",
         "setting" : {
             "urlCheck" : false
+        },
+        "uniStatistics" : {
+            "enable" : true
         }
     },
     "h5" : {
@@ -58,6 +64,32 @@
             "treeShaking" : {
                 "enable" : true
             }
+        },
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "uniStatistics" : {
+        "enable" : true
+    },
+    "mp-alipay" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-baidu" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-qq" : {
+        "uniStatistics" : {
+            "enable" : true
+        }
+    },
+    "mp-toutiao" : {
+        "uniStatistics" : {
+            "enable" : true
         }
     }
 }

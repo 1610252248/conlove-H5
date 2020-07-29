@@ -5,9 +5,9 @@
 			<image src="/static/image/pic-login-head.png" mode="aspectFit" class="head-image"></image>
 			<image src="/static/image/title.png" mode="aspectFit" class="head-title"></image>
 
-			<u-form class="zai-form" :model="form" ref="uForm" :errorType="['toast']">
-				<u-form-item :label-width="0" prop="userName" :border-bottom="false"><input class="zai-input" v-model="form.userName" placeholder="账号 / 邮箱" /></u-form-item>
-				<u-form-item :label-width="0" prop="password" :border-bottom="false">
+			<u-form class="zai-form" label-width="0" :model="form" ref="uForm" :errorType="['toast']">
+				<u-form-item  prop="userName" :border-bottom="false"><input class="zai-input" v-model="form.userName" placeholder="账号 / 邮箱" /></u-form-item>
+				<u-form-item  prop="password" :border-bottom="false">
 					<input class="zai-input" v-model="form.password" password placeholder="密码" />
 				</u-form-item>
 				<!-- <view url="/pages/index/register" hover-class="none" class="zai-label" v-if="illegal">
@@ -113,7 +113,7 @@ export default {
 	width 532rpx
 	height 92rpx
 .zai-form
-	width 64%
+	width 60%
 	margin 80rpx auto 0
 .zai-input
 	border 1px solid #a7b6d0

@@ -4,7 +4,7 @@
 			{{userDB.nickName + '的动态'}}
 		</block></c-custom-mid>
 		<c-scroll @scrolltolower="lower" midHeight>
-			<c-post :lists="postList" :appreciateList="appreciateList" :isLoad="isLoad" :dotsShow="dotsShow"
+			<c-post :lists="postList" :appreciateList="appreciateList" :isLoad="isLoad" x
 				@chang-appreciate="changAppreciate"   @chang-public="changPublic"
 				@delete="deletePost"/>
 		</c-scroll>

@@ -1,7 +1,8 @@
 <template>
 	<view class="page-content">
 		<c-scroll @scrolltolower="lower">
-			<c-home :lists="list" :isLoad="isLoad"></c-home>
+			<c-home :lists="list" :isLoad="isLoad" @chang-public="changPublic" @delete="deleteSticker"
+			 />
 		</c-scroll>
 		<!-- <view class="bottom-bar">
 			<view class="content">
@@ -72,7 +73,18 @@ export default {
 				console.log(this.list);
 			})
 		},
-
+		// 公开/私有 
+		changPublic(idx) {
+			this.list[idx].isPublic ^= 1;
+			this.$http.post('/updateSticker', {sticker: this.list[idx]});
+		},
+		
+		// 删除帖子
+		deleteSticker(idx) {
+			this.$http.post('/deleteSticker',this.list[idx]).then(res => {
+				this.list.splice(idx, 1);
+			})
+		},
 		/**
 		 * 页面触底，加载更多数据
 		 */

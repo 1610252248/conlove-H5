@@ -7,7 +7,6 @@ import store from './store'
 //把vuex定义成全局组件
 Vue.prototype.$store = store
 
-
 Vue.prototype.$eventBus = new Vue();//注册全局事件对象
 
 import uView from "uview-ui";

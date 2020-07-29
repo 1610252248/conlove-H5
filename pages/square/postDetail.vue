@@ -68,7 +68,12 @@ export default {
 		//  帖子对象
 		getPost(id) {
 			this.$http.get('/getPost', { id }).then(res => {
-				this.post = res.data;
+				if(res.status == this.$http.ERROR) {
+					this.$u.route('/pages/empty/empty', {mode: 'page'})
+				} else {
+					this.post = res.data;
+				}
+				
 			});
 		},
 		// 评论列表

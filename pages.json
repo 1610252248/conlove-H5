@@ -15,6 +15,7 @@
 	}, {
 		"path": "pages/home/home",
 		"style": {
+			// "navigationStyle":"custom",
 			"navigationBarTitleText": "缘来",
 			"enablePullDownRefresh": true,
 			"h5": {
@@ -48,6 +49,12 @@
 		"style": {
 			"navigationStyle":"custom",
 			"navigationBarTitleText": "验证邮箱"
+		}
+	},{
+		"path": "pages/empty/empty",
+		"style": {
+			"navigationStyle":"custom",
+			"navigationBarTitleText": "空页面"
 		}
 	}, {
 		"path": "pages/enter/forget",
@@ -114,11 +121,14 @@
 	}, {
 		"path": "pages/message/HM-chat/HM-chat",
 		"style": {
-			"navigationStyle":"custom"
+			"navigationStyle":"custom",
+			"navigationBarTitleText": "聊天"
 		}
 	}, {
 		"path": "pages/message/message",
 		"style": {
+			
+			// "navigationStyle":"custom",
 			"navigationBarTitleText": "我的消息"
 		}
 	}, {

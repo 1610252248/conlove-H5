@@ -95,10 +95,15 @@ export default {
 		 */
 		getInfo(id) {
 			this.$http.get('/sticker', { id }).then(res => {
-				this.sticker = res.data.sticker;
-				// 是否对当前帖子用户发送秋波
-				if(res.data.friend != null) this.isLike = true
-				if (this.sticker.user.id == this.userDB.id) this.isMySticker = true;
+				if(res.status == this.$http.ERROR) {
+					this.$u.route('/pages/empty/empty', {mode: 'page'})
+				} else {
+					this.sticker = res.data.sticker;
+					// 是否对当前帖子用户发送秋波
+					if(res.data.friend != null) this.isLike = true
+					if (this.sticker.user.id == this.userDB.id) this.isMySticker = true;
+				}
+				
 			});
 		},
 		getComments(id) {

@@ -1,10 +1,10 @@
 <template>
 	<view v-if="lists.length">
 		<view class="display-box solids-bottom" v-for="(item, index) in lists" :key="index" @click="navToHomeDetail(item.id)">
-			<view v-if="dotsShow">
+			<view v-show="item.user.id == userDB.id">
 				<!--是否隐藏动态 -->
 				<text v-if="!item.isPublic" class="isPublic margin-left text-gray cuIcon-attentionforbid"></text>
-				<text v-show="dotsShow" :style="{'left':!item.isPublic?'270rpx':'300rpx'}" @click.stop="showModal(index)" class="cuIcon-more"></text>
+				<text :style="{'left':!item.isPublic?'270rpx':'300rpx'}" @click.stop="showModal(index)" class="cuIcon-more"></text>
 			</view>
 			<image lazy-load class="box-image" :src="item.images[0].image" mode="widthFix"></image>
 			<view class="box-info-up">
@@ -50,17 +50,19 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+	
 export default {
+	computed: {
+		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapState(['userDB'])
+	},
 	props: {
 		lists: {
 			type: Array,
 			default: () => []
 		},
 		isLoad: {
-			type: Boolean,
-			default: false
-		},
-		dotsShow: {
 			type: Boolean,
 			default: false
 		},

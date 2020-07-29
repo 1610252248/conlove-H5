@@ -23,7 +23,7 @@
 						:type="type"
 						class="u-flex-1 u-field__input-wrap"
 						:value="value"
-						:password="password || type === 'password'"
+						:password="password || this.type === 'password'"
 						:placeholder="placeholder"
 						:placeholderStyle="placeholderStyle"
 						:disabled="disabled"
@@ -362,5 +362,9 @@ export default {
 
 .u-input-class {
 	font-size: 28rpx;
+}
+
+.u-button-wrap {
+	margin-left: 8rpx;
 }
 </style>

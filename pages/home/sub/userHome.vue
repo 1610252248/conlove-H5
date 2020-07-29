@@ -4,7 +4,7 @@
 			{{userDB.nickName + '的缘来'}}
 		</block></c-custom-mid>
 		<c-scroll @scrolltolower="lower" midHeight >
-			<c-home :lists="list" :isLoad="isLoad" :dotsShow="isMy" 
+			<c-home :lists="list" :isLoad="isLoad" 
 			 @chang-public="changPublic" @delete="deleteSticker"
 			 />
 		</c-scroll>
@@ -27,13 +27,11 @@ export default {
 			page: 1, //当前请求页
 			pageSize: 4, // 每页数量
 			totalPage: 0, // 总页数
-			isMy: false,
 		};
 	},
 	
 	onLoad({id}) {
 		this.init(id);
-		if(id == this.userDB.id) this.isMy = true;
 		this.$eventBus.$on('update-sticker', ()=>{
 			this.init(id)
 		})
