@@ -1,15 +1,10 @@
 <template>
-	<view class="page-content">
-		<c-scroll @scrolltolower="lower">
+	<view >
+		<c-scroll @scrolltolower="lower" midHeight>
 			<c-home :lists="list" :isLoad="isLoad" @chang-public="changPublic" @delete="deleteSticker"
 			 />
 		</c-scroll>
-		<!-- <view class="bottom-bar">
-			<view class="content">
-				<view>登录解锁更多功能哦</view>
-				<u-button class="btn" :ripple="true" @click="navToModify">前往登录</u-button>
-			</view>
-		</view> -->
+		
 	</view>
 </template>
 
@@ -70,7 +65,6 @@ export default {
 				this.page = res.pageNum;
 				if(this.page >= this.totalPage) this.isLoad = true
 				this.list.push(...res.list);
-				console.log(this.list);
 			})
 		},
 		// 公开/私有 

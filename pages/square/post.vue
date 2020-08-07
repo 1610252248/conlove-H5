@@ -33,6 +33,11 @@ export default {
 				this.init();
 			});
 		});
+		this.$eventBus.$on('login-success', () => {
+			this.$nextTick(() => {
+				this.init();
+			});
+		});
 	},
 	methods: {
 		// 初始化函数

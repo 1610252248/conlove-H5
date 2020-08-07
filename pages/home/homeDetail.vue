@@ -59,9 +59,11 @@
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 export default {
+	
 	computed: {
+		...mapGetters(['isLogin']),
 		// 使用对象展开运算符将 getter 混入 computed 对象中
 		...mapState(['userDB'])
 	},
@@ -89,6 +91,7 @@ export default {
 		this.comments = [];
 		this.getComments(id);
 	},
+	
 	methods: {
 		/**
 		 * 获取帖子详情

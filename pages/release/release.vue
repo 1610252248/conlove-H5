@@ -1,6 +1,6 @@
 <template>
-	
 	<c-scroll max-height>
+		<c-custom-mid><block slot="center">发布缘来</block></c-custom-mid>
 		<view class="bg-white padding">
 			<view class="cu-steps">
 				<view class="cu-item" :class="index>basics?'':'text-red'" v-for="(item,index) in basicsList" :key="index">
@@ -49,14 +49,14 @@ export default {
 			id: -1, // 表明不是修改页面过来的
 		}
 	},
-	onBackPress() {
-		if(this.id == -1) {
-			uni.switchTab({
-				url: '/pages/home/home'
-			})
-			return true;
-		} 
-	},
+	// onBackPress() {
+	// 	if(this.id == -1) {
+	// 		uni.switchTab({
+	// 			url: '/pages/home/home'
+	// 		})
+	// 		return true;
+	// 	} 
+	// },
 	onLoad({id}) {
 		if(id != null) {
 			this.id = id;

@@ -2,7 +2,6 @@
 	<view>
 		<c-custom @send="send" v-if="id == -1"><block slot="center">发布动态</block></c-custom>
 		<c-custom @send="send" sendName="修改" v-else ><block slot="center">修改动态</block></c-custom>
-		
 		<view class="content">
 			<view class="cu-form-group margin-xs"><textarea style="min-height: 250rpx;" v-model="post.content" placeholder="此刻的想法..."></textarea></view>
 			<view class="cu-bar solids-top padding-xs">

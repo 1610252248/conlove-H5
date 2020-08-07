@@ -46,6 +46,11 @@
 							<!-- 左-消息 -->
 							<view class="left">
 								<!-- 文字消息 -->
+								<view style="height: 100%;" class="flex align-end">
+									<view class="text-gray padding-xs text-sm">
+										{{getMessage(row.time)}}
+									</view>
+								</view>
 								<view v-if="row.msgType == 'text'" class="bubble"><rich-text :nodes="row.content"></rich-text></view>
 								<!-- 图片消息 -->
 								<view v-if="row.msgType == 'img'" class="bubble img" @tap="showPic(row.image)">
@@ -59,7 +64,7 @@
 						<!-- 别人发出的消息 -->
 						<view class="other" v-else>
 							<!-- 左-头像 -->
-							<view class="left"><image :src="row.user.avatar"></image></view>
+							<view class="left" @click.stop="navToOtherUser(row.user.id)"><image :src="row.user.avatar"></image></view>
 							<!-- 右-用户名称-时间-消息 -->
 							<view class="right">
 								<!-- <view class="username">
@@ -278,6 +283,8 @@ export default {
 			maxBottom: 0, // 页面底部最大距离
 			curScrollTop: 0, // 页面当前底部距离
 			disBottom: 100, // 距离页面底部 > 100 滚动底部
+			sendNum: 0,
+			lastTime: '', // 上次的时间
 		};
 	},
 	onLoad({id, nickName}) {
@@ -289,10 +296,10 @@ export default {
 		this.id = id
 		this.init()
 		
-		// //每 1 秒一次请求
+		// //每 5 秒一次请求
 		this.task = setInterval(()=>{
 			this.refreshMsgList()
-		}, 10000)
+		}, 5000)
 	},
 	onUnload() {
 		//离开页面 终止请求
@@ -333,9 +340,16 @@ export default {
 			let data = {id: this.id, page: 1, pageSize:this.pageSize }
 			this.$http.get('/message/getChat', data).then(res => {
 				res = res.data;
-				this.totalPage = res.pages;
-				this.setList(res.list);
+				this.lastTime = res.friend.lastTime
+				this.totalPage = res.pageInfo.pages;
+				this.setList(res.pageInfo.list);
 			})
+		},
+		// 获取信息是否 已读
+		getMessage(time) {
+			let startTime= Date.parse(this.lastTime);
+			let endTime= Date.parse(time);
+			return (startTime > endTime) ? "已读" : "未读"
 		},
 		// 加载初始页面消息
 		getMsgList() {
@@ -350,9 +364,10 @@ export default {
 					return ;
 				}
 				res = res.data;
-				this.totalPage = res.pages;
+				this.lastTime = res.friend.lastTime
+				this.totalPage = res.pageInfo.pages;
+				this.setList(res.pageInfo.list);
 				if(this.page >= this.totalPage) this.isLoad = true;
-				this.setList(res.list);
 				if(this.page == 1) { // 直接滑倒底部
 					this.$nextTick(function() {
 						//进入页面滚动到底部
@@ -372,6 +387,11 @@ export default {
 				}
 			})
 			
+		},
+		// 跳转用户资料
+		navToOtherUser(id) {
+			//当前统一跳转 其它用户
+			this.$u.route('/pages/user/otherUser', {id})
 		},
 		// 获取消息中的图片,并处理显示尺寸
 		setList(list) {
@@ -524,6 +544,8 @@ export default {
 		},
 		// 发送文字消息
 		sendText() {
+			if(this.sendNum != 0) return ;
+			this.sendNum++;
 			this.hideDrawer(); //隐藏抽屉
 			if (!this.textMsg) {
 				return;
@@ -542,6 +564,7 @@ export default {
 				this.msgList.push(msg)
 				
 				this.textMsg = ''; //清空输入框
+				this.sendNum--;
 				this.scrollBottom()
 			})
 			
@@ -549,14 +572,12 @@ export default {
 		//替换表情符号为图片
 		replaceEmoji(str) {
 			let replacedStr = str.replace(/\[([^(\]|\[)]*)\]/g, (item, index) => {
-				console.log('item: ' + item);
 				let curPath = '/static/img/emoji/';
 				for (let i = 0; i < this.emojiList.length; i++) {
 					let row = this.emojiList[i];
 					let rowItem = row.find(rItem => rItem.alt == item);
 					if(rowItem) {
 						let imgstr = '<img src="' + curPath + rowItem.url + '">';
-						console.log(imgstr);
 						return imgstr;
 					}
 				}

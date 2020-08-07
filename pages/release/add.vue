@@ -6,10 +6,22 @@
 
 <script>
 export default {
+	data() {
+		return {
+			flag: false
+		}
+	},
 	onShow() {
-		uni.navigateTo({
-			url: '/pages/release/release'
-		})
+		this.flag = !this.flag;
+		if(this.flag) {
+			uni.navigateTo({
+				url: '/pages/release/release'
+			})
+		} else {
+			uni.switchTab({
+				url: '/pages/home/home'
+			})
+		}
 	},
 	
 };

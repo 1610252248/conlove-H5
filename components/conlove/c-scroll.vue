@@ -105,7 +105,7 @@ export default {
 .max-height
 	height 100vh !important
 .mid-height
-	height calc(100vh - 44px) !important
+	height calc(100vh - 49px) !important
 .min-height
 	height calc(100vh - 84px) !important
 .goToTop

@@ -15,7 +15,7 @@
 	}, {
 		"path": "pages/home/home",
 		"style": {
-			// "navigationStyle":"custom",
+			"navigationStyle":"custom",
 			"navigationBarTitleText": "缘来",
 			"enablePullDownRefresh": true,
 			"h5": {
@@ -96,6 +96,7 @@
 	}, {
 		"path": "pages/user/user",
 		"style": {
+			"navigationStyle":"custom",
 			"navigationBarTitleText": "我的主页"
 		}
 	}, {
@@ -106,6 +107,7 @@
 	}, {
 		"path": "pages/release/release",
 		"style": {
+			"navigationStyle":"custom",
 			"navigationBarTitleText": "发布缘来"
 		}
 	}, {
@@ -128,7 +130,7 @@
 		"path": "pages/message/message",
 		"style": {
 			
-			// "navigationStyle":"custom",
+			"navigationStyle":"custom",
 			"navigationBarTitleText": "我的消息"
 		}
 	}, {

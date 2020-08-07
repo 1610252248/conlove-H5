@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<c-custom-mid><block slot="center">
-			{{userDB.nickName + '的动态'}}
+			{{nickName }}
 		</block></c-custom-mid>
 		<c-scroll @scrolltolower="lower" midHeight>
 			<c-post :lists="postList" :appreciateList="appreciateList" :isLoad="isLoad" x
@@ -34,6 +34,7 @@ export default {
 			isLoad: false,
 			loadCnt: 0,
 			dotsShow: false,
+			nickName: ''
 		};
 	},
 	
@@ -57,8 +58,14 @@ export default {
 		init(id) {
 			this.postList = []
 			this.page = 1;
+			this.getUser(id)
 			this.getPost(id)
 
+		},
+		getUser(id) {
+			this.$http.get('/getUser', {id}).then(res => {
+				this.nickName = res.data.user.nickName + '的动态'
+			})
 		},
 		// 请求帖子数据
 		getPost(id) {

@@ -3,11 +3,11 @@
 		<view class="u-form-item__body" :style="{
 			flexDirection: elLabelPosition == 'left' ? 'row' : 'column'
 		}">
+			<!-- 微信小程序中，将一个参数设置空字符串，结果会变成字符串"true" -->
 			<view class="u-form-item--left" :style="{
-				width: elLabelPosition == 'left' ? $u.addUnit(elLabelWidth) : '100%',
-				flex: `0 0 ${elLabelPosition == 'left' ? $u.addUnit(elLabelWidth) : '100%'}`,
+				width: uLabelWidth,
+				flex: `0 0 ${uLabelWidth}`,
 				marginBottom: elLabelPosition == 'left' ? 0 : '10rpx',
-
 			}">
 				<!-- 为了块对齐 -->
 				<view class="u-form-item--left__content">
@@ -169,6 +169,11 @@ export default {
 		},
 	},
 	computed: {
+		// 计算后的label宽度，由于需要多个判断，故放到computed中
+		uLabelWidth() {
+			// 如果用户设置label为空字符串(微信小程序空字符串最终会变成字符串的'true')，意味着要将label的位置宽度设置为auto
+			return this.elLabelPosition == 'left' ? (this.label === 'true' || this.label === '' ? 'auto' : this.$u.addUnit(this.elLabelWidth)) : '100%';
+		},
 		fieldValue() {
 			return this.uForm.model[this.prop];
 		},
@@ -182,8 +187,8 @@ export default {
 		},
 		// label的宽度
 		elLabelWidth() {
-			// label默认宽度为90，优先使用本组件的值，如果没有，则用u-form的值
-			return this.labelWidth ? this.labelWidth : (this.parent ? this.parent.labelWidth : 90);
+			// label默认宽度为90，优先使用本组件的值，如果没有(如果设置为0，也算是配置了值，依然起效)，则用u-form的值
+			return (this.labelWidth != 0 || this.labelWidth != '') ? this.labelWidth : (this.parent ? this.parent.labelWidth : 90);
 		},
 		// label的样式
 		elLabelStyle() {

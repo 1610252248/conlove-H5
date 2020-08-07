@@ -1,12 +1,17 @@
 <template>
-	<view class="cu-bar input input-fixed">
+	<view class="cu-bar input input-fixed" v-show="isLogin">
 		<input :placeholder="placeholder" @blur="inputBlur" :focus="isFocus" v-model="content" class="padding-left-sm solid" maxlength="40" />
 		<button class="cu-btn round bg-blue shadow-blur" @click="sendComment">发送</button>
 	</view>
 </template>
 
 <script>
+import { mapState, mapGetters } from 'vuex';
 export default {
+	computed: {
+		// 使用对象展开运算符将 getter 混入 computed 对象中
+		...mapGetters(['isLogin']),
+	},
 	props: {
 		placeholder: {
 			type: String,

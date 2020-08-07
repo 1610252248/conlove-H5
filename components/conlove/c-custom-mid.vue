@@ -3,13 +3,12 @@
 		<view class="navBar cu-bar">
 			<view class="action margin-left " @click="BackPage">
 				<text class="text-icon"><text class="cuIcon-back"></text></text>
-				
 			</view>
 			<view class="content text-bold">
 				<slot name="center"></slot>
 			</view>	
 		</view>
-		<view style="height: 90rpx;"></view>
+		<view style="height: 82rpx;"></view>
 	</view>
 </template>
 
@@ -37,10 +36,12 @@
 	position fixed
 	top 0
 	width 100%
-	height 90rpx
-	line-height 90rpx
+	min-height 80rpx 
+	line-height 80rpx
 	z-index 111
 	background-color white
+.cu-bar 
+	min-height 80rpx 
 .cuIcon-back 
 	font-size 42rpx
 .cu-btn.sm

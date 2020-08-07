@@ -21,14 +21,14 @@ let $http = new request({
 	//是否显示请求动画
 	load: false,
 	//是否使用处理数据模板
-	isFactory:  true,
+	isFactory: true,
 	//列表接口是否有加载判断
-	loadMore:  false,
+	loadMore: false,
 });
 //当前接口请求数
 let requestNum = 0;
 //请求开始拦截器
-$http.requestStart = function (options) {
+$http.requestStart = function(options) {
 	if (requestNum <= 0) {
 		uni.showNavigationBarLoading();
 		if (options.load) {
@@ -46,7 +46,7 @@ $http.requestStart = function (options) {
 	return options;
 }
 //请求结束
-$http.requestEnd = function (options, resolve) {
+$http.requestEnd = function(options, resolve) {
 	//判断当前接口是否需要加载动画
 	requestNum = requestNum - 1;
 	if (requestNum <= 0) {
@@ -55,7 +55,7 @@ $http.requestEnd = function (options, resolve) {
 	}
 	let code = resolve.statusCode;
 	//请求失败、未登录或登录已失效
-	if (resolve.errMsg &&  code && code != 200 && code != 1000 && code != 1001) { 
+	if (resolve.errMsg && code && code != 200 && code != 1000 && code != 1001) {
 		uni.showToast({
 			title: "网络错误，请检查一下网络",
 			icon: "none"
@@ -63,10 +63,8 @@ $http.requestEnd = function (options, resolve) {
 	}
 }
 
-//登录弹窗次数
-let loginPopupNum = 0;
 //所有接口数据处理（可在接口里设置不调用此方法）
-$http.dataFactory = function (options, resolve) {
+$http.dataFactory = function(options, resolve) {
 	// console.log("接口返回结果", resolve);
 	//设置回调默认值
 	var callback = {
@@ -81,35 +79,30 @@ $http.dataFactory = function (options, resolve) {
 		callback.result = resolve.data;
 	} else if (resolve.statusCode == "1000" || resolve.statusCode == "1001") {
 		//未登录或登录已失效
-		if (loginPopupNum <= 0) {
-			store.dispatch('del')
-			loginPopupNum++;
-			uni.showModal({
-				title: '温馨提示',
-				content: '此时此刻需要您登录喔~',
-				confirmText: "去登录",
-				cancelText: "再逛会",
-				success: (res) => {
-					loginPopupNum--;
-					if (res.confirm) {
-						uni.navigateTo({
-							url:'/pages/enter/login'
-						});
-					} else {
-						uni.switchTab({
-							url: '/pages/home/home'
-						})
-					}
+		store.dispatch('del')
+		uni.showModal({
+			title: '温馨提示',
+			content: '此时此刻需要您登录喔~',
+			confirmText: "去登录",
+			cancelText: "再逛会",
+			success: (res) => {
+				if (res.confirm) {
+					uni.navigateTo({
+						url: '/pages/enter/login'
+					});
+				} else {
+					uni.switchTab({
+						url: '/pages/home/home'
+					})
 				}
-			});
-		}
-	} 
-	else { //其他错误提示
+			}
+		});
+	} else { //其他错误提示
 		//设置可以提示的时候
 		if (options.isPrompt) {
 			//提示后台接口抛出的错误信息
 			uni.showToast({
-				title: '接口有错误'+resolve.data.msg,
+				title: '接口有错误' + resolve.data.msg,
 				icon: "none",
 			});
 		}

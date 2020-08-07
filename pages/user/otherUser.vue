@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<c-custom-mid><block slot="center">
-			{{user.nickName + '的缘来'}}
+			{{user.nickName}}
 		</block></c-custom-mid>
 		<c-scroll >
 			<!-- 用户 -->
@@ -81,7 +81,8 @@
 				</view>
 			</view>
 		</c-scroll>
-		<view class="bg-gray margin-bottom flex align-center justify-center padding-xs" >
+		<u-modal v-model="showDel" content="确定要取消秋波吗？" mask-close-able show-cancel-button @confirm="confirmDel" />
+		<view class="bg-gray flex align-center justify-center padding-xs" >
 			<!-- 喜欢按钮 -->
 			<view class="like-box" @click="likeClick" >
 				<image v-if="userDB.id != user.id" class="like" :src="isLike ? '/static/image/pic-like-active.png' : '/static/image/pic-like-normal.png'"></image>
@@ -104,6 +105,7 @@ export default {
 				id: -1,
 				nickName: ''
 			},
+			
 			//用户选择的标签
 			selectTagList: [],
 
@@ -116,6 +118,7 @@ export default {
 			stickers: [],
 			posts: [],
 			isLike: false,
+			showDel: false,
 		};
 	},
 
@@ -127,6 +130,7 @@ export default {
 		}
 	},
 	methods: {
+		
 		/* 获取个性展示标签，缘来和动态 */
 		init(id) {
 			this.getUser(id);
@@ -221,6 +225,17 @@ export default {
 		},
 	
 		likeClick(){
+			if(this.isLike) {
+				this.showDel = true;
+			} else {
+				this.$http.post('/changFriend', {userId: this.userDB.id, friendId: this.user.id}).then(res => {
+					this.isLike = !this.isLike;
+				})
+			}
+			
+			
+		},
+		confirmDel() {
 			this.$http.post('/changFriend', {userId: this.userDB.id, friendId: this.user.id}).then(res => {
 				this.isLike = !this.isLike;
 			})

@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<c-custom-mid><block slot="center">
-			{{userDB.nickName + '的缘来'}}
+			{{nickName}}
 		</block></c-custom-mid>
 		<c-scroll @scrolltolower="lower" midHeight >
 			<c-home :lists="list" :isLoad="isLoad" 
@@ -27,6 +27,7 @@ export default {
 			page: 1, //当前请求页
 			pageSize: 4, // 每页数量
 			totalPage: 0, // 总页数
+			nickName: '',
 		};
 	},
 	
@@ -44,9 +45,14 @@ export default {
 		init(id) {
 			this.list = [];
 			this.page = 1;
+			this.getUser(id);
 			this.getListData(id);
 		},
-
+		getUser(id) {
+			this.$http.get('/getUser', {id}).then(res => {
+				this.nickName = res.data.user.nickName + '的缘来'
+			})
+		},
 		/**
 		 * 获取首页列表的数据
 		 */

@@ -1,5 +1,5 @@
 <template>
-	<c-scroll>
+	<c-scroll midHeight>
 		<!-- 没有登陆 -->
 		<view v-if="!isLogin">
 			<view class="bg-gray padding">
