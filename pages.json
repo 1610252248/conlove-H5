@@ -51,6 +51,11 @@
 			"navigationBarTitleText": "验证邮箱"
 		}
 	},{
+		"path": "pages/user/favorite",
+		"style": {
+			"navigationBarTitleText": "心动信号"
+		}
+	},{
 		"path": "pages/empty/empty",
 		"style": {
 			"navigationStyle":"custom",

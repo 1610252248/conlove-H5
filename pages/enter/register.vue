@@ -4,7 +4,7 @@
 			<image style="width: 300rpx; height: 300rpx;" src="/static/image/pic-login-head.png" mode="aspectFit" ></image>
 			<!-- 表单 + 验证，规则是ruler，错误提示使用 toast -->
 			<u-form label-width="0"  class="zai-form" :model="form" ref="uForm" :errorType="errorType" >
-				<u-form-item  required  prop="userName" :border-bottom="false">
+				<u-form-item class="item-input"  required  prop="userName" :border-bottom="false">
 					<!-- <input  v-model="form.userName"  placeholder="请输入账号" /> -->
 					<u-input placeholder-style="color:#94afce" :custom-style="inputCustome"  placeholder="请输入账号" :clearable="false" v-model="form.userName" type="text"/>
 					<view class="loading-absolute" v-if="this.form.userName">
@@ -12,13 +12,13 @@
 						<text v-else-if="this.isLodingName == 1" class="cuIcon-roundcheckfill text-green"></text>
 						<text v-else-if="this.isLodingName == 2" class="cuIcon-roundclosefill text-red"></text>
 					</view>
-					</u-form-item>
-				<u-form-item required  prop="password" :border-bottom="false"><input v-model="form.password" password placeholder="请输入密码" /></u-form-item>
-				<u-form-item required  prop="checkPass" :border-bottom="false">
+				</u-form-item>
+				<u-form-item class="item-input" required  prop="password" :border-bottom="false"><input v-model="form.password" password placeholder="请输入密码" /></u-form-item>
+				<u-form-item class="item-input" required  prop="checkPass" :border-bottom="false">
 					<input v-model="form.checkPass" @blur="diffPassword = form.password != form.checkPass" password placeholder="请再输入一次密码" />
 				</u-form-item>
-				<u-form-item required  prop="nickName" :border-bottom="false"><input v-model="form.nickName" placeholder="请输入昵称" /></u-form-item>
-				<u-form-item required  prop="email" :border-bottom="false">
+				<u-form-item class="item-input" required  prop="nickName" :border-bottom="false"><input v-model="form.nickName" placeholder="请输入昵称" /></u-form-item>
+				<u-form-item class="item-input" required  prop="email" :border-bottom="false">
 					<!-- <input v-model="form.email" placeholder="请输入邮箱" /> -->
 					<u-input placeholder-style="color:#94afce" :custom-style="inputCustome"  placeholder="请输入邮箱" :clearable="false" v-model="form.email" type="text"/>
 					<view class="loading-absolute" v-if="this.form.email">
@@ -27,11 +27,11 @@
 						<text v-else-if="this.isLodingEmail == 2" class="cuIcon-roundclosefill text-red"></text>
 					</view>
 				</u-form-item>
-				<u-form-item style="width: 84%;" required  prop="code" :border-bottom="false">
-					<input class="zai-input" v-model="form.code" placeholder="请输入验证码" />
+				<u-form-item class="item-input" required  prop="code" :border-bottom="false">
+					<input class="zai-input verify" v-model="form.code" placeholder="请输入验证码" />
 					<u-button slot="right" type="success" size="mini" @click="getCode">{{ codeTips }}</u-button>
 				</u-form-item>
-				<u-form-item required  prop="sex" :border-bottom="false">
+				<u-form-item  required  prop="sex" :border-bottom="false">
 					<u-radio-group v-model="form.sex">
 						<u-radio name="男" shape="circle">男</u-radio>
 						<u-radio name="女" shape="circle" active-color="#FF4A2D">女</u-radio>
@@ -301,6 +301,8 @@ uni-input
 	height 80upx
 	font-size 30upx
 	color #94afce
+.item-input 
+	width 90%
 .btn
 	color #ffffff !important
 	background-color #ff4a2d !important

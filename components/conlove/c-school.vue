@@ -1,29 +1,32 @@
 <template>
 	<!-- 学校信息 -->
-	<view class="card">
-		<view class="margin-bottom-xs" @click="navToSchool">
-			<text>学校信息</text>
-			<block v-if="user.isIdentify">
-				<image class="identify" src="/static/image/identify.png"></image>
-				<text class="text-sm" style="color: #68dbdf;">已提交认证材料</text>
-			</block>
-			<text v-if="user.id == userDB.id" class="fr cuIcon-right text-gray"></text>
-		</view>
-		<view class="padding-left text-sm">
-			<view>
-				<text>学校</text>
-				<text class="text-gray margin-left">{{ user.school }}</text>
+	<view>
+		<c-card>
+			<view slot="top"  @click="navToSchool">
+				<text>学校信息</text>
+				<block v-if="user.isIdentify">
+					<image class="identify" src="/static/image/identify.png"></image>
+					<text class="text-sm" style="color: #68dbdf;">已提交认证材料</text>
+				</block>
+				<text v-if="user.id == userDB.id" class="fr cuIcon-right text-gray"></text>
 			</view>
-			<view>
-				<text>专业</text>
-				<text class="text-gray margin-left">{{ user.major }}</text>
+			<view slot="content">
+				<view>
+					<text>学校</text>
+					<text class="text-gray margin-left">{{ user.school }}</text>
+				</view>
+				<view>
+					<text>专业</text>
+					<text class="text-gray margin-left">{{ user.major }}</text>
+				</view>
+				<view>
+					<text>年级</text>
+					<text class="text-gray margin-left" v-if="user.grade && user.level">{{ user.grade + '级' + user.level}}</text>
+				</view>
 			</view>
-			<view>
-				<text>年级</text>
-				<text class="text-gray margin-left">{{ getGrade() }}</text>
-			</view>
-		</view>
+		</c-card>
 	</view>
+	
 </template>
 
 <script>
@@ -65,17 +68,9 @@ export default {
 </script>
 
 <style lang="stylus">
-.card
-	box-shadow 0px 2px 5px #EDEDED
-	width 86%
-	margin 40rpx auto
-	border 1px solid #cecece
-	border-radius 15rpx
-	color black
-	padding 20rpx
-	text
-		height 46rpx
-		line-height 46rpx
+text 
+	height 40rpx
+	line-height 40rpx
 .identify
 	width 30rpx
 	height 30rpx
