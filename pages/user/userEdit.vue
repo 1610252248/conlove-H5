@@ -93,9 +93,11 @@
 		<c-card>
 			<view slot="top">个性展示</view>
 			<view slot="content">
-				<view class="text-sm">
-					<view class="card-item">关键词</view>
-					<view class="card-item" :class="index == TabCur ? 'cur' : ''" v-for="(item, index) in infoList" :key="index" @tap="TabCur = index">{{ item.name }}</view>
+				<view class="flex">
+					<view class="card-item">关键词:</view>
+					<view style="width: 80%">
+						<u-tabs :height="60" :font-size="24" :bar-width="30" :gutter="28" :list="labelList"  :current="tabCur" @change="changeTab"></u-tabs>
+					</view>
 				</view>
 				<!-- 关键词内容 -->
 				<view class="text-sm margin-top-sm " style="min-height: 180rpx;">
@@ -104,7 +106,7 @@
 							class="info-tag"
 							@click="changeTag(item)"
 							:class="getTabColor(item)"
-							v-for="(item, index) in infoList[TabCur].list[infoList[TabCur].index]"
+							v-for="(item, index) in labelList[tabCur].list[labelList[tabCur].index]"
 							:key="index"
 						>
 							{{ item }}
@@ -168,6 +170,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
+import labelList from './label-data/label.js'
 export default {
 	computed: {
 		// 使用对象展开运算符将 getter 混入 computed 对象中
@@ -185,7 +188,7 @@ export default {
 			},
 			isFemale: false,
 			sexPicker: ['男', '女'],
-			TabCur: 0,
+			tabCur: 0,
 			showYear: false,
 			showMonth: false,
 			showDay: false,
@@ -197,37 +200,7 @@ export default {
 			graduationList: [{ value: 0, label: '未毕业' }, { value: 1, label: '已毕业' }],
 			selectTagList: [],
 			colorList: ['bg-red', 'bg-yellow', 'bg-blue'],
-			infoList: [
-				{
-					name: '专业',
-					list: [['哲学类', '经济类', '法学类', '教育类', '文学类', '历史类', '理学类', '工学类', '农学类', '医学类', '管理类', '艺术类', '军事类']],
-					index: 0
-				},
-				{
-					name: '爱好',
-					list: [
-						['篮球', '跑步', '跳绳', '举重', '足球', '滑板', '羽毛球', '兵乓球', '滑旱冰', '看书', '听音乐', '看电影', '绘画', '写小说', '积木', '王者荣耀'],
-						['弹吉他', '钢琴', '萨克斯', '葫芦丝', '折纸', '剪纸', '品茶', '涂鸦', '英雄联盟', '五子棋', 'CF', '地下城勇士', '飞行棋', '真心话大冒险'],
-						['吃鸡', '国际象棋', '扑克牌']
-					],
-					index: 0
-				},
-				{
-					name: '日常',
-					list: [],
-					index: 0
-				},
-				{
-					name: '经历',
-					list: [],
-					index: 0
-				},
-				{
-					name: '其它',
-					list: [],
-					index: 0
-				}
-			],
+			labelList: labelList,
 			changUser: false // 改变信息
 		};
 	},
@@ -279,6 +252,9 @@ export default {
 		sexChange(e) {
 			this.user.sex = this.sexPicker[e.detail.value];
 		},
+		changeTab(index) {
+			this.tabCur = index;
+		},
 		setGrage(e) {
 			this.user.grade = e.year;
 		},
@@ -301,8 +277,8 @@ export default {
 		},
 		// 换一批 个性展示
 		changeList() {
-			let cur = this.TabCur;
-			let info = this.infoList[cur];
+			let cur = this.tabCur;
+			let info = this.labelList[cur];
 			//
 			if (info.index + 1 < info.list.length) info.index++;
 			else {
@@ -313,7 +289,7 @@ export default {
 		//获取导航栏选中的 颜色
 		getTabColor(tab) {
 			if (this.selectTagList.find(item => item.name === tab)) {
-				return this.getTagColor(this.TabCur);
+				return this.getTagColor(this.tabCur);
 			}
 			return 'tag-border';
 		},
@@ -378,16 +354,12 @@ export default {
 	display flex
 	align-items center
 .card-item
-	height 50rpx
+	height 60rpx
 	display inline-block
-	line-height 50rpx
+	line-height 60rpx
 	margin 0 18rpx
-	padding 0 4rpx
 	color #333333
-.card-item:last-child
-	margin-right 0rpx
-.card-item.cur
-	border-bottom 4rpx solid #a7a7a7
+
 .cuIcon-camerafill
 	background-color transparent !important
 	color #8799a3

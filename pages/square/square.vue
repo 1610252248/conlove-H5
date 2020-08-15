@@ -2,9 +2,8 @@
 	<view>
 		<!-- 导航  动态/树洞 -->
 		<view class="bg-white nav text-black">
-			<view class="cu-item text-lg  text-bold" v-for="(item, index) in navs" :key="index" @click="tabSelect(index)">
-				<view class=" text-center">{{ item }}</view>
-				<view :class="{ active: tabCur == index }"></view>
+			<view>
+				<u-tabs :bar-height="8" :active-item-style="{'color':'#000000'}" :bar-style="{'background-color':'#c2c2c2'}"  :font-size="34" :bar-width="80" :gutter="40" :list="navs"  :current="tabCur" @change="changeTab"></u-tabs>
 			</view>
 			<view class="add-fixed text-xxl" @click="showModal"><text class="cuIcon-roundaddfill"></text></view>
 		</view>
@@ -39,7 +38,7 @@ export default {
 	data() {
 		return {
 			tabCur: 0,
-			navs: ['动态', '树洞'],
+			navs: [{name:'动态'}, {name:'树洞'}],
 			bottomModal: false,
 		};
 	},
@@ -53,7 +52,9 @@ export default {
 		tabSelect(index) {
 			this.tabCur = index;
 		},
-
+		changeTab(index) {
+			this.tabCur = index;
+		},
 		showModal() {
 			this.bottomModal = true;
 		},
