@@ -70,9 +70,7 @@ export default {
 			});
 		},
 		login() {
-			console.log('login');
 			this.$refs.uForm.validate(valid => {
-				console.log(valid);
 				if (valid)  {
 					this._login()
 				}

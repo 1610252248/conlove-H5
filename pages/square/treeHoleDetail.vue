@@ -93,7 +93,6 @@ export default {
 		getTreeHole(id) {
 			this.$http.get('/getTreeHole', { id }).then(res => {
 				this.treeHole = res.data;
-				console.log(res);
 			});
 		},
 		
@@ -139,7 +138,6 @@ export default {
 					let comment = res.data;
 					comment.user = this.userDB;
 					let i = this.cIndex;
-					console.log(i);
 					if(this.comments[i].newComments == null)
 						this.comments[i].newComments = [comment];
 					else 

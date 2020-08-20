@@ -270,7 +270,6 @@ export default {
 			}
 			let b = this.birth;
 			this.user.birthDate = b.year + '-' + b.month + '-' + b.day;
-			console.log(this.user.birthDate);
 		},
 		gradeChange(e) {
 			this.user.grade = this.gradePicker[e.detail.value];

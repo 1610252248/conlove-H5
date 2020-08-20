@@ -44,7 +44,6 @@ export default {
 		getComment(){
 			this.$http.get('/message/getComment').then(res => {
 				this.lists = res.data;
-				console.log(this.lists);
 			})
 		},
 		// 跳转用户资料

@@ -42,7 +42,8 @@
 	}, {
 		"path": "pages/release/add",
 		"style": {
-			"navigationStyle":"custom"
+			"navigationStyle":"custom",
+			"navigationBarTitleText": "发布缘来"
 		}
 	}, {
 		"path": "pages/enter/verify",

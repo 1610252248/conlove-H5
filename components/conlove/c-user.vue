@@ -1,22 +1,6 @@
 <template>
-	<c-scroll midHeight v-if="Object.keys(user).length && user.avatar">
-		<!-- 没有登陆 -->
-		<view v-if="!isLogin">
-			<view class="bg-gray padding">
-				<view class="flex justify-start align-center ">
-					<u-avatar class="margin-left" size="110" mode="circle"></u-avatar>
-					<view @click="navToLogin" class="margin-left-xl text-df text-bold">点击登录</view>
-				</view>
-			</view>
-			<view class="card">
-				<view class="flex justify-center flex-direction align-center" style="height: 60vh;">
-					<image style="width: 150upx;height: 150upx;" src="/static/image/pic-dataIsNone.png"></image>
-					<text style="color:#bebebe">暂无数据</text>
-				</view>
-			</view>
-		</view>
-
-		<view v-else>
+	<view  v-if="Object.keys(user).length && user.avatar">
+		<view >
 			<!-- 用户 -->
 			<view class="bg-gray ">
 				<view class="user-content padding-left">
@@ -124,8 +108,7 @@
 				</view>
 			</c-card>
 		</view>
-		<u-top-tips :navbar-height="0" ref="uTips" @edit-user="navToEditUser"></u-top-tips>
-	</c-scroll>
+	</view>
 </template>
 
 <script>
@@ -133,7 +116,6 @@ import { mapState, mapGetters } from 'vuex';
 export default {
 	computed: {
 		// 使用对象展开运算符将 getter 混入 computed 对象中
-		...mapGetters(['isLogin']),
 		...mapState(['userDB'])
 	},
 	props: {
@@ -158,21 +140,9 @@ export default {
 			type: Boolean,
 			default: true
 		},
+		
 	},
-	onReady() {
-		/* 只能密码是空，其它属性不为空，否则就提示信息不完整 */
-		let num = 0;
-		for (let obj in this.user) {
-			if (this.user[obj] == null) num++;
-		}
-		if (num > 3) {
-			this.$refs.uTips.show({
-				title: '完善信息之后，得到秋波几率更高哦~',
-				type: 'primary',
-				duration: '2300'
-			});
-		}
-	},
+	
 	methods: {
 		
 		viewImage(url) {

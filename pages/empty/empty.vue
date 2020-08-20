@@ -9,9 +9,7 @@
 				mode: 'data'
 			}
 		},
-		onLoad(op) {
-			console.log(op);
-		},
+		
 	}
 </script>
 

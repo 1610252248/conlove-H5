@@ -93,7 +93,6 @@ export default {
 					obj.isAppreciate = idx == -1 ? false : true;
 					this.comment.childComments.push(obj);
 				}
-				console.log(this.comment);
 			});
 		},
 

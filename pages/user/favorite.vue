@@ -9,8 +9,8 @@
 						auto-height
 						v-model="user.favorite"
 						class="textarea-border-2"
-						placeholder="向对你感兴趣的人介绍下自己吧o(￣▽￣o)~ 
-可以讲讲你的爱好、家庭、求学经历、去过的地方等等等"
+						placeholder="向大家描述下心里的那个TA吧，
+理想型什么的，说不定真的存在哦！"
 					/>
 				</view>
 				<u-line color="#d4d4d4" />

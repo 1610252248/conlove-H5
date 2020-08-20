@@ -130,7 +130,6 @@ export default {
 					this.$refs.uCode.start();
 					if (res.status == this.$http.SUCCESS) {
 						this.verifyCode = res.data
-						console.log(this.verifyCode);
 						// 这里此提示会被this.start()方法中的提示覆盖
 						this.$refs.uToast.show({
 							title: res.msg,

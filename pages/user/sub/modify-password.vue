@@ -58,7 +58,6 @@ export default {
 				return ;
 			}
 			this.$http.get('/modify/oldPass',{oldPass, newPass}).then(res => {
-				console.log(res);
 				if(res.status == this.$http.SUCCESS) {
 					this.$refs.uToast.show({
 						title: res.msg,

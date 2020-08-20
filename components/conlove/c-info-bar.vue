@@ -59,7 +59,7 @@
 	width 40rpx
 	height 40rpx
 .info-bar
-	height 36rpx
-	line-height 46rpx
+	height 40rpx
+	line-height 40rpx
 	padding 0 30rpx
 </style>

@@ -1,17 +1,36 @@
 <template>
 	<c-scroll max-height>
 		<c-custom-mid><block slot="center">发布缘来</block></c-custom-mid>
-		<view class="bg-white padding">
+		<view class="bg-white padding margin-bottom-lg">
 			<view class="cu-steps">
 				<view class="cu-item" :class="index>basics?'':'text-red'" v-for="(item,index) in basicsList" :key="index">
-					<text :class="'cuIcon-' + item.cuIcon"></text> {{item.name}}
+					<view class="step-bottom">
+						<image class="step-image" :src="'/static/image/' +  (index<=basics ? item.imageActive : item.image)" />
+					</view> 
+					<view class="step-bottom padding-top-sm">
+						{{item.name}}
+					</view>
+				</view>	
+			</view>
+		</view>
+		
+		<!-- 基本信息 -->
+		<release-first v-if="basics == 0" :data="data"  @next="next" />
+		<!-- 心动信号 -->
+		<release-third v-if="basics == 1" :data="data" @next="nextThird" />
+		<!-- 图片上传 -->
+		<release-second v-show="basics == 2" :data="data.images" @back="back" @next-sec="nextSec" />
+		<block v-if="basics == 3">
+			<view style="height: 40rpx;"></view>
+			<view class="margin-tb flex justify-center">
+				<u-image :show-loading="false" :fade="false" width="40%" shape="circle" height="300rpx" src="/static/image/release-finish-toast.png" />
+			</view>
+			<view style="height: 60rpx; line-height: 60rpx;text-align: center;" class="text-bold">
+				<view>
+					您已发布成功，快 <text class="navJump" @click="navToHome">返回首页</text> 看看吧
 				</view>
 			</view>
-			
-		</view>
-		<release-first :data="data"  @next="next" v-show="basics == 0"/>
-		<release-second :data="data.images" @back="back" @next-sec="nextSec" v-show="basics == 1"/>
-		<!-- <release-third  v-show="basics == 2"/> -->
+		</block>
 		<u-toast ref="uToast" />
 	</c-scroll>
 </template>
@@ -19,21 +38,24 @@
 <script>
 import releaseFirst from '@/pages/release/releaseFirst.vue'
 import releaseSecond from '@/pages/release/releaseSecond.vue'
-import { mapGetters } from 'vuex';
+import releaseThird from '@/pages/release/releaseThird.vue'
+import { mapState, mapGetters } from 'vuex';
 export default {
 	computed: {
 		// 使用对象展开运算符将 getter 混入 computed 对象中
-		...mapGetters(['isLogin'])
+		...mapGetters(['isLogin']),
+		...mapState(['userDB'])
 	},
 	components: {
-		releaseFirst, releaseSecond
+		releaseFirst, releaseSecond, releaseThird
 	},
 	data() {
 		return {
 			basicsList: [
-				{cuIcon: 'usefullfill',	name: '填写信息'},
-				{cuIcon: 'radioboxfill',name: '上传图片'}, 
-				// {cuIcon: 'roundcheckfill',name: '完成'}, 
+				{image: 'release-edit.png', imageActive: 'release-edit-active.png', name: '填写信息'},
+				{image: 'release-heart.png', imageActive: 'release-heart-active.png', name: '心动信号'}, 
+				{image: 'release-image.png', imageActive: 'release-image-active.png', name: '上传图片'}, 
+				{image: 'release-finish.png', imageActive: 'release-finish-active.png',name: '完成'}
 			],
 			basics: 0,
 			data: {
@@ -44,28 +66,54 @@ export default {
 				birthDate: '',
 				height: '',
 				introduce: '',
-				images: []
+				images: [],
+				favorite: '',
+				emotion: '',
+				friend: true, // 默认为朋友发帖
 			},
 			id: -1, // 表明不是修改页面过来的
+			levelList: {
+				'学士': '大',
+				'硕士': '硕',
+				'博士': '博',
+			},
+			grade: {
+				'1': '一',
+				'2': '二',
+				'3': '三',
+				'4': '四',
+				'5': '五',
+			}
 		}
 	},
-	// onBackPress() {
-	// 	if(this.id == -1) {
-	// 		uni.switchTab({
-	// 			url: '/pages/home/home'
-	// 		})
-	// 		return true;
-	// 	} 
-	// },
-	onLoad({id}) {
+	onLoad({id, friend}) {
+		if(!this.isLogin) {
+			this.$http.get('/verifyLogin').catch( err => {})
+		}
 		if(id != null) {
 			this.id = id;
 			this.getSticker(id);
 		}
-		if(!this.isLogin) {
-			this.$http.get('/verifyLogin').catch( err => {})
+		// 为自己发帖
+		if(friend && friend == 'false') {
+			this.$http.get('/getUser', {id: this.userDB.id}).then(res => {
+				let user = res.data.user;
+				for(let key in user) {
+					this.data[key] = user[key]
+				}
+				if(user.grade && user.level ) {
+					let d = new Date();
+					let v = d.getFullYear() - user.grade;
+					if(d.getMonth() >= 7) v++;
+					this.data.grade = this.levelList[user.level] + this.grade[v];
+				}
+				if(user.graduation && user.graduation == 1) {
+					this.data.grade = '已毕业'
+				}
+			})
+			this.data.images = []
+			this.data.friend = false
 		}
-			
 		
 	},
 	methods: {
@@ -78,32 +126,44 @@ export default {
 			this.basics++;
 			this.data = firstData;
 		},
+		nextThird(data) {
+			for(let key in data) {
+				this.data[key] = data[key]
+			}
+			this.basics++;
+		},
 		nextSec(images) {
 			// 修改
 			if(this.id != -1) {
 				this.$http.post('/updateSticker', {sticker: this.data, images}).then(res => {
-					this.$refs.uToast.show({
-						title: res.msg,
-						type: 'success',
-						back: true
-					})
 					this.$eventBus.$emit('update-sticker');
+					setTimeout(() => {
+						this.$u.route({
+							url: '/pages/home/home',
+							type: 'tab'
+						})
+					}, 4000)
 				})
 			} else {
 				this.data.images = images
 				this.$http.post('/addSticker', this.data).then(res => {
-					this.$refs.uToast.show({
-						title: res.msg,
-						type: 'success',
-						url: '/pages/home/home',
-						isTab: true
-					})
 					this.$eventBus.$emit('add-sticker')
+					this.basics++;
+					setTimeout(() => {
+						this.$u.route({
+							url: '/pages/home/home',
+							type: 'tab'
+						})
+					}, 4000)
 				})
 			}
-			
 		},
-		
+		navToHome() {
+			this.$u.route({
+				type: 'tab',
+				url: '/pages/home/home'
+			})
+		},
 		back() {
 			this.basics--;
 		}
@@ -112,5 +172,21 @@ export default {
 </script>
 
 <style lang="stylus">
-
+.step-image
+	width: 50rpx;
+	height: 50rpx;
+.step-bottom 
+	position relative
+	top 16rpx
+.btn
+	color #ffffff !important
+	background-color #ff4a2d !important
+	border-radius 1000px
+	font-size 30upx
+	padding 0 100rpx
+.navJump
+	font-weight 600
+	color #94afce
+	padding 1px
+	border-bottom 0.5px solid #859eb8;
 </style>

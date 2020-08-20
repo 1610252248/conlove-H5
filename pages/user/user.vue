@@ -1,9 +1,24 @@
 <template>
 	<c-scroll midHeight>
 		<!-- 用户信息 -->
-		<c-user :user="user" :selectTagList="selectTagList" :isIdentity="isIdentity"
+		<view v-if="!isLogin">
+			<view class="bg-gray padding">
+				<view class="flex justify-start align-center ">
+					<u-avatar class="margin-left" size="110" mode="circle"></u-avatar>
+					<view @click="navToLogin" class="margin-left-xl text-df text-bold">点击登录</view>
+				</view>
+			</view>
+			<view class="card">
+				<view class="flex justify-center flex-direction align-center" style="height: 60vh;">
+					<image style="width: 150upx;height: 150upx;" src="/static/image/pic-dataIsNone.png"></image>
+					<text style="color:#bebebe">暂无数据</text>
+				</view>
+			</view>
+		</view>
+		<c-user v-else :user="user"  :selectTagList="selectTagList" :isIdentity="isIdentity"
 		:stickers="stickers" :posts="posts"
 		 />
+		 <u-top-tips :navbar-height="0" ref="uTips" @edit-user="navToEditUser"></u-top-tips>
 	</c-scroll>
 </template>
 
@@ -26,7 +41,8 @@ export default {
 			isIdentity: true,
 
 			stickers: [],
-			posts: []
+			posts: [],
+			is_login: false,
 		};
 	},
 	onReady() {
@@ -56,6 +72,10 @@ export default {
 		})
 	},
 	methods: {
+		// 修改信息
+		navToEditUser() {
+			this.$u.route('/pages/user/userEdit');
+		},
 		/* 获取个性展示标签，缘来和动态 */
 		init() {
 			this.user = this.$u.deepClone(this.userDB);
@@ -79,8 +99,11 @@ export default {
 			this.$http.get('/user/getUserSticker', data).then(res => {
 				this.stickers = res.data.list;
 			});
-		}
-	
+		},
+		// 登录跳转
+		navToLogin() {
+			this.$u.route('/pages/enter/login');
+		},
 	}
 };
 </script>

@@ -122,7 +122,6 @@ export default {
 					{ required: true, message: '请重新输入密码' },
 					{
 						validator: (rule, value) => {
-							console.log(vaue);
 							return value === this.form.password;
 						},
 						message: '两次输入的密码不相等',

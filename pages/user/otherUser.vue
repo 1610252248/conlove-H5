@@ -4,19 +4,17 @@
 			{{user.nickName}}
 		</block></c-custom-mid>
 		<!-- 用户信息 -->
-		<c-scroll minHeight>
+		<c-scroll midHeight>
 			<c-user :user="user" :selectTagList="selectTagList" :isIdentity="isIdentity"
 			:stickers="stickers" :posts="posts"
 			 />
+			 
 		</c-scroll>
 		<!-- 秋波功能 -->
-		<view class="bg-gray flex align-center justify-center padding-xs" >
+		<view class="like-box" @click="likeClick" >
 			<!-- 喜欢按钮 -->
-			<view class="like-box" @click="likeClick" >
-				<image v-if="userDB.id != user.id" class="like" :src="isLike ? '/static/image/pic-like-active.png' : '/static/image/pic-like-normal.png'"></image>
-			</view>
+			<image v-if="userDB.id != user.id" class="like" :src="isLike ? '/static/image/pic-like-active.png' : '/static/image/pic-like-normal.png'"></image>
 		</view>
-		
 		<u-modal v-model="showDel" content="确定要取消秋波吗？" mask-close-able show-cancel-button @confirm="confirmDel" />
 	</view>
 </template>
@@ -67,7 +65,6 @@ export default {
 			this.$http.get("/getUser", {id}).then(res => {
 				this.user = res.data.user;
 				let friend = res.data.friend;
-				console.log(this.user);
 				// 关系等于 空，或者有关系，但不是被动，也可以
 				if(friend != null &&  friend.state != 1) {
 					this.isLike = true;
@@ -116,12 +113,18 @@ export default {
 
 <style lang="stylus">
 .like-box
-	background-color rgba(207, 207, 207, 0.4)
-	height 80rpx
+	background-color rgba(199, 199, 199, 0.4)
+	width 96rpx
+	height 96rpx
 	border-radius 50%
-	z-index 999
+	z-index 99
+	position fixed
+	bottom 40rpx
+	right 52rpx
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	.like
-		margin 6rpx 6rpx
 		width 70rpx
 		height 70rpx
 		z-index 999

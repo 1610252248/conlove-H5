@@ -32,9 +32,9 @@
 				</button>
 			</view>
 			<view class="action">
-				<button class="cu-btn bg-red round" @click="nextSec">
+				<u-button   class=" btn bg-red round" @click="nextSec">
 					发布 <text class="cuIcon-right"></text>
-				</button>
+				</u-button>
 			</view>
 		</view>
 		
@@ -82,16 +82,7 @@
 				});
 			},
 			DelImg(e) {
-				uni.showModal({
-					content: '确定要删除照片吗？',
-					cancelText: '取消',
-					confirmText: '确定',
-					success: res => {
-						if (res.confirm) {
-							this.images.splice(e.currentTarget.dataset.index, 1)
-						}
-					}
-				})
+				this.images.splice(e.currentTarget.dataset.index, 1)
 			},
 			nextSec() {
 				if(!this.images || this.images.length == 0) {
@@ -135,4 +126,10 @@
 	height 80rpx
 .text-sm 
 	font-size 26rpx
+.btn
+	color #ffffff !important
+	background-color #ff4a2d !important
+	border-radius 1000px
+	font-size 30upx
+	padding 0 60rpx
 </style>

@@ -8,7 +8,6 @@
 export default {
 	onLoad() {
 		setTimeout(()=>{
-			console.log("转场结束"); 
 			uni.switchTab({
 				url:'/pages/home/home'
 			})

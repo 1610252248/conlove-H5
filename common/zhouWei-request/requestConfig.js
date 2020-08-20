@@ -3,8 +3,8 @@ import store from '@/store'
 // let baseUrl = "https://www.conlove.cn/api";
 // let baseUrl = "http://localhost:8181/api";
 // let baseUrl = "http://192.168.0.102:8181/api";
+// let baseUrl = "http://192.168.10.102:8181/api";
 let baseUrl = "http://47.93.9.196:8282/api"; // 1核
-// let baseUrl = "http://39.96.59.80:8282/api"; // 2核 服务器
 //可以new多个request来支持多个域名请求
 let $http = new request({
 	//接口请求地址

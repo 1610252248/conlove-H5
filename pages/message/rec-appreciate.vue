@@ -48,7 +48,6 @@ export default {
 		getAppreciate(){
 			this.$http.get('/message/getAppreciate').then(res => {
 				this.lists = res.data;
-				console.log(this.lists);
 			})
 		},
 		// 跳转用户资料

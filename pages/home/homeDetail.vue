@@ -4,11 +4,6 @@
 			<!-- 用户信息 -->
 			<view class="user-info">
 				<view class="box-info-up">
-					<text class="fl">{{ sticker.school + ' | ' + sticker.grade }}</text>
-					<image class="sex-image fl" :src="getSexImage(sticker.sex)"></image>
-					<text class="fr">{{ $utils.getAge(sticker.birthDate) + '岁 | ' + sticker.height + 'cm' }}</text>
-				</view>
-				<view class="box-info-down">
 					<view class="user fl flex align-center" @click.stop="navToOtherUser(sticker.user.id)">
 						<image class="userAvatar" :src="sticker.user.avatar"></image>
 						<text class="box-userName text-cut">{{ sticker.user.nickName }}</text>
@@ -18,27 +13,46 @@
 						<text class="title-text text-cut">{{ sticker.title }}</text>
 					</view>
 				</view>
+				<view class="box-info-down">
+					<text class="fl">{{ sticker.school + ' | ' + sticker.grade }}</text>
+					<image class="sex-image fl" :src="getSexImage(sticker.sex)"></image>
+					<text class="fr">{{ $utils.getAge(sticker.birthDate) + '岁 | ' + sticker.height + 'cm' }}</text>
+				</view>
+			
 			</view>
 			<view class="user-info-image">
-				<!-- 喜欢按钮 -->
-				<view class="like-box" v-if="!isMySticker" @click="likeClick">
-					<image class="like" :src="isLike ? '/static/image/pic-like-active.png' : '/static/image/pic-like-normal.png'"></image>
-				</view>
 				<!-- 图片轮播 -->
 				<swiper class="card-swiper square-dot" indicator-dots circular autoplay @change="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
-					<swiper-item v-for="(item, index) in sticker.images" :key="index" :class="cardCur == index ? 'cur' : ''" >
-						<view class="swiper-item"  @click="viewImage(item.image)" >
-							<image :src="item.image" mode="aspectFill"/>
-						</view>
+					<swiper-item v-for="(item, index) in sticker.images" :key="index" :class="cardCur == index ? 'cur' : ''">
+						<view class="swiper-item" @click="viewImage(item.image)"><image :src="item.image" mode="aspectFill" /></view>
 					</swiper-item>
 				</swiper>
-				<!-- 帖子详情 -->
-				<view class="margin-left-sm  text-left">
-					<view class="padding-lg text-gray text-wrap">
-						<view>{{ sticker.introduce }}</view>
+				<!-- 关于我 -->
+				<view class="padding margin-left-sm max-height">
+					<u-section lineColor="#FF4A2D" :title="sticker.friend ? '关于我的朋友': '关于我'" :bold="false" :right="false"></u-section>
+					<view class="text-gray text-content margin-top-sm" style="height: 100%;">{{ sticker.introduce }}</view>
+				</view>
+				<!-- 心仪的TA -->
+				<view class="padding margin-left-sm">
+					<u-section lineColor="#FF4A2D" title="心仪的TA" :bold="false" :right="false"></u-section>
+					<view class="text-gray text-content margin-top-sm" style="height: 100%;">
+						<text>{{ sticker.favorite }}</text>
+					</view>
+				</view>
+				<!-- 感情观 -->
+				<view class="padding margin-left-sm">
+					<u-section lineColor="#FF4A2D" title="感情观" :bold="false" :right="false"></u-section>
+					<view class="text-gray text-content margin-top-sm" style="height: 100%;">
+						<text>{{ sticker.emotion }}</text>
 					</view>
 				</view>
 			</view>
+			
+			<!-- 喜欢按钮 -->
+			<view class="like-box" v-if="!isMySticker" @click="likeClick">
+				<image class="like" :src="isLike ? '/static/image/pic-like-active.png' : '/static/image/pic-like-normal.png'"></image>
+			</view>
+			
 			<!-- 夸夸墙 -->
 			<view class="praise-wall">
 				<!-- 标题 -->
@@ -49,9 +63,9 @@
 					</view>
 				</view>
 				<!-- 评论 -->
-				<c-comment id="comment"  :comments="comments" @change-like="changLike" :showInfo="false" />
+				<c-comment id="comment" :comments="comments" @change-like="changLike" :showInfo="false" />
 			</view>
-			<view class="cu-load" :class="!isLoad ? 'loading' : 'over'"/>
+			<view class="cu-load" :class="!isLoad ? 'loading' : 'over'" />
 			<u-toast ref="uToast" />
 		</c-scroll>
 		<c-input @send-comment="sendComment" />
@@ -61,7 +75,6 @@
 <script>
 import { mapState, mapGetters } from 'vuex';
 export default {
-	
 	computed: {
 		...mapGetters(['isLogin']),
 		// 使用对象展开运算符将 getter 混入 computed 对象中
@@ -83,7 +96,7 @@ export default {
 			// 用户赞过的评论
 			isLoad: false,
 			loadCnt: 0,
-			scrollId: '',
+			scrollId: ''
 		};
 	},
 	onLoad({ id }) {
@@ -91,22 +104,21 @@ export default {
 		this.comments = [];
 		this.getComments(id);
 	},
-	
+
 	methods: {
 		/**
 		 * 获取帖子详情
 		 */
 		getInfo(id) {
 			this.$http.get('/sticker', { id }).then(res => {
-				if(res.status == this.$http.ERROR) {
-					this.$u.route('/pages/empty/empty', {mode: 'page'})
+				if (res.status == this.$http.ERROR) {
+					this.$u.route('/pages/empty/empty', { mode: 'page' });
 				} else {
 					this.sticker = res.data.sticker;
 					// 是否对当前帖子用户发送秋波
-					if(res.data.friend != null) this.isLike = true
+					if (res.data.friend != null) this.isLike = true;
 					if (this.sticker.user.id == this.userDB.id) this.isMySticker = true;
 				}
-				
 			});
 		},
 		getComments(id) {
@@ -115,17 +127,15 @@ export default {
 				this.totalPage = res.data.pages;
 				if (this.page >= this.totalPage) this.isLoad = true;
 				this.getAppreciate(res.data.list);
-				console.log(this.comments);
 			});
 		},
 		getAppreciate(list) {
-			
 			this.$http.get('/sticker/commentAppreciate').then(res => {
 				let appreciateList = res.data;
-				for(let obj of list) {
-					let idx = appreciateList.findIndex(item => item.commentId == obj.id)
-					obj.isAppreciate = (idx == -1 ? false : true);
-					this.comments.push(obj)
+				for (let obj of list) {
+					let idx = appreciateList.findIndex(item => item.commentId == obj.id);
+					obj.isAppreciate = idx == -1 ? false : true;
+					this.comments.push(obj);
 				}
 			});
 		},
@@ -138,7 +148,7 @@ export default {
 
 		viewImage(url) {
 			let images = [];
-			for(let obj of this.sticker.images) images.push(obj.image)
+			for (let obj of this.sticker.images) images.push(obj.image);
 			uni.previewImage({
 				urls: images,
 				current: url
@@ -150,28 +160,27 @@ export default {
 			this.cardCur = e.detail.current;
 		},
 
-		
 		/**
 		 * @param {Object} id 评论id
 		 * @param {Object} isLike 是否点赞
 		 */
 		changLike(id, isLike) {
-			if (!isLike) { 
+			if (!isLike) {
 				this.$http.post('/sticker/addCommentLike', { commentId: id });
 			} else {
-				this.$http.get('/sticker/delCommentLike', { id});
+				this.$http.get('/sticker/delCommentLike', { id });
 			}
 		},
-		
+
 		likeClick() {
-			this.$http.post('/changFriend', {userId: this.userDB.id, friendId: this.sticker.user.id}).then(res => {
+			this.$http.post('/changFriend', { userId: this.userDB.id, friendId: this.sticker.user.id }).then(res => {
 				this.isLike = !this.isLike;
-			})
+			});
 		},
 
 		// 跳转用户资料
 		navToOtherUser(id) {
-			this.$u.route('/pages/user/otherUser', {id})
+			this.$u.route('/pages/user/otherUser', { id });
 		},
 		// 发送评论
 		sendComment(content) {
@@ -208,42 +217,42 @@ export default {
 	font-size $uni-font-size-base
 .box-info-up
 	width 85%
-	height 55rpx
+	height 65rpx
+	line-height 65rpx
 	margin 30rpx auto 0
-.box-info-down
-	width 85%
-	height 60rpx
-	margin 0 auto 30rpx
 	.user
 		max-width 45%
 		.box-userName
-			position relative
-			top 5rpx
 			margin-left 10rpx
 			max-width 70%
 	.title
 		max-width 45%
-		height 100%
 		font-size 30rpx
-		// font-weight 600
 		.title-text
 			margin-left 10rpx
+.box-info-down
+	width 85%
+	height 60rpx
+	margin 20rpx auto 0
+	
 .user-info-image
 	width 100%
-	.like-box
-		background-color rgba(135, 153, 163, 0.4)
-		width 80rpx
-		height 80rpx
-		border-radius 50%
-		position absolute
-		top 635rpx
-		right 85rpx
-		z-index 99
-		.like
-			margin 6rpx 6rpx
-			width 70rpx
-			height 70rpx
-			z-index 999
+.like-box
+	background-color rgba(199, 199, 199, 0.4)
+	width 96rpx
+	height 96rpx
+	border-radius 50%
+	position fixed
+	bottom 140rpx
+	right 34rpx
+	z-index 99
+	display: flex;
+	justify-content: center;
+	align-items: center;
+.like
+	width 70rpx
+	height 70rpx
+	z-index 999
 .card-swiper
 	height 630rpx !important
 	.praise-wall
@@ -257,4 +266,7 @@ export default {
 	width 100%
 	background-color #FFFFFF
 	z-index 9999
+.text-content
+	height 40rpx
+	line-height 40rpx
 </style>

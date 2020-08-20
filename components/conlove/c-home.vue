@@ -138,11 +138,10 @@ export default {
 .box-info-down
 	width 90%
 	height 60rpx
+	line-height 60rpx
 	.user
 		max-width 45%
 		.box-userName
-			position relative
-			top 5rpx
 			font-size 28rpx
 			color #333333
 			margin-left 10rpx
