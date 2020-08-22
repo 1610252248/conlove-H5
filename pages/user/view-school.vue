@@ -3,7 +3,7 @@
 		
 		<!-- 已上传资料 -->
 		<view class="margin-tb-sm title ">已上传资料</view>
-		<u-image width="100%" height="650rpx" :src="userDB.identifyImage" @click="$utils.viewImage(userDB.identifyImage)"></u-image>
+		<u-image width="650rpx" height="600rpx" :fade="false" mode="aspectFit" :src="(userDB.identifyImage?userDB.identifyImage:'/static/image/default-identify.png')" @click="$utils.viewImage(userDB.identifyImage)"/>
 		<view class="margin-tb-sm tips-text ">
 			<view class="cuIcon-favorfill">上传的材料将在个人主页-学校信息-认证材料可见</view>
 			<view>请注意遮挡隐私信息</view>

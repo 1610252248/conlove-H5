@@ -1,21 +1,24 @@
 <template>
 	<view>
 		<u-form class="form" :model="form" ref="uForm" :errorType="['toast']">
-			<u-form-item label="标题" prop="title"><u-input inputAlign="right" v-model="form.title" placeholder="请输入发帖的标题(最多14个字)" maxlength="14" /></u-form-item>
+			<u-form-item label="标题" prop="title">
+				<u-input inputAlign="right" v-model="form.title" placeholder="请输入发帖的标题(最多14个字)" maxlength="14" />
+			</u-form-item>
 			<u-form-item label="学校" prop="school">
 				<u-input inputAlign="right" type="select" v-model="form.school" placeholder="请选择学校" @click="$refs.schoolPicker.show()" />
 			</u-form-item>
-			<u-form-item label="性别" prop="sex"><u-input inputAlign="right" type="select" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true" /></u-form-item>
+			<u-form-item label="性别" prop="sex">
+				<u-input inputAlign="right" type="select" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true" />
+				</u-form-item>
 			<u-form-item label="年级" prop="grade">
 				<u-input inputAlign="right" type="select" v-model="form.grade" placeholder="请选择年级" @click="gradeShow = true" />
 			</u-form-item>
 			<u-form-item label="生日" prop="birthDate">
 				<u-input inputAlign="right" type="select" v-model="form.birthDate" placeholder="请选择生日" @click="dateShow = true" />
 			</u-form-item>
-			<u-form-item label="身高" prop="height"><u-input inputAlign="right" type="number" v-model="form.height" placeholder="请输入身高" /></u-form-item>
-			<!-- <u-form-item label="关于你" labelWidth="120" prop="introduce">
-				<u-input type="textarea"  placeholder="介绍下你自己, 收到的秋波的可能性更高哦~ (最少10个字)" v-model="form.introduce" />
-			</u-form-item> -->
+			<u-form-item label="身高" prop="height">
+				<u-input inputAlign="right" type="number" v-model="form.height" placeholder="请输入身高" />
+			</u-form-item>
 		</u-form>
 		<u-select v-model="sexShow" :list="sexPicker" @confirm="sexChange"></u-select>
 		<u-select v-model="gradeShow" :list="gradePicker" @confirm="gradeChange"></u-select>
@@ -38,7 +41,14 @@ export default {
 	},
 	data() {
 		return {
-			form: {},
+			form: {
+				title: '',
+				sex: '',
+				school: '',
+				grade: '',
+				birthDate: '',
+				height: '',
+			},
 			// 操作菜单控制显示
 			sexShow: false,
 			gradeShow: false,
@@ -80,11 +90,11 @@ export default {
 
 	mounted() {
 		setTimeout(() => {
-			//  把height 转一下字符串，不然会报错，不知道为什么
-			this._props.data.height = this._props.data.height + '';
-			this.form = this._props.data;
-		}, 100);
-
+			let data = this._props.data
+			for(let key in this.form) {
+				if(data[key]) this.form[key] = data[key]
+			}
+		}, 10);
 		this.$refs.uForm.setRules(this.rules);
 	},
 	// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
@@ -110,7 +120,7 @@ export default {
 		dataChange(e) {
 			this.form.birthDate = e.year + '-' + e.month + '-' + e.day;
 		},
-
+		
 		// 下一步
 		next() {
 			// 验证

@@ -1,27 +1,37 @@
 <template>
-	<c-scroll midHeight>
-		<view class="flex align-center justify-center flex-direction">
-			<!-- （图片和标题） -->
-			<image src="/static/image/pic-login-head.png" mode="aspectFit" class="head-image"></image>
-			<image src="/static/image/title.png" mode="aspectFit" class="head-title"></image>
-
-			<u-form class="zai-form" label-width="0" :model="form" ref="uForm" :errorType="['toast']">
-				<u-form-item  prop="userName" :border-bottom="false"><input class="zai-input" v-model="form.userName" placeholder="账号 / 邮箱" /></u-form-item>
-				<u-form-item  prop="password" :border-bottom="false">
-					<input class="zai-input" v-model="form.password" password placeholder="密码" />
-				</u-form-item>
-				<!-- <view url="/pages/index/register" hover-class="none" class="zai-label" v-if="illegal">
-				<span style="color:red;font-weight: 600;">由于你之前的违规，请自觉离开本平台</span>
-			</view> -->
-				<view class="flex margin-top">
-					<u-button class="btn" :ripple="true" @click="navToIndex">随便看看</u-button>
-					<u-button class="btn" :ripple="true" @click="login">立即登录</u-button>
-				</view>
-				<view class="margin-tb-xl flex justify-between padding-lr" style="color: #87a1bc;">
-					<view @click="$u.route('/pages/enter/forget')">忘记密码？</view>
-					<view @click="$u.route('/pages/enter/register')">立即注册</view>
-				</view>
-			</u-form>
+	<c-scroll midHeight class="content">
+		<!-- 提示语 -->
+		<c-title :imageSrc="'/static/image/avatar-left.jpg'">
+			<block slot="content">
+				<view>欢迎来到缘来！</view>
+				<view>开启你的缘分之旅</view>
+			</block>
+		</c-title>
+		
+		<!-- 表单 -->
+		<u-form class="form" label-width="0" :model="form" ref="uForm" :errorType="errorType">
+			<u-form-item prop="email" :border-bottom="false">
+				<u-input :custom-style="inputCustome" placeholder="请输入邮箱" :clearable="false" v-model="form.email" type="text" />
+			</u-form-item>
+			<u-form-item prop="password" :border-bottom="false">
+				<u-input :custom-style="inputCustome" placeholder="请输入密码" :password-icon="false" :clearable="false" v-model="form.password" type="password" />
+			</u-form-item>
+		</u-form>
+		
+		<view class="flex justify-between padding-lr-xl margin-top-xs">
+			<view class="navJump" @click="$u.route('/pages/enter/forget')">忘记密码？</view>
+			<view class="navJump" @click="$u.route('/pages/enter/register')">立即注册</view>
+		</view>
+		
+		<view class="btn-bottom">
+			<view class="flex justify-around">
+				<button @click="back" class="cu-btn round lines-red lg"> 随便逛逛</button>
+				<button @click="login" class="cu-btn round bg-red lg"> 登录</button>
+			</view>
+			<view class="margin-tb-xl text-center"  style="color: #A7A7A7;">
+				登录即同意
+				<span @click="$u.route('/pages/enter/serviceAgreement')" class="navJump">《缘来服务协议》</span>
+			</view>
 		</view>
 		<u-toast ref="uToast" />
 	</c-scroll>
@@ -38,36 +48,48 @@ export default {
 	},
 	data() {
 		return {
-			form: {
-				userName: '',
-				password: ''
+			inputCustome: {
+				'background': '#ffffff',
+				'border': '1px solid #C0C0C0',
+				'border-radius': '100upx',
+				'padding': '14upx 40upx',
+				'height': '76upx',
+				'width': '100%',
+				'font-size': '30upx'
 			},
+			errorType: ['toast'],
+			form: {
+				email: '',
+				password: '',
+			},
+			
 			rules: {
-				userName: [{ required: true, message: '请输入账号或邮箱' }],
+				email: [{ required: true, message: '请输入邮箱' }],
 				password: [{ required: true, message: '请输入密码' }]
 			}
-		};
+		}
+	},
+	// 设置表单规则
+	mounted() {
+		this.$refs.uForm.setRules(this.rules);
 	},
 	onShow() {
 		if (this.isLogin) {
 			this.$u.toast('您已登录');
 			setTimeout(() => {
-				this.navToIndex();
+				this.$u.route({
+					url: '/pages/user/user',
+					type: 'tab'
+				})
 			}, 1000);
 		}
-	},
-	// 必须要在onReady生命周期，因为onLoad生命周期组件可能尚未创建完毕
-	onReady() {
-		this.$refs.uForm.setRules(this.rules);
 	},
 	methods: {
 		...mapActions([
 			'set' // 将 `this.set()` 映射为 `this.$store.dispatch('set')`
 		]),
-		navToIndex() {
-			uni.switchTab({
-				url: '/pages/home/home'
-			});
+		back() {
+			uni.navigateBack();
 		},
 		login() {
 			this.$refs.uForm.validate(valid => {
@@ -97,36 +119,24 @@ export default {
 				}
 			});
 		}
-	}
+	},
 };
 </script>
 
 <style lang="stylus">
-.head-image
-	margin-top 50rpx
-	width 500rpx
-	height 400rpx
-	min-height 200rpx
-.head-title
-	width 532rpx
-	height 92rpx
-.zai-form
-	width 60%
-	margin 80rpx auto 0
-.zai-input
-	border 1px solid #a7b6d0
-	width 100%
-	border-radius 100upx
-	padding 0 40rpx
-	height 80upx
-	font-size 30upx
-	color #94afce
-.input-placeholder, .text-color
-	color #94afce
-.btn
-	color #ffffff !important
-	background-color #ff4a2d !important
-	border-radius 1000px
-	font-size 30upx
-	padding 0 38rpx
+.content
+	width 84%
+	margin 0 auto
+.title-text view
+	padding 12rpx 0
+.form 
+	margin-top 90rpx
+.cu-btn, .lg
+	width 210rpx
+.btn-bottom 
+	padding-top 50%
+.navJump
+	color #A7A7A7 
+	padding-bottom 2rpx
+	border-bottom 1px solid #A7A7A7
 </style>

@@ -77,34 +77,44 @@
 			<!-- 缘来 -->
 			<c-card @child-click="navToUserHome">
 				<u-section slot="top" :bold="false" :show-line="false" :color="'#000000'" title="缘来" sub-title="更多" />
-				<view slot="content" v-if="stickers.length">
-					<view class="flex justify-start">
-						<view class="fl"><image class="sticker-image" :src="stickers[0].images[0].image" @click.stop="viewImage(stickers[0].images[0].image)" /></view>
-						<view class="margin-left fl" style="width: 60%;">
-							<view class="cuIcon-notification">
-								<text class="margin-left-xs">{{ stickers[0].title }}</text>
-							</view>
-							<view class="text-wrap text-gray">
-								<text>{{ stickers[0].introduce }}</text>
-							</view>
-							<view class="text-gray">
-								<text>{{ $utils.dateUtils.format(stickers[0].createTime) }}</text>
+				<view slot="content">
+					<block v-if="stickers.length">
+						<view class="flex justify-start">
+							<view class="fl"><image class="sticker-image" :src="stickers[0].images[0].image" @click.stop="viewImage(stickers[0].images[0].image)" /></view>
+							<view class="margin-left fl" style="width: 60%;">
+								<view class="cuIcon-notification">
+									<text class="margin-left-xs">{{ stickers[0].title }}</text>
+								</view>
+								<view class="text-wrap text-gray">
+									<text>{{ stickers[0].introduce }}</text>
+								</view>
+								<view class="text-gray">
+									<text>{{ $utils.dateUtils.format(stickers[0].createTime) }}</text>
+								</view>
 							</view>
 						</view>
-					</view>
+					</block>
+					<block v-else>
+						<u-empty/>
+					</block>
 				</view>
 			</c-card>
 
 			<!-- 动态 -->
 			<c-card @child-click="navToUserPost">
 				<u-section slot="top" :bold="false" :show-line="false" :color="'#000000'" title="动态" sub-title="更多" />
-				<view slot="content" v-if="stickers.length">
-				<view class="flex justify-between flex-wrap text-sm">
-					<view class="dt-item" v-for="item in posts" :key="item.id">
-						<view v-if="item.images.length > 0"><image class="dt-image" :src="item.images[0].image" @click.stop="viewImage(item.images[0].image)" /></view>
-						<view v-else class="dt-image dt-text">{{ item.content }}</view>
-					</view>
-				</view>
+				<view slot="content" >
+					<block v-if="posts.length">
+						<view class="flex justify-between flex-wrap text-sm">
+							<view class="dt-item" v-for="item in posts" :key="item.id">
+								<view v-if="item.images.length > 0"><image class="dt-image" :src="item.images[0].image" @click.stop="viewImage(item.images[0].image)" /></view>
+								<view v-else class="dt-image dt-text">{{ item.content }}</view>
+							</view>
+						</view>
+					</block>
+					<block v-else>
+						<u-empty/>
+					</block>
 				</view>
 			</c-card>
 		</view>
@@ -180,8 +190,7 @@ export default {
 		// 获取在校情况，学士在读、硕士在读、博士在读，已毕业
 		getCurSchool() {
 			let graduation = this.user.graduation;
-			if (graduation == null) return null;
-			if (graduation == 1) return '已毕业';
+			if (graduation && graduation == 1) return '已毕业';
 			return this.user.level + '在读';
 		},
 
@@ -192,10 +201,12 @@ export default {
 		},
 		//跳转用户动态
 		navToUserPost() {
+			if(this.posts.length == 0) return ;
 			this.$u.route('/pages/square/sub/userPost', { id: this.user.id });
 		},
 		//跳转用户缘来页面
 		navToUserHome() {
+			if(this.stickers.length == 0) return ;
 			this.$u.route('/pages/home/sub/userHome', { id: this.user.id });
 		},
 		// 设置

@@ -131,5 +131,6 @@
 <style>
 	p span {
 		padding-left: 2em;
+		line-height: 1.5em;
 	}
 </style>

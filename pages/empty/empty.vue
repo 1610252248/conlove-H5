@@ -1,16 +1,9 @@
 <template>
-	<u-empty  :mode="mode"></u-empty>
+	<u-empty/>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-				mode: 'data'
-			}
-		},
-		
-	}
+
 </script>
 
 <style>

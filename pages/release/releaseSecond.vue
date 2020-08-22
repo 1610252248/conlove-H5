@@ -93,15 +93,8 @@
 					return ;
 				}
 				
-				uni.showLoading({
-				    title: '发布中'
-				});
 				
-				setTimeout(() => {
-				    uni.hideLoading();
-					this.$emit('next-sec', this.images)
-				}, 500);
-				
+				this.$emit('next-sec', this.images)
 			},
 			confirm() {
 				this.$emit("back");

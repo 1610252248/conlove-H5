@@ -86,9 +86,7 @@ export default {
 	props: {
 		data: {
 			type: Object,
-			default: () => {
-				[];
-			}
+			default: () => {{}}
 		}
 	},
 	data() {
@@ -108,9 +106,9 @@ export default {
 	mounted() {
 		setTimeout(() => {
 			let data = this._props.data;
-			this.user.favorite = data.favorite;
-			this.user.introduce = data.introduce;
-			this.user.emotion = data.emotion;
+			for(let key in this.user) {
+				if(data[key]) this.user[key] = data[key]
+			}
 			if(data.friend) {
 				this.nameList.introduce = '关于我的朋友'
 			}
@@ -120,6 +118,7 @@ export default {
 		// 下一步
 		next() {
 			// 验证
+			let flag = false;
 			for(let key in this.user) {
 				if(this.user[key] == '') {
 					this.$u.toast('请填写' + this.nameList[key])

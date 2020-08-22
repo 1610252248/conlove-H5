@@ -4,7 +4,7 @@
 		<c-card>
 			<view slot="top">基础资料</view>
 			<view slot="content">
-				<view @tap="updateAvatar" class="cu-avatar round xl margin-bottom" :style="{ backgroundImage: 'url(' + user.avatar + ')' }">
+				<view @click="updateAvatar" class="cu-avatar round xl margin-bottom" :style="{ backgroundImage: 'url(' + user.avatar + ')' }">
 					<view class="cu-tag lg badge cuIcon-camerafill"></view>
 				</view>
 				<view class="title">

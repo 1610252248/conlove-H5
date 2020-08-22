@@ -45,12 +45,6 @@
 			"navigationStyle":"custom",
 			"navigationBarTitleText": "发布缘来"
 		}
-	}, {
-		"path": "pages/enter/verify",
-		"style": {
-			"navigationStyle":"custom",
-			"navigationBarTitleText": "验证邮箱"
-		}
 	},{
 		"path": "pages/user/favorite",
 		"style": {
@@ -66,7 +60,7 @@
 		"path": "pages/enter/forget",
 		"style": {
 			// "navigationStyle":"custom",
-			"navigationBarTitleText": "修改密码"
+			"navigationBarTitleText": "找回密码"
 		}
 	},{
 		"path": "pages/user/sub/modify-password",

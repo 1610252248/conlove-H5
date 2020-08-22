@@ -19,7 +19,7 @@
 		<!-- 心动信号 -->
 		<release-third v-if="basics == 1" :data="data" @next="nextThird" />
 		<!-- 图片上传 -->
-		<release-second v-show="basics == 2" :data="data.images" @back="back" @next-sec="nextSec" />
+		<release-second v-if="basics == 2" :data="data.images" @back="back" @next-sec="nextSec" />
 		<block v-if="basics == 3">
 			<view style="height: 40rpx;"></view>
 			<view class="margin-tb flex justify-center">
@@ -27,7 +27,7 @@
 			</view>
 			<view style="height: 60rpx; line-height: 60rpx;text-align: center;" class="text-bold">
 				<view>
-					您已发布成功，快 <text class="navJump" @click="navToHome">返回首页</text> 看看吧
+					您已{{id != -1 ? '修改' : '发布'}}成功，快 <text class="navJump" @click="navToHome">返回首页</text> 看看吧
 				</view>
 			</view>
 		</block>
@@ -39,7 +39,7 @@
 import releaseFirst from '@/pages/release/releaseFirst.vue'
 import releaseSecond from '@/pages/release/releaseSecond.vue'
 import releaseThird from '@/pages/release/releaseThird.vue'
-import { mapState, mapGetters } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
 export default {
 	computed: {
 		// 使用对象展开运算符将 getter 混入 computed 对象中
@@ -78,12 +78,14 @@ export default {
 				'博士': '博',
 			},
 			grade: {
-				'1': '一',
-				'2': '二',
+				'1': '一','2': '二',
 				'3': '三',
 				'4': '四',
 				'5': '五',
-			}
+			},
+			last_user: {},
+		
+			
 		}
 	},
 	onLoad({id, friend}) {
@@ -96,35 +98,37 @@ export default {
 		}
 		// 为自己发帖
 		if(friend && friend == 'false') {
-			this.$http.get('/getUser', {id: this.userDB.id}).then(res => {
-				let user = res.data.user;
-				for(let key in user) {
-					this.data[key] = user[key]
-				}
-				if(user.grade && user.level ) {
-					let d = new Date();
-					let v = d.getFullYear() - user.grade;
-					if(d.getMonth() >= 7) v++;
-					this.data.grade = this.levelList[user.level] + this.grade[v];
-				}
-				if(user.graduation && user.graduation == 1) {
-					this.data.grade = '已毕业'
-				}
-			})
+			let user = this.userDB;
+			for(let key in user) {
+				this.data[key] = user[key]
+			}
+			this.last_user = this.$u.deepClone(this.data);
+			if(user.grade && user.level ) {
+				let d = new Date();
+				let v = d.getFullYear() - user.grade;
+				if(d.getMonth() >= 7) v++;
+				this.data.grade = this.levelList[user.level] + this.grade[v];
+			}
+			if(user.graduation && user.graduation == 1) {
+				this.data.grade = '已毕业'
+			}
 			this.data.images = []
 			this.data.friend = false
 		}
 		
 	},
 	methods: {
+		...mapActions([
+			'set' // 将 `this.setIsLogin()` 映射为 `this.$store.dispatch('setIsLogin')`
+		]),
 		getSticker(id) {
-			this.$http.get('/getModify/sticker/', {id}).then(res => {
+			this.$http.get('/getModify/sticker', {id}).then(res => {
 				this.data = res.data;
 			})
 		},
 		next(firstData) {
 			this.basics++;
-			this.data = firstData;
+			this.data = this.$u.deepMerge(this.data, firstData);;
 		},
 		nextThird(data) {
 			for(let key in data) {
@@ -133,30 +137,59 @@ export default {
 			this.basics++;
 		},
 		nextSec(images) {
-			// 修改
+			// 先判断是否更新信息
+			// console.log(this.data.friend);
+			if(this.data.friend == false) {
+				let flag = false;
+				let user = {}
+				for(let key in this.userDB) {
+					if(this.last_user[key] != this.data[key]) flag = true;
+					user[key] = this.data[key]
+				}
+				if(flag) {
+					let _this = this;
+					uni.showModal({
+					    title: '提示',
+					    content: '同步个人信息',
+					    success: function (res) {
+					        if (res.confirm) {
+								user.grade = null;
+								_this.$http.post('/updateUserInfo', {user}).then(res => {
+									_this.set({user})
+									_this.publish(images)
+								})
+					        } 
+					    }
+					});
+				}
+			} else {
+				this.publish(images)
+			}
+		},
+		publish(images) {
+			uni.showLoading();
 			if(this.id != -1) {
 				this.$http.post('/updateSticker', {sticker: this.data, images}).then(res => {
 					this.$eventBus.$emit('update-sticker');
-					setTimeout(() => {
-						this.$u.route({
-							url: '/pages/home/home',
-							type: 'tab'
-						})
-					}, 4000)
+					this.jumpHome()
 				})
 			} else {
 				this.data.images = images
 				this.$http.post('/addSticker', this.data).then(res => {
 					this.$eventBus.$emit('add-sticker')
-					this.basics++;
-					setTimeout(() => {
-						this.$u.route({
-							url: '/pages/home/home',
-							type: 'tab'
-						})
-					}, 4000)
+					this.jumpHome()
 				})
 			}
+		},
+		jumpHome() {
+			uni.hideLoading();
+			this.basics++;
+			setTimeout(() => {
+				this.$u.route({
+					url: '/pages/home/home',
+					type: 'tab'
+				})
+			}, 3000)
 		},
 		navToHome() {
 			this.$u.route({

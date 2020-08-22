@@ -18,7 +18,7 @@
 			<view class="text-sm margin-bottom-sm">已提交材料信息</view>
 			<view class="flex">
 				<view @click="$utils.viewImage(userDB.identifyImage)">
-					<u-image width="350rpx" height="280rpx" :src="userDB.identifyImage"  ></u-image>
+					<u-image mode="aspectFit" :fade="false" width="350rpx" height="280rpx" :src="(userDB.identifyImage?userDB.identifyImage:'/static/image/default-identify.png')"  ></u-image>
 				</view>
 				<view >
 					<view style="height: 246rpx;"></view>

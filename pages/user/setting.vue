@@ -8,11 +8,6 @@
 			
 			<view class="vertical-space"/>
 				
-			
-			<view class="cu-form-group">
-				<view class="title">账号</view>
-				<u-input placeholderStyle="color:#939393" :placeholder="user.userName" disabled input-align="right" />
-			</view>
 			<view class="cu-form-group" >
 				<view class="title">邮箱</view>
 				<u-input placeholderStyle="color:#939393" :placeholder="user.email" disabled input-align="right" />

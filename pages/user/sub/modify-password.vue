@@ -14,7 +14,7 @@
 			</view>
 			<view class="cu-form-group" >
 				<view class="title">新密码</view>
-				<u-input  placeholder="请输入新密码" type="password"  v-model="newPass"    input-align="right" />
+				<u-input  placeholder="请输入新密码" type="password"  v-model="newPass" input-align="right" />
 			</view>
 			<view class="margin-tb flex justify-between padding-lr" style="color: #99999e;">
 				<view @click="$u.route('/pages/enter/forget')">忘记原密码？</view>

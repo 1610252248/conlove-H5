@@ -3,7 +3,7 @@
 		
 		<!-- 材料示意图 -->
 		<view class="margin-tb-sm title ">材料示意图</view>
-		<u-image width="100%" height="650rpx" @click="$utils.viewImage('/static/image/shool-card.jpg')" src="/static/image/shool-card.jpg"></u-image>
+		<u-image  :fade="false" mode="aspectFit" height="650rpx" @click="$utils.viewImage('/static/image/shool-card.jpg')" src="/static/image/shool-card.jpg"></u-image>
 		<view class="margin-tb-sm tips-text ">
 			<view>请确保上传材料中学校名称或logo清晰有效</view>
 			<view>材料在学校信息可见，请注意遮挡隐私</view>
