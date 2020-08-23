@@ -56,8 +56,8 @@ export default {
 			})
 		},
 		
-		ChooseImage() {
-			this.$http.urlImgUpload('/fileUpload').then(res => {
+		async ChooseImage() {
+			await this.$http.urlImgUpload('/fileUpload').then(res => {
 				for (let image of res) {
 					if (this.images.length < 9) this.images.push(image);
 				}

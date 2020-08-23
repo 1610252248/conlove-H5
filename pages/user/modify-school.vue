@@ -39,8 +39,8 @@ export default {
 			this.getImage('camera');
 		},
 		//选照片 or 拍照
-		getImage(type) {
-			this.$http.urlImgUpload('/fileUpload', {sourceType: [type], count: 1}).then(res => {
+		async getImage(type) {
+			await this.$http.urlImgUpload('/fileUpload', {sourceType: [type], count: 1}).then(res => {
 				this.$http.get('/identifySchool', {image: res[0]}).then(msg => {
 					let user = this.$u.deepClone(this.userDB);
 					user.identifyImage = res[0];

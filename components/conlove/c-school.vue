@@ -8,7 +8,7 @@
 					<image class="identify" src="/static/image/identify.png"></image>
 					<text class="text-sm" style="color: #68dbdf;">已提交认证材料</text>
 				</block>
-				<text v-if="user.id == userDB.id" class="fr cuIcon-right text-gray"></text>
+				<text v-if="showRight && user.id == userDB.id" class="fr cuIcon-right text-gray"></text>
 			</view>
 			<view slot="content">
 				<view>
@@ -41,6 +41,10 @@ export default {
 			type: Object,
 			default: () => {{}}
 		},
+		showRight: {
+			type: Boolean,
+			default: false
+		}
 	},
 	data() {
 		return {

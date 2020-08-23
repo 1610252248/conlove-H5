@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view  class="content">
 		<!-- 提示语 -->
 		<c-title :imageSrc="'/static/image/avatar-left.jpg'">
 			<block slot="content">
@@ -175,6 +175,10 @@ export default {
 </script>
 
 <style lang="stylus">
+.content
+	width 84%
+	margin 0 auto
+
 .tips-border
 	width 100%
 	height 206rpx

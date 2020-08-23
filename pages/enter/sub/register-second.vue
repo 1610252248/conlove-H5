@@ -1,49 +1,51 @@
 <template>
-	<view>
-		<c-title @upload-avatar="uploadAvatar" :imageSrc="imageSrc">
-			<block slot="content">
-				<view>最后一步！</view>
-				<view class="text-xl">构造你的初始形象吧</view>
-			</block>
-		</c-title>
-		
-		<!-- 表单 -->
-		<u-form class="form" label-width="0"  :model="form" ref="uForm" :errorType="errorType">
-			<u-form-item prop="nickName" :border-bottom="false">
-				<u-input :custom-style="inputCustome" placeholder="请输入昵称" :clearable="false" v-model="form.nickName" type="text" />
-			</u-form-item>
-			<u-form-item prop="sex" :border-bottom="false">
-				<u-input :custom-style="inputCustome" placeholder="请选择性别"  @click="showSex = true" disabled :clearable="false" v-model="form.sex" type="text" />
-				<u-icon class="arrow-down-fill"  @click="showSex = true" name="arrow-down-fill" color="#A7A7A7" size="22" />
-			</u-form-item>
-			<u-form-item prop="shool" :border-bottom="false">
-				<u-input :custom-style="inputCustome" placeholder="请选择学校" disabled @click="$refs.schoolPicker.show()" :clearable="false" v-model="form.school" type="text" />
-				<u-icon class="arrow-down-fill" @click="$refs.schoolPicker.show()" name="arrow-down-fill" color="#A7A7A7" size="22" />
-			</u-form-item>
-			<view class="flex">
-				<u-form-item prop="grade" :border-bottom="false">
-					<view class="padding-right">
-						<u-input :custom-style="inputCustome" placeholder="请选择入学时间" @click="showGrade=true" disabled :clearable="false" v-model="form.grade" type="text" />
-					</view>
-					<u-icon class="arrow-down-fill-left" @click="showGrade=true" name="arrow-down-fill" color="#A7A7A7" size="22" />
+	<view >
+		<view class="content">
+			<c-title @upload-avatar="uploadAvatar" :imageSrc="imageSrc">
+				<block slot="content">
+					<view>最后一步！</view>
+					<view class="text-xl">构造你的初始形象吧</view>
+				</block>
+			</c-title>
+			
+			<!-- 表单 -->
+			<u-form class="form" label-width="0"  :model="form" ref="uForm" :errorType="errorType">
+				<u-form-item prop="nickName" :border-bottom="false">
+					<u-input :custom-style="inputCustome" placeholder="请输入昵称" :clearable="false" v-model="form.nickName" type="text" />
 				</u-form-item>
-				<view style="width: 50%;">
-					<u-form-item prop="level" :border-bottom="false">
-						<u-input :custom-style="inputCustome" placeholder="学位" disabled @click="showLevel=true" :clearable="false" v-model="form.level" type="text" />
-						<u-icon class="arrow-down-fill" name="arrow-down-fill" @click="showLevel=true" color="#A7A7A7" size="22" />
+				<u-form-item prop="sex" :border-bottom="false">
+					<u-input :custom-style="inputCustome" placeholder="请选择性别"  @click="showSex = true" disabled :clearable="false" v-model="form.sex" type="text" />
+					<u-icon class="arrow-down-fill"  @click="showSex = true" name="arrow-down-fill" color="#A7A7A7" size="22" />
+				</u-form-item>
+				<u-form-item prop="shool" :border-bottom="false">
+					<u-input :custom-style="inputCustome" placeholder="请选择学校" disabled @click="$refs.schoolPicker.show()" :clearable="false" v-model="form.school" type="text" />
+					<u-icon class="arrow-down-fill" @click="$refs.schoolPicker.show()" name="arrow-down-fill" color="#A7A7A7" size="22" />
+				</u-form-item>
+				<view class="flex">
+					<u-form-item prop="grade" :border-bottom="false">
+						<view class="padding-right">
+							<u-input :custom-style="inputCustome" placeholder="请选择入学时间" @click="showGrade=true" disabled :clearable="false" v-model="form.grade" type="text" />
+						</view>
+						<u-icon class="arrow-down-fill-left" @click="showGrade=true" name="arrow-down-fill" color="#A7A7A7" size="22" />
 					</u-form-item>
+					<view style="width: 50%;">
+						<u-form-item prop="level" :border-bottom="false">
+							<u-input :custom-style="inputCustome" placeholder="学位" disabled @click="showLevel=true" :clearable="false" v-model="form.level" type="text" />
+							<u-icon class="arrow-down-fill" name="arrow-down-fill" @click="showLevel=true" color="#A7A7A7" size="22" />
+						</u-form-item>
+					</view>
 				</view>
-			</view>
-			<u-form-item prop="major" :border-bottom="false">
-				<u-input :custom-style="inputCustome" placeholder="请输入专业"  :clearable="false" v-model="form.major" type="text" />
-			</u-form-item>
-		</u-form>
-		
-		<view class="text-center">
-			<button @click="next" class="cu-btn round bg-red lg"> 开启缘来</button>
-			<view class="margin-tb-xl"  style="color: #888888;">
-				已有账号？
-				<span @click="$u.route('/pages/enter/login')" class="navJump">点此登录</span>
+				<u-form-item prop="major" :border-bottom="false">
+					<u-input :custom-style="inputCustome" placeholder="请输入专业"  :clearable="false" v-model="form.major" type="text" />
+				</u-form-item>
+			</u-form>
+			
+			<view class="text-center">
+				<button @click="next" class="cu-btn round bg-red lg"> 开启缘来</button>
+				<view class="margin-tb-xl"  style="color: #888888;">
+					已有账号？
+					<span @click="$u.route('/pages/enter/login')" class="navJump">点此登录</span>
+				</view>
 			</view>
 		</view>
 		<u-toast ref="uToast" />
@@ -124,8 +126,8 @@
 					this.form.school = school;
 				}
 			},
-			uploadAvatar() {
-				this.$http.urlImgUpload('/fileUpload').then(res => {
+			async uploadAvatar() {
+				await this.$http.urlImgUpload('/fileUpload').then(res => {
 					this.form.avatar = res[0];
 					this.imageSrc = res[0];
 				});
@@ -143,16 +145,19 @@
 </script>
 
 <style lang="stylus">
+.content
+	width 84%
+	margin 0 auto
 .form 
 	margin-top 90rpx
 .title-text view
 	padding 12rpx 0
 .arrow-down-fill 
 	position absolute
-	right 22rpx
+	right 10%
 .arrow-down-fill-left
 	position absolute
-	left 48%
+	right 50%
 .cu-btn, .lg
 	margin-top 60rpx
 	width 230rpx	

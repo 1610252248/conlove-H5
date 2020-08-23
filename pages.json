@@ -9,9 +9,6 @@
 		"style": {
 			"navigationStyle":"custom"
 		}
-	},{
-		"path": "pages/enter/index"
-		
 	}, {
 		"path": "pages/home/home",
 		"style": {

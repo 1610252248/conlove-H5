@@ -68,8 +68,8 @@
 			}, 100)
 		},
 		methods: {
-			ChooseImage() {
-				this.$http.urlImgUpload('/fileUpload').then(res => {
+			async ChooseImage() {
+				await this.$http.urlImgUpload('/fileUpload').then(res => {
 					for(let image of res) {
 						if(this.images.length < 6) this.images.push(image);
 					}

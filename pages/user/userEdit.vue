@@ -307,8 +307,8 @@ export default {
 			else this.selectTagList.push(obj);
 		},
 		// 更新头像
-		updateAvatar() {
-			this.$http.urlImgUpload('/fileUpload').then(res => {
+		async updateAvatar() {
+			await this.$http.urlImgUpload('/fileUpload').then(res => {
 				this.user.avatar = res[0];
 			});
 		},

@@ -32,11 +32,14 @@
 			</view>
 			
 			<!-- 学校信息 -->
-			<c-school :user="user" @nav-to-school="navToSchool" />
+			<c-school :user="user" showRight @nav-to-school="navToSchool" />
 
 			<!-- 个性展示 -->
 			<c-card>
-				<view slot="top" >个性展示</view>
+				<view slot="top" @click="navToEditUser">
+					<text>个性展示</text>
+					<text v-if="user.id == userDB.id" class="fr cuIcon-right text-gray"></text>
+				</view>
 				<view slot="content">
 					<view class="flex justify-start">
 						<view class="text-nowrap"><text>关键词</text></view>
@@ -197,6 +200,7 @@ export default {
 		/*************** 跳转页面 ***************/
 		// 修改信息
 		navToEditUser() {
+			if(this.user.id != this.userDB.id) return ;
 			this.$u.route('/pages/user/userEdit');
 		},
 		//跳转用户动态

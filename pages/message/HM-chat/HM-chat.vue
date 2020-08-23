@@ -494,9 +494,9 @@ export default {
 			})
 		},
 		//选照片 or 拍照
-		getImage(type) {
+		async getImage(type) {
 			this.hideDrawer();
-			this.$http.urlImgUpload('/fileUpload', {sourceType: [type]}).then(res => {
+			await this.$http.urlImgUpload('/fileUpload', {sourceType: [type]}).then(res => {
 				res.forEach(url => {
 					uni.getImageInfo({
 						src: url,

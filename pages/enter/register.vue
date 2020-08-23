@@ -1,5 +1,5 @@
 <template>
-	<c-scroll midHeight class="content">
+	<c-scroll midHeight>
 		<register-first @next="next" v-if="step == 1" />
 		<register-second @next="register" v-else />
 		<u-toast ref="uToast" />
@@ -15,7 +15,7 @@ export default {
 	},
 	data() {
 		return {
-			step: 2,
+			step: 1,
 			data: {
 				
 			},
@@ -54,8 +54,5 @@ export default {
 </script>
 
 <style lang="stylus">
-.content
-	width 84%
-	margin 0 auto
 
 </style>

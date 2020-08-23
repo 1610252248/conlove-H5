@@ -3,7 +3,7 @@
 		<view class="cu-list menu-avatar">
 			
 			<view class="cu-item" v-for="(item, index) in lists" :key="index" @click="navToItem(index)">
-				<view class="cu-avatar round lg" :style="{'background-image':'url('+item.image+')'}" />
+				<view class="cu-avatar  lg" :style="{'background-image':'url('+item.image+')'}" />
 				<view class="content"><view class="text-black margin-left-sm">{{item.name}}</view></view>
 				<view class="action">
 					<view class="cu-tag round bg-red sm" v-if="item.tag">{{item.tag}}</view>
