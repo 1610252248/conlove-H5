@@ -14,12 +14,12 @@
 		"style": {
 			"navigationStyle":"custom",
 			"navigationBarTitleText": "缘来",
-			"enablePullDownRefresh": true,
-			"h5": {
-				"pullToRefresh": {
-					"offset":"50px"
-				}
-			}
+			"enablePullDownRefresh": true
+			// "h5": {
+			// 	"pullToRefresh": {
+			// 		"offset":"10px"
+			// 	}
+			// }
 		}
 	}, {
 		"path": "pages/square/reply/post-reply-comment",

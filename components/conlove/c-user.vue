@@ -1,126 +1,120 @@
 <template>
-	<view  v-if="Object.keys(user).length && user.avatar">
-		<view >
-			<!-- 用户 -->
-			<view class="bg-gray ">
-				<view class="user-content padding-left">
-					<!-- 修改资料和设置 -->
-					<view v-if="user.id == userDB.id" class="flex userSetting text-lg" style="color: #000000;">
-						<view @click="navToEditUser" class="padding-xs cuIcon-write"></view>
-						<view @click="navToSetting" class="padding-xs cuIcon-settings"></view>
+	<view v-if="Object.keys(user).length && user.avatar">
+		<!-- 用户 -->
+		<view class="bg-gray ">
+			<view class="user-content padding-left">
+				<!-- 修改资料和设置 -->
+				<view v-if="user.id == userDB.id" class="flex userSetting text-lg" style="color: #000000;">
+					<view @click="navToEditUser" class="padding-xs cuIcon-write"></view>
+					<view @click="navToSetting" class="padding-xs cuIcon-settings"></view>
+				</view>
+				<view class="flex justify-start align-center padding-top">
+					<view class="cu-avatar round xl margin-left" @click="$utils.viewImage(user.avatar)" :style="{ backgroundImage: 'url(' + user.avatar + ')' }">
+						<view class="cu-tag lg badge" :class="user.sex == '女' ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'"></view>
 					</view>
-					<view class="flex justify-start align-center padding-top">
-						<view class="cu-avatar round xl margin-left" @click="$utils.viewImage(user.avatar)"
-						 :style="{ backgroundImage: 'url(' + user.avatar + ')' }">
-							<view class="cu-tag lg badge" :class="user.sex == '女' ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'"></view>
-						</view>
 
-						<view class="content margin-left text-black margin-top-sm">
-							<view class="text-bold">
-								<text>{{ user.nickName }}</text>
-							</view>
-							<view class="text-cut padding-top-xs text-sm">{{ user.sign == null ? '暂时没有介绍' : user.sign }}</view>
+					<view class="content margin-left text-black margin-top-sm">
+						<view class="text-bold">
+							<text>{{ user.nickName }}</text>
 						</view>
+						<view class="text-cut padding-top-xs text-sm">{{ user.sign == null ? '暂时没有介绍' : user.sign }}</view>
 					</view>
-					<view class="padding flex flex-wrap">
-						<view v-if="user.birthDate != null" class="cu-btn border-color-red">{{ getAge() }}</view>
-						<view v-if="user.birthDate != null" class="cu-btn border-color-yellow">{{ getConstellation() }}</view>
-						<view v-if="user.city != null" class="cu-btn border-color-blue">{{ user.city }}</view>
-						<view v-if="user.grade != null" class="cu-btn border-color-blue">{{ getCurSchool() }}</view>
+				</view>
+				<view class="padding flex flex-wrap">
+					<view v-if="user.birthDate != null" class="cu-btn border-color-red">{{ getAge() }}</view>
+					<view v-if="user.birthDate != null" class="cu-btn border-color-yellow">{{ getConstellation() }}</view>
+					<view v-if="user.city != null" class="cu-btn border-color-blue">{{ user.city }}</view>
+					<view v-if="user.grade != null" class="cu-btn border-color-blue">{{ getCurSchool() }}</view>
+				</view>
+			</view>
+		</view>
+
+		<!-- 学校信息 -->
+		<c-school :user="user" showRight @nav-to-school="navToSchool" />
+
+		<!-- 个性展示 -->
+		<c-card>
+			<view slot="top" @click="navToEditUser">
+				<text>个性展示</text>
+				<text v-if="user.id == userDB.id" class="fr cuIcon-right text-gray"></text>
+			</view>
+			<view slot="content">
+				<view class="flex justify-start">
+					<view class="text-nowrap"><text>关键词</text></view>
+					<!-- 已选标签 -->
+					<view class="flex flex-wrap margin-left-xs">
+						<view class="info-tag" :class="getTagColor(index)" v-for="(item, index) in selectTagList" :key="index">{{ item.name }}</view>
+					</view>
+				</view>
+				<view class="flex justify-start">
+					<view class="text-nowrap">关于我</view>
+					<view class="text-gray margin-left">{{ user.introduce }}</view>
+				</view>
+			</view>
+		</c-card>
+
+		<!-- 心动信号 -->
+		<c-card>
+			<view slot="top" @click="navToFavorite">
+				<text>心动信号</text>
+				<text v-if="user.id == userDB.id" class="fr cuIcon-right text-gray"></text>
+			</view>
+			<view slot="content">
+				<view class="margin-bottom-xs">
+					<view class="margin-bottom-xs">心仪的TA</view>
+					<view class="padding-left-xs text-gray">
+						<text>{{ user.favorite }}</text>
+					</view>
+				</view>
+				<view class="margin-bottom-xs">
+					<view class="margin-bottom-xs">感情观</view>
+					<view class="padding-left-xs text-gray">
+						<text>{{ user.emotion }}</text>
 					</view>
 				</view>
 			</view>
-			
-			<!-- 学校信息 -->
-			<c-school :user="user" showRight @nav-to-school="navToSchool" />
+		</c-card>
 
-			<!-- 个性展示 -->
-			<c-card>
-				<view slot="top" @click="navToEditUser">
-					<text>个性展示</text>
-					<text v-if="user.id == userDB.id" class="fr cuIcon-right text-gray"></text>
-				</view>
-				<view slot="content">
+		<!-- 缘来 -->
+		<c-card @child-click="navToUserHome">
+			<u-section slot="top" :bold="false" :show-line="false" :color="'#000000'" title="缘来" sub-title="更多" />
+			<view slot="content">
+				<block v-if="stickers.length">
 					<view class="flex justify-start">
-						<view class="text-nowrap"><text>关键词</text></view>
-						<!-- 已选标签 -->
-						<view class="flex flex-wrap margin-left-xs">
-							<view class="info-tag" :class="getTagColor(index)" v-for="(item, index) in selectTagList" :key="index">{{ item.name }}</view>
-						</view>
-					</view>
-					<view class="flex justify-start">
-						<view class="text-nowrap">关于我</view>
-						<view class="text-gray margin-left">{{ user.introduce }}</view>
-					</view>
-				</view>
-			</c-card>
-			
-			<!-- 心动信号 -->
-			<c-card >
-				<view slot="top" @click="navToFavorite" >
-					<text>心动信号</text>
-					<text v-if="user.id == userDB.id" class="fr cuIcon-right text-gray"></text>
-				</view>
-				<view slot="content">
-					<view class="margin-bottom-xs">
-						<view class="margin-bottom-xs">心仪的TA</view>
-						<view class="padding-left-xs text-gray">
-							<text>{{user.favorite}}</text>
-						</view>
-					</view>
-					<view class="margin-bottom-xs">
-						<view class="margin-bottom-xs">感情观</view>
-						<view class="padding-left-xs text-gray">
-							<text>{{user.emotion}}</text>
-						</view>
-					</view>
-				</view>
-			</c-card>
-
-			<!-- 缘来 -->
-			<c-card @child-click="navToUserHome">
-				<u-section slot="top" :bold="false" :show-line="false" :color="'#000000'" title="缘来" sub-title="更多" />
-				<view slot="content">
-					<block v-if="stickers.length">
-						<view class="flex justify-start">
-							<view class="fl"><image class="sticker-image" :src="stickers[0].images[0].image" @click.stop="viewImage(stickers[0].images[0].image)" /></view>
-							<view class="margin-left fl" style="width: 60%;">
-								<view class="cuIcon-notification">
-									<text class="margin-left-xs">{{ stickers[0].title }}</text>
-								</view>
-								<view class="text-wrap text-gray">
-									<text>{{ stickers[0].introduce }}</text>
-								</view>
-								<view class="text-gray">
-									<text>{{ $utils.dateUtils.format(stickers[0].createTime) }}</text>
-								</view>
+						<view class="fl"><image class="sticker-image" :src="stickers[0].images[0].image" @click.stop="viewImage(stickers[0].images[0].image)" /></view>
+						<view class="margin-left fl" style="width: 60%;">
+							<view class="cuIcon-notification">
+								<text class="margin-left-xs">{{ stickers[0].title }}</text>
+							</view>
+							<view class="text-wrap text-gray">
+								<text>{{ stickers[0].introduce }}</text>
+							</view>
+							<view class="text-gray">
+								<text>{{ $utils.dateUtils.format(stickers[0].createTime) }}</text>
 							</view>
 						</view>
-					</block>
-					<block v-else>
-						<u-empty/>
-					</block>
-				</view>
-			</c-card>
+					</view>
+				</block>
+				<block v-else><u-empty /></block>
+			</view>
+		</c-card>
 
-			<!-- 动态 -->
-			<c-card @child-click="navToUserPost">
-				<u-section slot="top" :bold="false" :show-line="false" :color="'#000000'" title="动态" sub-title="更多" />
-				<view slot="content" >
-					<block v-if="posts.length">
-						<view class="flex justify-between flex-wrap text-sm">
-							<view class="dt-item" v-for="item in posts" :key="item.id">
-								<view v-if="item.images.length > 0"><image class="dt-image" :src="item.images[0].image" @click.stop="viewImage(item.images[0].image)" /></view>
-								<view v-else class="dt-image dt-text">{{ item.content }}</view>
-							</view>
+		<!-- 动态 -->
+		<c-card @child-click="navToUserPost">
+			<u-section slot="top" :bold="false" :show-line="false" :color="'#000000'" title="动态" sub-title="更多" />
+			<view slot="content">
+				<block v-if="posts.length">
+					<view class="flex justify-between flex-wrap text-sm">
+						<view class="dt-item" v-for="item in posts" :key="item.id">
+							<view v-if="item.images.length > 0"><image class="dt-image" :src="item.images[0].image" @click.stop="viewImage(item.images[0].image)" /></view>
+							<view v-else class="dt-image dt-text">{{ item.content }}</view>
 						</view>
-					</block>
-					<block v-else>
-						<u-empty/>
-					</block>
-				</view>
-			</c-card>
-		</view>
+					</view>
+				</block>
+				<block v-else><u-empty /></block>
+			</view>
+		</c-card>
+		<view style="height: 1rpx;"></view>
 	</view>
 </template>
 
@@ -135,34 +129,41 @@ export default {
 		// 用户信息
 		user: {
 			type: Object,
-			default: () => {{}} 
+			default: () => {
+				{
+				}
+			}
 		},
 		selectTagList: {
 			type: Array,
-			default: () => {[]} 
+			default: () => {
+				[];
+			}
 		},
 		stickers: {
 			type: Array,
-			default: () => {[]} 
+			default: () => {
+				[];
+			}
 		},
 		posts: {
 			type: Array,
-			default: () => {[]} 
+			default: () => {
+				[];
+			}
 		},
 		isIdentity: {
 			type: Boolean,
 			default: true
-		},
-		
+		}
 	},
-	
+
 	methods: {
-		
 		viewImage(url) {
 			let images = [url];
 			uni.previewImage({ urls: images, current: url });
 		},
-	
+
 		// 获取选中标签的 颜色
 		getTagColor(idx) {
 			idx %= 3;
@@ -200,17 +201,17 @@ export default {
 		/*************** 跳转页面 ***************/
 		// 修改信息
 		navToEditUser() {
-			if(this.user.id != this.userDB.id) return ;
+			if (this.user.id != this.userDB.id) return;
 			this.$u.route('/pages/user/userEdit');
 		},
 		//跳转用户动态
 		navToUserPost() {
-			if(this.posts.length == 0) return ;
+			if (this.posts.length == 0) return;
 			this.$u.route('/pages/square/sub/userPost', { id: this.user.id });
 		},
 		//跳转用户缘来页面
 		navToUserHome() {
-			if(this.stickers.length == 0) return ;
+			if (this.stickers.length == 0) return;
 			this.$u.route('/pages/home/sub/userHome', { id: this.user.id });
 		},
 		// 设置
@@ -223,12 +224,10 @@ export default {
 		},
 		// 学校信息跳转
 		navToSchool() {
-			if(this.user.id == this.userDB.id)
-			this.$u.route('/pages/user/school', {id: this.user.id});
+			if (this.user.id == this.userDB.id) this.$u.route('/pages/user/school', { id: this.user.id });
 		},
 		navToFavorite() {
-			if(this.user.id == this.userDB.id)
-			this.$u.route('/pages/user/favorite');
+			if (this.user.id == this.userDB.id) this.$u.route('/pages/user/favorite');
 		}
 	}
 };
@@ -246,7 +245,6 @@ export default {
 	line-height 40rpx
 	padding 6rpx 15rpx
 	margin-left 18rpx
-
 .bg-red
 	border 1px solid #ff4a2d
 .bg-blue
@@ -281,7 +279,7 @@ export default {
 	position absolute
 	top 44rpx
 	right 30rpx
-text 
+text
 	height 40rpx
 	line-height 40rpx
 .sticker-image

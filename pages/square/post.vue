@@ -26,7 +26,7 @@ export default {
 	},
 	mounted() {
 		// 初始化拿到数据
-		// this.init();
+		this.init();
 		// 监听新动态，重新拿到请求
 		this.$eventBus.$on('add-post', () => {
 			this.$nextTick(() => {
