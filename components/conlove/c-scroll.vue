@@ -1,7 +1,7 @@
 <template>
-	<view>
+	<view >
 		<scroll-view
-			:class="[maxHeight ? 'max-height' : '', midHeight ? 'mid-height' : '', minHeight ? 'min-height' : '']"
+			:class="[maxHeight ? 'max-height' : '', midHeight ? 'mid-height' : '', minHeight ? 'min-height' : '', $utils.isSafari() ? 'isSafari': '']"
 			class="scroll-view"
 			scroll-y
 			@scrolltolower="scrolltolower"
@@ -53,7 +53,8 @@ export default {
 
 			old: {
 				scrollTop: 0
-			}
+			},
+			isSafari:  (/Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)),
 		};
 	},
 	methods: {
@@ -104,10 +105,19 @@ export default {
 	width 100%
 .max-height
 	height 100vh !important
+
 .mid-height
 	height calc(100vh - 49px) !important
+
 .min-height
-	height calc(100vh - 84px) !important
+	height calc(100vh - 94px) !important
+	
+.max-height.isSafari
+	height calc(100vh - 75px) !important
+.mid-height.isSafari
+	height calc(100vh - 49px - 75px) !important
+.min-height.isSafari
+	height calc(100vh - 94px - 75px) !important
 .goToTop
 	position fixed
 	bottom 55rpx

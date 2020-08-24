@@ -1,5 +1,5 @@
 <template>
-	<c-scroll @scrolltolower="lower">
+	<c-scroll minHeight @scrolltolower="lower">
 		<c-post :lists="postList" :appreciateList="appreciateList"  
 			@chang-appreciate="changAppreciate" :isLoad="isLoad"  @chang-public="changPublic"
 			@delete="deletePost"/>
@@ -26,7 +26,7 @@ export default {
 	},
 	mounted() {
 		// 初始化拿到数据
-		this.init();
+		// this.init();
 		// 监听新动态，重新拿到请求
 		this.$eventBus.$on('add-post', () => {
 			this.$nextTick(() => {

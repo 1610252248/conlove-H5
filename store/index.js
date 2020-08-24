@@ -19,8 +19,13 @@ const store = new Vuex.Store({
 		del({state}) {
 		  state.token = '';
 		  state.userDB = {};
-		  uni.removeStorageSync('token');
-		  uni.removeStorageSync('user');
+		  if(uni.getStorageSync('token')) {
+			  uni.removeStorageSync('token');
+		  }
+			
+		  if(uni.getStorageSync("user")) {
+			uni.removeStorageSync('user');
+		  }
 		}
 	},
 	getters: {

@@ -31,15 +31,16 @@ let requestNum = 0;
 $http.requestStart = function(options) {
 	if (requestNum <= 0) {
 		uni.showNavigationBarLoading();
-		if (options.load) {
-			//打开加载动画
-			// uni.showLoading({
-			// 	title: '加载中',
-			// 	mask: true
-			// });
-		}
+		// if (options.load) {
+		// 	//打开加载动画
+		// 	// uni.showLoading({
+		// 	// 	title: '加载中',
+		// 	// 	mask: true
+		// 	// });
+		// }
 	}
 	requestNum += 1;
+	
 	//请求前加入token
 	options.headers['token'] = uni.getStorageSync('token') ? uni.getStorageSync('token') : '';
 	// console.log("请求开始前", options);
@@ -53,6 +54,7 @@ $http.requestEnd = function(options, resolve) {
 		// uni.hideLoading();
 		uni.hideNavigationBarLoading();
 	}
+	
 	let code = resolve.statusCode;
 	//请求失败、未登录或登录已失效
 	if (resolve.errMsg && code && code != 200 && code != 1000 && code != 1001) {
@@ -66,6 +68,7 @@ $http.requestEnd = function(options, resolve) {
 //所有接口数据处理（可在接口里设置不调用此方法）
 $http.dataFactory = function(options, resolve) {
 	// console.log("接口返回结果", resolve);
+	
 	//设置回调默认值
 	var callback = {
 		//success数据是否请求成功状态
@@ -74,12 +77,13 @@ $http.dataFactory = function(options, resolve) {
 		result: ""
 	};
 	//判断数据是否请求成功
-	if (resolve.statusCode == "200") {
+	if (resolve.statusCode == "200" && resolve.data.status != "1000") {
 		callback.success = true;
 		callback.result = resolve.data;
-	} else if (resolve.statusCode == "1000" || resolve.statusCode == "1001") {
+	} else if (resolve.statusCode == "1000" || resolve.statusCode == "1001" || resolve.data.status == "1000") {
 		//未登录或登录已失效
-		store.dispatch('del')
+		
+		// store.dispatch('del')
 		uni.showModal({
 			title: '温馨提示',
 			content: '此时此刻需要您登录喔~',

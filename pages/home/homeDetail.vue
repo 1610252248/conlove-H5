@@ -104,7 +104,11 @@ export default {
 		this.comments = [];
 		this.getComments(id);
 	},
-
+	onShow() {
+		if(!this.isLogin) {
+			this.$http.get('/verifyLogin').catch( err => {})
+		}
+	},
 	methods: {
 		/**
 		 * 获取帖子详情

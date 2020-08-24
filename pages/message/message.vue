@@ -1,5 +1,5 @@
 <template>
-	<c-scroll>
+	<c-scroll midHeight>
 		<view class="cu-list menu-avatar">
 			
 			<view class="cu-item" v-for="(item, index) in lists" :key="index" @click="navToItem(index)">
@@ -29,15 +29,17 @@
 				</view>
 			</view>
 		</view>
+		
 	</c-scroll>
 </template>
 
 <script>
-import { mapState} from 'vuex';
+import { mapState, mapGetters} from 'vuex';
 export default {
 	computed: {
 		// 使用对象展开运算符将 getter 混入 computed 对象中
-		...mapState(['userDB'])
+		...mapState(['userDB']),
+		...mapGetters(['isLogin']),
 	},
 	data() {
 		return {
@@ -50,9 +52,11 @@ export default {
 			friends: [],
 		}
 	},
+	
 	onShow() {
-		
-		
+		if(!this.isLogin) {
+			this.$http.get('/verifyLogin').catch( err => {})
+		}
 		this.getMessage();
 		this.getFriend();
 	},

@@ -98,7 +98,6 @@ export default {
 		reSetPassAndLogin(form) {
 			this.$http.post('/modifyPassword', {code:  form.code, verifyCode: this.verifyCode,
 			 email: form.email, password: form.password}).then(res => {
-				 console.log(res);
 				if(res.status == this.$http.SUCCESS) {
 					this.set(res.data);
 					this.$eventBus.$emit('login-success');

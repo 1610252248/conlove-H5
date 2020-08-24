@@ -7,6 +7,13 @@
 			</view>
 			<view class="add-fixed text-xxl" @click="showModal"><text class="cuIcon-roundaddfill"></text></view>
 		</view>
+		
+		<!-- 说说内容 -->
+		<post v-if="tabCur == 0"/>
+		<!-- 树洞内容 -->
+		<tree-hole v-else/>
+		
+		
 		<!-- 新建 -->
 		<view class="cu-modal  bottom-modal" :class="bottomModal ? 'show' : ''" @tap="hideModal">
 			<view class="cu-dialog radius">
@@ -17,10 +24,6 @@
 				</view>
 			</view>
 		</view>
-		<!-- 说说内容 -->
-		<post v-if="tabCur == 0"/>
-		<!-- 树洞内容 -->
-		<tree-hole v-else/>
 	</view>
 </template>
 

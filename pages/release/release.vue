@@ -31,6 +31,7 @@
 				</view>
 			</view>
 		</block>
+		<view style="height: 50rpx;"></view>
 		<u-toast ref="uToast" />
 	</c-scroll>
 </template>
@@ -138,7 +139,6 @@ export default {
 		},
 		nextSec(images) {
 			// 先判断是否更新信息
-			// console.log(this.data.friend);
 			if(this.data.friend == false) {
 				let flag = false;
 				let user = {}

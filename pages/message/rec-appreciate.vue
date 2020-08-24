@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<c-scroll midHeight> 
 		<view class="cu-list menu-avatar">
 			<view class="cu-item" v-for="(item, index) in lists" :key="item.id" @click="navDetail(item)">
 				<view @click.stop="navToOtherUser(item.user.id)" class="cu-avatar round lg" :style="{ 'background-image': 'url(' + item.user.avatar + ')' }">
@@ -14,7 +14,7 @@
 		</view>
 		<!-- 没有更多数据 -->
 		<view class="cu-load over"  />
-	</view>
+	</c-scroll>
 </template>
 
 <script>

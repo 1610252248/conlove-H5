@@ -21,14 +21,16 @@
 					<u-input :custom-style="inputCustome" placeholder="请选择学校" disabled @click="$refs.schoolPicker.show()" :clearable="false" v-model="form.school" type="text" />
 					<u-icon class="arrow-down-fill" @click="$refs.schoolPicker.show()" name="arrow-down-fill" color="#A7A7A7" size="22" />
 				</u-form-item>
-				<view class="flex">
-					<u-form-item prop="grade" :border-bottom="false">
-						<view class="padding-right">
-							<u-input :custom-style="inputCustome" placeholder="请选择入学时间" @click="showGrade=true" disabled :clearable="false" v-model="form.grade" type="text" />
-						</view>
-						<u-icon class="arrow-down-fill-left" @click="showGrade=true" name="arrow-down-fill" color="#A7A7A7" size="22" />
-					</u-form-item>
-					<view style="width: 50%;">
+				<view class="flex justify-between">
+					<view style="width: 60%;">
+						<u-form-item prop="grade" :border-bottom="false">
+							<view class="padding-right">
+								<u-input :custom-style="inputCustome" placeholder="请选择入学时间" @click="showGrade=true" disabled :clearable="false" v-model="form.grade" type="text" />
+							</view>
+							<u-icon class="arrow-down-fill-left" @click="showGrade=true" name="arrow-down-fill" color="#A7A7A7" size="22" />
+						</u-form-item>
+					</view>
+					<view style="width: 40%;">
 						<u-form-item prop="level" :border-bottom="false">
 							<u-input :custom-style="inputCustome" placeholder="学位" disabled @click="showLevel=true" :clearable="false" v-model="form.level" type="text" />
 							<u-icon class="arrow-down-fill" name="arrow-down-fill" @click="showLevel=true" color="#A7A7A7" size="22" />
@@ -157,7 +159,7 @@
 	right 10%
 .arrow-down-fill-left
 	position absolute
-	right 50%
+	right 48%
 .cu-btn, .lg
 	margin-top 60rpx
 	width 230rpx	

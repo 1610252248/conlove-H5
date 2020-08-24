@@ -25,7 +25,6 @@
 		},
 		methods: {
 			uploadAvatar() {
-				console.log('-------');
 				this.$emit('upload-avatar')
 			}
 		},

@@ -7,7 +7,6 @@
 				<view>开启你的缘分之旅</view>
 			</block>
 		</c-title>
-		
 		<!-- 表单 -->
 		<u-form class="form" label-width="0" :model="form" ref="uForm" :errorType="errorType">
 			<u-form-item prop="email" :border-bottom="false">
@@ -66,7 +65,8 @@ export default {
 			rules: {
 				email: [{ required: true, message: '请输入邮箱' }],
 				password: [{ required: true, message: '请输入密码' }]
-			}
+			},
+			isaa: /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent)
 		}
 	},
 	// 设置表单规则

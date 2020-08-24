@@ -1,5 +1,5 @@
 <template>
-	<c-scroll @scrolltolower="lower">
+	<c-scroll minHeight @scrolltolower="lower">
 		<view v-for="(item, index) in treeHoleList" :key="item.id" class="solids-bottom padding-bottom" @click="navToTreeHoleDetail(false, item.id)">
 			<!-- 树洞内容 -->
 			<tree-hole-info :data="item" />

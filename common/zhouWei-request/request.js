@@ -60,6 +60,7 @@ export default class request {
 	get(url = '', data = {}, options = {}) {
 		let requestInfo = this.getDefault(url, options, "data");
 		requestInfo.data = data;
+		
 		return new Promise((resolve, reject) => {
 			this.getRequest("GET", requestInfo, (state, response) => {
 				//是否用外部的数据处理方法
@@ -111,6 +112,7 @@ export default class request {
 	//接口请求方法
 	getRequest(ajaxType, options, callback) {
 		//请求前回调
+		
 		if (this.requestStart) {
 			options.method = ajaxType;
 			var requestStart = this.requestStart(options);
@@ -125,6 +127,7 @@ export default class request {
 				return;
 			}
 		}
+		
 		uni.request({
 			url: options.httpUrl,
 			data: options.data,
