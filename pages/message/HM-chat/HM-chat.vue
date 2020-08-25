@@ -441,7 +441,7 @@ export default {
 		
 		scrollBottom() {
 			// 滚动到底部
-			this.scrollTop = 0;
+			this.scrollTop = 9998;
 			this.$nextTick(function() {
 				//进入页面滚动到底部
 				this.scrollTop = 9999;
@@ -477,6 +477,7 @@ export default {
 			this.getImage('camera');
 		},
 		sendImage(data){
+			this.refreshMsgList()
 			this.$http.post('/message/sendImage', data).then(res => {
 				// 1. 如果时间不为空，先插入时间
 				if(res.data.system != null) {
@@ -545,6 +546,7 @@ export default {
 		// 发送文字消息
 		sendText() {
 			if(this.sendNum != 0) return ;
+			this.refreshMsgList()
 			this.sendNum++;
 			this.hideDrawer(); //隐藏抽屉
 			if (!this.textMsg) {
@@ -583,62 +585,6 @@ export default {
 				}
 			});
 			return '<div style="display: flex;align-items: center;word-wrap:break-word;">' + replacedStr + '</div>';
-		},
-
-		// 发送消息
-		sendMsg(content, type) {
-			//实际应用中，此处应该提交长连接，模板仅做本地处理。
-			var nowDate = new Date();
-			let lastid = this.msgList[this.msgList.length - 1].msg.id;
-			lastid++;
-			let msg = {
-				type: 'user',
-				msg: {
-					id: lastid,
-					time: nowDate.getHours() + ':' + nowDate.getMinutes(),
-					type: type,
-					userinfo: { uid: 0, username: '大黑哥', face: '/static/img/face.jpg' },
-					content: content
-				}
-			};
-			// 发送消息
-			this.screenMsg(msg);
-			// 定时器模拟对方回复,三秒
-			setTimeout(() => {
-				lastid = this.msgList[this.msgList.length - 1].msg.id;
-				lastid++;
-				msg = {
-					type: 'user',
-					msg: {
-						id: lastid,
-						time: nowDate.getHours() + ':' + nowDate.getMinutes(),
-						type: type,
-						userinfo: { uid: 1, username: '售后客服008', face: '/static/img/im/face/face_2.jpg' },
-						content: content
-					}
-				};
-				// 本地模拟发送消息
-				this.screenMsg(msg);
-			}, 3000);
-		},
-
-		// 添加文字消息到列表
-		addTextMsg(msg) {
-			this.msgList.push(msg);
-		},
-
-		// 添加图片消息到列表
-		addImgMsg(msg) {
-			msg.msg.content = this.setPicSize(msg.msg.content);
-			this.msgImgList.push(msg.msg.content.url);
-			this.msgList.push(msg);
-		},
-
-		sendSystemMsg(content, type) {
-			let lastid = this.msgList[this.msgList.length - 1].msg.id;
-			lastid++;
-			let row = { type: 'system', msg: { id: lastid, type: type, content: content } };
-			this.screenMsg(row);
 		},
 
 		// 预览图片

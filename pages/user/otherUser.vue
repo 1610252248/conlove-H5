@@ -11,9 +11,9 @@
 			 
 		</c-scroll>
 		<!-- 秋波功能 -->
-		<view class="like-box" @click="likeClick" >
+		<view v-if="userDB.id != user.id" class="like-box" @click="likeClick" >
 			<!-- 喜欢按钮 -->
-			<image v-if="userDB.id != user.id" class="like" :src="isLike ? '/static/image/pic-like-active.png' : '/static/image/pic-like-normal.png'"></image>
+			<image  class="like" :src="isLike ? '/static/image/pic-like-active.png' : '/static/image/pic-like-normal.png'"></image>
 		</view>
 		<u-modal v-model="showDel" content="确定要取消秋波吗？" mask-close-able show-cancel-button @confirm="confirmDel" />
 	</view>

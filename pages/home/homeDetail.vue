@@ -193,7 +193,7 @@ export default {
 				let comment = res.data;
 				comment.user = this.userDB;
 				this.comments.unshift(comment);
-				this.$refs.uToast.show({ title: res.msg, type: 'success' });
+				// this.$refs.uToast.show({ title: res.msg, type: 'success' });
 				this.scrollId = 'comment';
 			});
 		},

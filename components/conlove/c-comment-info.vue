@@ -1,12 +1,12 @@
 <template>
 	<view class="cu-item" v-if="Object.keys(comment).length">
 		<!-- 头像 -->
-		<image @click="navToOtherUser(comment.user.id)" class="cu-avatar  round" :src="comment.user.avatar" />
-
+		<image @click="navToOtherUser(comment.user.id)" class="cu-avatar  round" :src="getAvatar()" />
+		<!-- {{treeHoleId}} -->
 		<view class="content" style="max-width: 100%">
 			<view style="height: 34rpx;">
 				<!-- 用户名 -->
-				<view @click="navToOtherUser(comment.user.id)" class="text-grey text-sm">{{ comment.user.nickName }}</view>
+				<view @click="navToOtherUser(comment.user.id)" class="text-grey text-sm">{{ getUserName() }}</view>
 				<!-- 火的数量 -->
 				<text v-for="(num, index) in hotNums" :key="index" v-if="appreciate >= num" class="cuIcon-hotfill text-red" />
 				<!-- 点赞	 -->
@@ -19,7 +19,7 @@
 			<!-- 内容 -->
 			<view>
 				<text v-if="comment.replyName!=null">回复</text>
-				<text v-if="comment.replyName!=null" class="text-blue" >{{' ' + comment.replyName + ': ' }}</text>
+				<text v-if="comment.replyName!=null" class="text-blue" >{{' ' + getReplyName() + ': ' }}</text>
 				<text>{{ comment.content }}</text>
 			</view>
 			
@@ -31,7 +31,7 @@
 					<image class="dot" src="@/static/image/dot1.png"></image>
 					<text @click="reply">回复</text>
 				</view>
-				<c-reply v-if="replyInfo" :comments="comment.newComments" :c-length="comment.childComments.length" @click.native="navToReply(comment.id)" >
+				<c-reply v-if="replyInfo" :treeHoleId="treeHoleId" :anonymous="anonymous" :comments="comment.newComments" :c-length="comment.childComments.length" @click.native="navToReply(comment.id)" >
 					<!-- 回复数量 -->
 					<view class="margin-left-xs text-blue text-sm" v-if="comment.childComments.length > 0" >
 						{{ '共' + comment.childComments.length + '条回复 >' }}
@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import anonymousList from '@/pages/square/sub/anonymous.js'
 export default {
 	props: {
 		// 显示 时间
@@ -60,6 +61,15 @@ export default {
 			type: Object,
 			default: () => {{}}
 		},
+		anonymous: {
+			type: Boolean,
+			default: false
+		},
+		// 树洞 id，做匿名用
+		treeHoleId: {
+			type: Number,
+			default: 0
+		}
 	},
 	data() {
 		return {
@@ -76,6 +86,24 @@ export default {
 		this.init(props);
 	},
 	methods: {
+		getReplyName() {
+			// 树洞 id + 回复用户 id
+			let i = (this.treeHoleId + parseInt(this.comment.replyName)) % anonymousList.length;
+			return this.anonymous? anonymousList[i] : comment.replyName
+		},
+		getId() {
+			let cm = this.comment;
+			return this.treeHoleId + cm.userId
+		},
+		getUserName() {
+			let i = this.getId() % anonymousList.length;
+			return this.anonymous? anonymousList[i] : this.comment.user.nickName;
+		},
+		getAvatar() {
+			let i = this.getId() % 6;
+			let src = '/static/avatar-pool/avatar-' + i + '.jpg'
+			return this.anonymous ? src  : this.comment.user.avatar
+		},
 		init(props) {
 			this.isLike = props.comment.isAppreciate;
 			this.appreciate = props.comment.appreciate;
@@ -88,12 +116,14 @@ export default {
 			this.isLike = !this.isLike;
 			this.appreciate += this.isLike ? 1 : -1;
 		},
-		reply(index, id, name) {
+		// 发送回复事件
+		reply() {
 			this.$emit('reply');
 		},
 		// 跳转用户资料
 		navToOtherUser(id) {
 			//当前统一跳转 其它用户
+			if(this.anonymous) return ;
 			this.$u.route('/pages/user/otherUser', {id})
 		}
 	}

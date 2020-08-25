@@ -1,10 +1,10 @@
 <template>
 	<view class="cu-list menu-avatar comment solids-top padding-tb-sm">
 		<!-- 评论 -->
-		<c-comment-info  v-for="(item, index) in comments" :key="item.id"
+		<c-comment-info :anonymous="anonymous" :treeHoleId="treeHoleId" v-for="(item, index) in comments" :key="item.id"
 		  :showInfo="showInfo" :replyInfo="replyInfo" :comment="item"
 		  @nav-to-reply="navToReply" @change-like="changeLike"
-		  @reply="reply(index, item.id, item.user.nickName)"
+		  @reply="reply(index, item.id, item.user)"
 		 />
 	</view>
 </template>
@@ -29,6 +29,14 @@ export default {
 				[];
 			}
 		},
+		anonymous: {
+			type: Boolean,
+			default: false
+		},
+		treeHoleId: {
+			type: Number,
+			default: 0
+		}
 	},
 	data() {
 		return {
@@ -42,8 +50,13 @@ export default {
 		changeLike(id, isLike) {
 			this.$emit('change-like', id, isLike);
 		},
-		reply(index, id, name) {
-			this.$emit('reply', index, id, name);
+		reply(index, id, user) {
+			// console.log();
+			let tmp = user.nickName;
+			// 匿名给id
+			if(this.anonymous) tmp = user.id;
+			console.log(user, tmp);
+			this.$emit('reply', index, id, tmp);
 		}
 	}
 };

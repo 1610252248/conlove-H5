@@ -1,7 +1,7 @@
 <template>
 	<c-scroll midHeight>
 		<view class="cu-list menu-avatar">
-			
+			<!-- 秋波 评论 赞 -->
 			<view class="cu-item" v-for="(item, index) in lists" :key="index" @click="navToItem(index)">
 				<view class="cu-avatar  lg" :style="{'background-image':'url('+item.image+')'}" />
 				<view class="content"><view class="text-black margin-left-sm">{{item.name}}</view></view>
@@ -23,9 +23,7 @@
 				</view>
 				<view class="action" >
 					<view class="text-grey text-xs">{{ $utils.dateUtils.format(item.time) }}</view>
-					<!-- <view class="cu-tag round bg-grey sm">1</view> -->
 					<view class="cu-tag round bg-red sm" v-if="item.newMsg">{{item.newMsg}}</view>
-					<!-- <view class="cuIcon-right text-gray" v-else></view> -->
 				</view>
 			</view>
 		</view>

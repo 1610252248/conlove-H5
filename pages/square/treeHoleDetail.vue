@@ -7,7 +7,7 @@
 			<tree-hole-info-bar :data="treeHole" :isAppreciate="isAppreciate" @change-appreciate="changAppreciate" @click-message="focusInput" />
 		
 			<!-- 评论 -->
-			<c-comment id="comment"  class="margin-top-sm" :comments="comments" 
+			<c-comment :anonymous="true" id="comment"  class="margin-top-sm" :comments="comments" 
 				@nav-to-reply="navToReply" @change-like="changLike" @reply="reply" />
 			  
 			<view class="cu-load" :class="!isLoad ? 'loading' : 'over'"/>
@@ -127,11 +127,9 @@ export default {
 			this.placeholder = '回复'+ name + ': ';
 			this.$refs.cInput.focusInput()
 		},
-		
 		// 发送评论
 		sendComment(content) {
 			// 说明是 子评论
-			
 			if(this.placeholder != '评论') {
 				let data = {content, commentId: this.parentCommentId}
 				this.$http.post('/treeHole/replyComment', data).then(res => {

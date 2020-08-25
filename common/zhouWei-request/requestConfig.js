@@ -3,7 +3,7 @@ import store from '@/store'
 // let baseUrl = "https://www.conlove.cn/api";
 // let baseUrl = "http://localhost:8181/api";
 // let baseUrl = "http://192.168.0.102:8181/api";
-// let baseUrl = "http://192.168.10.102:8181/api";
+// let baseUrl = "http://192.168.0.105:8181/api";
 let baseUrl = "http://47.93.9.196:8282/api"; // 1核
 //可以new多个request来支持多个域名请求
 let $http = new request({
@@ -83,7 +83,7 @@ $http.dataFactory = function(options, resolve) {
 	} else if (resolve.statusCode == "1000" || resolve.statusCode == "1001" || resolve.data.status == "1000") {
 		//未登录或登录已失效
 		
-		// store.dispatch('del')
+		store.dispatch('del')
 		uni.showModal({
 			title: '温馨提示',
 			content: '此时此刻需要您登录喔~',

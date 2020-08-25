@@ -2,11 +2,11 @@
 	<c-scroll midHeight> 
 		<view class="cu-list menu-avatar">
 			<view class="cu-item" v-for="(item, index) in lists" :key="item.id" @click="navDetail(item)">
-				<view @click.stop="navToOtherUser(item.user.id)" class="cu-avatar round lg" :style="{ 'background-image': 'url(' + item.user.avatar + ')' }">
-					<view class="cu-tag badge" :class="item.user.sex == '女' ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'"></view>
+				<view @click.stop="navToOtherUser(item)" class="cu-avatar round lg" :style="{ 'background-image': 'url(' + getAvatar(item) + ')' }">
+					<view v-if="item.type<=2" class="cu-tag badge" :class="item.user.sex == '女' ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'"></view>
 				</view>
 				<view class="content">
-					<view @click.stop="navToOtherUser(item.user.id)" class="text-black">{{ item.user.nickName }}</view>
+					<view @click.stop="navToOtherUser(item)" class="text-black">{{ getUserName(item) }}</view>
 					<view class="text-gray text-df text-cut">{{ tips[item.type] }}</view>
 				</view>
 				<view class="action text-grey text-xs">{{ $utils.dateUtils.format(item.time) }}</view>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import anonymousList from '@/pages/square/sub/anonymous.js'
 export default {
 	data() {
 		return {
@@ -42,6 +43,15 @@ export default {
 		this.getAppreciate();
 	},
 	methods: {
+		getAvatar(item) {
+			let i = (item.aid + item.auserId) % 6;
+			let src = '/static/avatar-pool/avatar-' + i + '.jpg'
+			return (item.type > 2) ? src  : item.user.avatar
+		},
+		getUserName(item) {
+			let i = (item.aid + item.auserId) % anonymousList.length;
+			return (item.type > 2) ? anonymousList[i] : item.user.nickName;
+		},
 		clearAppreciate() {
 			this.$http.get('/clearAppreciate')
 		},
@@ -51,9 +61,13 @@ export default {
 			})
 		},
 		// 跳转用户资料
-		navToOtherUser(id) {
+		navToOtherUser(item) {
 			//当前统一跳转 其它用户
-			this.$u.route('/pages/user/otherUser', {id})
+			if(item.type > 2) {
+				this.navDetail(item)
+				return ;
+			}
+			this.$u.route('/pages/user/otherUser', {id : item.user.id})
 		},
 		navDetail(item) {
 			let type = item.type

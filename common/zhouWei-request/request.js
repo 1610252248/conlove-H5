@@ -1,3 +1,4 @@
+import * as TanslateImage from '@/common/translate-image.js'
 export default class request {
 	constructor(options) {
 		//请求公共地址
@@ -194,13 +195,22 @@ export default class request {
 		const _this = this;
 		return new Promise((resolve, reject) => {
 			uni.chooseImage({
-				count: data.count || 9, //默认9
+				count: 9, //默认9
 				sizeType: data.sizeType || ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 				sourceType: data.sourceType || ['album', 'camera'], //从相册选择
 				success: function(res) {
-					_this.urlFileUpload(requestInfo, res.tempFiles, (state, response) => {
-						state ? resolve(response) : reject(response);
-					});
+					let list = []
+					for(let i in res.tempFilePaths) {
+						TanslateImage.translate2(res.tempFilePaths[i], (res) => {
+							list.push(res)
+						})
+					}
+					setTimeout( () => {
+						console.log(list);
+						_this.urlFileUpload(requestInfo, list, (state, response) => {
+							state ? resolve(response) : reject(response);
+						});
+					}, 200)
 				}
 			});
 		});
@@ -231,7 +241,7 @@ export default class request {
 		function fileUpload(i) {
 			var config = {
 				url: options.httpUrl,
-				filePath: files[i].path,
+				filePath: files[i],
 				// header: options.headers, //加入请求头
 				name: options.name || "file",
 				success: (response) => {

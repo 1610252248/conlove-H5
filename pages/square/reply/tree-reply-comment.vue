@@ -11,7 +11,7 @@
 			</view>
 			
 			<!-- 子评论 -->
-			<c-comment @reply="reply" @change-like="changLike" :comments="comment.childComments" :replyInfo="false" />
+			<c-comment :anonymous="true" :treeHoleId="comment.treeHoleId" @reply="reply" @change-like="changLike" :comments="comment.childComments" :replyInfo="false" />
 			<!-- 加载 -->
 			<view class="cu-load" :class="!isLoad ? 'loading' : 'over'"></view>
 		</c-scroll>

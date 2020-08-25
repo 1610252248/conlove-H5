@@ -2,7 +2,7 @@
 	<view class="reply-box" v-if="(comments != null && comments.length > 0) || cLength > 0">
 		<view class="reply" v-for="(item, index) in comments" :key="index">
 			<view class="margin-left-xs text-sm " style="max-width: 100%">
-				<text class="text-blue ">{{ item.user.nickName + ': ' }}</text>
+				<text class="text-blue ">{{ getUserName(item.user)+ ': ' }}</text>
 				<text class="text-black">{{ item.content }}</text>
 			</view>
 		</view>
@@ -11,6 +11,7 @@
 </template>
 
 <script>
+import anonymousList from '@/pages/square/sub/anonymous.js'
 export default {
 	props: {
 		comments: {
@@ -23,6 +24,15 @@ export default {
 			type: Number,
 			default: 0
 		},
+		anonymous: {
+			type: Boolean,
+			default: true
+		},
+		// 树洞 id，做匿名用
+		treeHoleId: {
+			type: Number,
+			default: 0
+		}
 	},
 	data() {
 		return {
@@ -30,6 +40,10 @@ export default {
 		};
 	},
 	methods: {
+		getUserName(user) {
+			let i = (this.treeHoleId + user.id) % anonymousList.length;
+			return this.anonymous? anonymousList[i] : user.nickName;
+		},
 		reply(name) {
 			this.$emit('reply', name)
 		}

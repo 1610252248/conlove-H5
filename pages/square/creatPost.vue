@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<c-custom @send="send" v-if="id == -1"><block slot="center">发布动态</block></c-custom>
-		<c-custom @send="send" sendName="修改" v-else ><block slot="center">修改动态</block></c-custom>
+		<c-custom @send="send" sendName="修改" v-else><block slot="center">修改动态</block></c-custom>
 		<view class="content">
 			<view class="cu-form-group margin-xs"><textarea style="min-height: 250rpx;" v-model="post.content" placeholder="此刻的想法..."></textarea></view>
 			<view class="cu-bar solids-top padding-xs">
@@ -18,28 +18,29 @@
 				</view>
 			</view>
 		</view>
-		<u-modal v-model="show" :content="'确定要'+(id==-1?'发布':'修改')+'吗？'" :mask-close-able="true" @confirm="confirm" />
+		<u-modal v-model="show" :content="'确定要' + (id == -1 ? '发布' : '修改') + '吗？'" :mask-close-able="true" @confirm="confirm" />
 		<u-modal v-model="showDel" content="确定要删除照片吗？" :mask-close-able="true" @confirm="confirmDel" />
 		<u-toast ref="uToast" />
 	</view>
 </template>
 
 <script>
+import * as TanslateImage from '@/common/translate-image.js'
 export default {
 	data() {
 		return {
 			post: {
-				content: '',
+				content: ''
 			},
 			images: [],
 			show: false,
 			showDel: false,
 			imgIndex: 0,
-			id: -1,
+			id: -1
 		};
 	},
-	onLoad({id}) {
-		if(id != null) {
+	onLoad({ id }) {
+		if (id != null) {
 			this.getPost(id);
 			this.id = id;
 		} else {
@@ -48,14 +49,14 @@ export default {
 	},
 	methods: {
 		getPost(id) {
-			this.$http.get('/getModify/post', {id}).then(res => {
+			this.$http.get('/getModify/post', { id }).then(res => {
 				this.post = res.data;
-				for(let obj of this.post.images) {
-					this.images.push(obj.image)
+				for (let obj of this.post.images) {
+					this.images.push(obj.image);
 				}
-			})
+			});
 		},
-		
+
 		async ChooseImage() {
 			await this.$http.urlImgUpload('/fileUpload').then(res => {
 				for (let image of res) {
@@ -79,20 +80,19 @@ export default {
 		},
 		confirm() {
 			// 说明是修改动态
-			if(this.id != -1) {
-				this.$http.post('/updatePost', {post: this.post,  images: this.images}).then(res => {
+			if (this.id != -1) {
+				this.$http.post('/updatePost', { post: this.post, images: this.images }).then(res => {
 					this.$refs.uToast.show({
 						title: res.msg,
 						type: 'success',
 						back: true
 					});
-					this.$eventBus.$emit("update-post");
-				})	
+					this.$eventBus.$emit('update-post');
+				});
 			} else {
-				
 				this.$http.post('/addPost', { content: this.post.content, images: this.images }).then(res => {
 					// 全局事件 表明有新的数据，让post刷新
-					this.$eventBus.$emit("add-post");
+					this.$eventBus.$emit('add-post');
 					this.$refs.uToast.show({
 						title: res.msg,
 						type: 'success',
