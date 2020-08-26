@@ -1,8 +1,8 @@
 <template>
 	<view>
-		<c-custom-mid><block slot="center">
-			{{nickName}}
-		</block></c-custom-mid>
+		<c-custom-mid>
+			<block slot="center">{{ nickName }}</block>
+		</c-custom-mid>
 		<view class="content" @touchstart="hideDrawer">
 			<scroll-view
 				class="msg-list"
@@ -24,19 +24,14 @@
 						<view class="rect5"></view>
 					</view>
 				</view>
-				
-				
+
 				<view class="row" v-for="(row, index) in msgList" :key="index" :id="'msg' + row.id">
 					<!-- 系统消息 -->
 					<block v-if="row.type == 'system'">
 						<view class="system">
 							<!-- 文字消息 -->
-							<view v-if="row.msgType == 'text'" class="text">
-									{{ row.content }}
-							</view>
-							<view v-else-if="row.msgType == 'time'" class="time">
-									{{ $utils.dateUtils.trans(row.time) }}
-							</view>
+							<view v-if="row.msgType == 'text'" class="text">{{ row.content }}</view>
+							<view v-else-if="row.msgType == 'time'" class="time">{{ $utils.dateUtils.trans(row.time) }}</view>
 						</view>
 					</block>
 					<!-- 用户消息 -->
@@ -47,15 +42,12 @@
 							<view class="left">
 								<!-- 文字消息 -->
 								<view style="height: 100%;" class="flex align-end">
-									<view class="text-gray padding-xs text-sm">
-										{{getMessage(row.time)}}
-									</view>
+									<view class="text-gray padding-xs text-sm">{{ getMessage(row.time, row.id) }}</view>
 								</view>
 								<view v-if="row.msgType == 'text'" class="bubble"><rich-text :nodes="row.content"></rich-text></view>
 								<!-- 图片消息 -->
 								<view v-if="row.msgType == 'img'" class="bubble img" @tap="showPic(row.image)">
-									<image :src="row.image" 
-									:style="{ width: row.width + 'px', height: row.height + 'px' }"/>
+									<image :src="row.image" :style="{ width: row.width + 'px', height: row.height + 'px' }" />
 								</view>
 							</view>
 							<!-- 右-头像 -->
@@ -74,8 +66,7 @@
 								<view v-if="row.msgType == 'text'" class="bubble"><rich-text :nodes="row.content"></rich-text></view>
 								<!-- 图片消息 -->
 								<view v-if="row.msgType == 'img'" class="bubble img" @tap="showPic(row.image)">
-									<image :src="row.image" 
-									:style="{ width: row.width + 'px', height: row.height + 'px' }"/>
+									<image :src="row.image" :style="{ width: row.width + 'px', height: row.height + 'px' }" />
 								</view>
 							</view>
 						</view>
@@ -104,16 +95,17 @@
 			<view class="more" @tap="showMore"><view class="icon add"></view></view>
 			<view class="textbox">
 				<view class="text-mode">
-					<view class="box"><textarea auto-height="true" v-model="textMsg" @focus="textareaFocus" /></view>
+					<view class="box"><textarea auto-height="true" v-model="textMsg" @focus="textareaFocus" @blur="blur" /></view>
 					<view class="em" @tap="chooseEmoji"><view class="icon biaoqing"></view></view>
 				</view>
 			</view>
 			<view class="send" @tap="sendText"><view class="btn">发送</view></view>
 		</view>
+		
 	</view>
 </template>
 <script>
-import { mapState} from 'vuex';
+import { mapState } from 'vuex';
 export default {
 	computed: {
 		// 使用对象展开运算符将 getter 混入 computed 对象中
@@ -275,31 +267,33 @@ export default {
 			// 请求帖子参数
 			page: 1, //当前页
 			pageSize: 20, // 每页数量
-			totalPage: 0 ,// 总页数
+			totalPage: 0, // 总页数
 			// 加载更多
 			isLoad: false,
 			loadCnt: 0,
-			
+
 			maxBottom: 0, // 页面底部最大距离
 			curScrollTop: 0, // 页面当前底部距离
 			disBottom: 100, // 距离页面底部 > 100 滚动底部
 			sendNum: 0,
 			lastTime: '', // 上次的时间
+			messageId: 0, // 聊天的最大id
+			isFocus: false // 输入框是否foucs
 		};
 	},
-	onLoad({id, nickName}) {
-		if(id == null || nickName == null) {
+	onLoad({ id, nickName }) {
+		if (id == null || nickName == null) {
 			this.$u.toast('地址有误~');
-			return 
+			return;
 		}
-		this.nickName = nickName
-		this.id = id
-		this.init()
-		
+		this.nickName = nickName;
+		this.id = id;
+		this.init();
+
 		// //每 5 秒一次请求
-		this.task = setInterval(()=>{
-			this.refreshMsgList()
-		}, 5000)
+		this.task = setInterval(() => {
+			this.refreshMsgList();
+		}, 5000);
 	},
 	onUnload() {
 		//离开页面 终止请求
@@ -307,20 +301,22 @@ export default {
 	},
 	methods: {
 		init(id) {
-			this.msgList = []
-			this.msgImgList = []
+			this.msgList = [];
+			this.msgImgList = [];
 			this.getMsgList();
 		},
 		//  监听页面滚动
 		scrollChang(res) {
-			this.maxBottom = Math.max(this.maxBottom, res.detail.scrollTop)
-			this.curScrollTop = res.detail.scrollTop;
+			if (!this.isFocus) {
+				this.maxBottom = Math.max(this.maxBottom, res.detail.scrollTop);
+				this.curScrollTop = res.detail.scrollTop;
+			}
 		},
 		scrolltolower() {
 			this.isBottom = true;
-			setTimeout(()=>{
-				this.isBottom = false
-			},100)
+			setTimeout(() => {
+				this.isBottom = false;
+			}, 100);
 		},
 		//触发滑动到顶部(加载历史信息记录)
 		loadHistory() {
@@ -337,46 +333,51 @@ export default {
 		// 刷新数据
 		refreshMsgList() {
 			this.isRefresh = true;
-			let data = {id: this.id, page: 1, pageSize:this.pageSize }
+			let data = { id: this.id, page: 1, pageSize: this.pageSize };
 			this.$http.get('/message/getChat', data).then(res => {
 				res = res.data;
-				this.lastTime = res.friend.lastTime
+				this.lastTime = res.friend.lastTime;
 				this.totalPage = res.pageInfo.pages;
 				this.setList(res.pageInfo.list);
-			})
+			});
 		},
 		// 获取信息是否 已读
-		getMessage(time) {
-			let startTime= Date.parse(this.lastTime);
-			let endTime= Date.parse(time);
-			return (startTime > endTime) ? "已读" : "未读"
+		getMessage(time, id) {
+			let startTime = Date.parse(this.lastTime);
+			let endTime = Date.parse(time);
+			let isLast = this.messageId < id;
+			// 同时发出，时间相等的bug
+			if (this.messageId > id) return startTime >= endTime ? '已读' : '未读';
+			else return startTime > endTime ? '已读' : '未读';
 		},
 		// 加载初始页面消息
 		getMsgList() {
 			let Viewid = 0;
-			if(this.page != 1) {
+			if (this.page != 1) {
 				Viewid = this.msgList[0].id; //记住第一个信息ID
 			}
-			let data = {id: this.id, page: this.page, pageSize:this.pageSize }
+			let data = { id: this.id, page: this.page, pageSize: this.pageSize };
 			this.$http.get('/message/getChat', data).then(res => {
-				if(res.status == this.$http.ERROR) {
+				if (res.status == this.$http.ERROR) {
 					this.$u.roast(res.msg);
-					return ;
+					return;
 				}
 				res = res.data;
-				this.lastTime = res.friend.lastTime
+				this.lastTime = res.friend.lastTime;
 				this.totalPage = res.pageInfo.pages;
 				this.setList(res.pageInfo.list);
-				if(this.page >= this.totalPage) this.isLoad = true;
-				if(this.page == 1) { // 直接滑倒底部
+				if (this.page >= this.totalPage) this.isLoad = true;
+				if (this.page == 1) {
+					// 直接滑倒底部
 					this.$nextTick(function() {
 						//进入页面滚动到底部
 						this.scrollTop = 9999;
-						this.$nextTick(function() {//恢复滚动动画
+						this.$nextTick(function() {
+							//恢复滚动动画
 							this.scrollAnimation = true;
 						});
 					});
-				} else { 
+				} else {
 					//这段代码很重要，不然每次加载历史数据都会跳到顶部
 					this.$nextTick(function() {
 						this.scrollToView = 'msg' + Viewid; //跳转上次的第一行信息位置
@@ -385,67 +386,74 @@ export default {
 						});
 					});
 				}
-			})
-			
+			});
 		},
 		// 跳转用户资料
 		navToOtherUser(id) {
 			//当前统一跳转 其它用户
-			this.$u.route('/pages/user/otherUser', {id})
+			this.$u.route('/pages/user/otherUser', { id });
 		},
 		// 获取消息中的图片,并处理显示尺寸
 		setList(list) {
-			let maxId = -1, minId = 9999999;
-			if(this.msgList.length > 0) {
+			let maxId = -1,
+				minId = 9999999;
+			if (this.msgList.length > 0) {
 				maxId = this.msgList[this.msgList.length - 1].id;
+				this.messageId = maxId;
 				minId = this.msgList[0].id;
 			}
-			
-			let tmpList = [], imgList = []
+
+			let tmpList = [],
+				imgList = [];
 			list.forEach(obj => {
 				// 刷新数据，放到后面
-				if(this.isRefresh) {
-					if(obj.id > maxId) {
-						if(obj.msgType == 'img') {
-							tmpList.unshift(this.setPicSize(obj))
-							imgList.unshift(obj.image)
+				if (this.isRefresh) {
+					if (obj.id > maxId) {
+						this.messageId = obj.id;
+						if (obj.msgType == 'img') {
+							tmpList.unshift(this.setPicSize(obj));
+							imgList.unshift(obj.image);
 						} else {
-							tmpList.unshift(obj)
+							tmpList.unshift(obj);
 						}
-					} 
-				} else { // 否则到
-					if(this.page != 1) {
-						if(obj.id < minId) this.pushMsg(obj)
-					} else { // 2. 刷新加载更多
-						if(obj.id > maxId) this.pushMsg(obj)
+					}
+				} else {
+					// 否则到
+					if (this.page != 1) {
+						if (obj.id < minId) this.pushMsg(obj);
+					} else {
+						// 2. 刷新加载更多
+						if (obj.id > maxId) this.pushMsg(obj);
 					}
 				}
-			})
-			if(this.isRefresh) {
+			});
+			if (this.isRefresh) {
 				this.msgList.push(...tmpList);
 				this.msgImgList.push(...imgList);
-				if(this.maxBottom - this.disBottom < this.curScrollTop )
-					this.scrollBottom();
+				if (this.maxBottom - this.disBottom < this.curScrollTop) this.scrollBottom();
 			}
 			this.isRefresh = false;
 		},
-		
+
 		pushMsg(obj) {
-			if(obj.msgType == 'img') {
-				this.msgList.unshift(this.setPicSize(obj))
-				this.msgImgList.unshift(obj.image)
+			if (obj.msgType == 'img') {
+				this.msgList.unshift(this.setPicSize(obj));
+				this.msgImgList.unshift(obj.image);
 			} else {
-				this.msgList.unshift(obj)
+				this.msgList.unshift(obj);
 			}
 		},
-		
+
 		scrollBottom() {
-			// 滚动到底部
-			this.scrollTop = 9998;
-			this.$nextTick(function() {
-				//进入页面滚动到底部
-				this.scrollTop = 9999;
-			});
+			// 输入框失去焦点，才可以滚动，防止输入过程中滑动
+			if (!this.isFocus) {
+				// 滚动到底部
+				this.scrollTop = 9998;
+				this.$nextTick(function() {
+					//进入页面滚动到底部
+					this.scrollTop = 9999;
+				});
+			}
 		},
 		showMore() {
 			this.hideEmoji = true;
@@ -476,38 +484,37 @@ export default {
 		camera() {
 			this.getImage('camera');
 		},
-		sendImage(data){
-			this.refreshMsgList()
+		sendImage(data) {
+			this.refreshMsgList();
 			this.$http.post('/message/sendImage', data).then(res => {
 				// 1. 如果时间不为空，先插入时间
-				if(res.data.system != null) {
-					this.msgList.push(res.data.system)
+				if (res.data.system != null) {
+					this.msgList.push(res.data.system);
 				}
-				
+
 				// 2. 在插入发送的内容
 				let message = res.data.chat;
 				message.user = this.userDB;
 				message = this.setPicSize(message);
-				this.msgList.push(message)
+				this.msgList.push(message);
 				// 图片数组 +1
-				this.msgImgList.push(message.image)
-				this.scrollBottom()
-			})
+				this.msgImgList.push(message.image);
+				this.scrollBottom();
+			});
 		},
 		//选照片 or 拍照
 		async getImage(type) {
 			this.hideDrawer();
-			await this.$http.urlImgUpload('/fileUpload', {sourceType: [type]}).then(res => {
+			await this.$http.urlImgUpload('/fileUpload', { sourceType: [type] }).then(res => {
 				res.forEach(url => {
 					uni.getImageInfo({
 						src: url,
 						success: image => {
-							this.sendImage({id: this.id, image: url,
-							 width: image.width, height: image.height})
+							this.sendImage({ id: this.id, image: url, width: image.width, height: image.height });
 						}
-					})
-				})
-			})
+					});
+				});
+			});
 		},
 		// 选择表情
 		chooseEmoji() {
@@ -521,7 +528,8 @@ export default {
 		},
 		//处理图片尺寸，如果不处理宽高，新进入页面加载图片时候会闪
 		setPicSize(message) {
-			let w = message.width, h = message.height
+			let w = message.width,
+				h = message.height;
 			// 让图片最长边等于设置的最大长度，短边等比例缩小，图片控件真实改变，区别于aspectFit方式。
 			let maxW = uni.upx2px(350); //350是定义消息图片最大宽度
 			let maxH = uni.upx2px(350); //350是定义消息图片最大高度
@@ -539,37 +547,40 @@ export default {
 
 		//获取焦点，如果不是选表情ing,则关闭抽屉
 		textareaFocus() {
+			this.isFocus = true;
 			if (this.popupLayerClass == 'showLayer' && this.hideMore == false) {
 				this.hideDrawer();
 			}
 		},
+		blur() {
+			this.isFocus = false;
+		},
 		// 发送文字消息
 		sendText() {
-			if(this.sendNum != 0) return ;
-			this.refreshMsgList()
+			if (this.sendNum != 0) return;
+			this.refreshMsgList();
 			this.sendNum++;
 			this.hideDrawer(); //隐藏抽屉
 			if (!this.textMsg) {
 				return;
 			}
 			let content = this.replaceEmoji(this.textMsg);
-			
-			this.$http.post('/message/sendText',{id: this.id, content}).then(res => {
+
+			this.$http.post('/message/sendText', { id: this.id, content }).then(res => {
 				// 1. 如果时间不为空，先插入时间
-				if(res.data.system != null) {
-					this.msgList.push(res.data.system)
+				if (res.data.system != null) {
+					this.msgList.push(res.data.system);
 				}
-				
+
 				// 2 在插入发送的内容
 				let msg = res.data.chat;
 				msg.user = this.userDB;
-				this.msgList.push(msg)
-				
+				this.msgList.push(msg);
+
 				this.textMsg = ''; //清空输入框
 				this.sendNum--;
-				this.scrollBottom()
-			})
-			
+				this.scrollBottom();
+			});
 		},
 		//替换表情符号为图片
 		replaceEmoji(str) {
@@ -578,7 +589,7 @@ export default {
 				for (let i = 0; i < this.emojiList.length; i++) {
 					let row = this.emojiList[i];
 					let rowItem = row.find(rItem => rItem.alt == item);
-					if(rowItem) {
+					if (rowItem) {
 						let imgstr = '<img src="' + curPath + rowItem.url + '">';
 						return imgstr;
 					}
