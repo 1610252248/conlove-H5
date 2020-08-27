@@ -3,8 +3,8 @@ import store from '@/store'
 // let baseUrl = "https://www.conlove.cn/api";
 // let baseUrl = "http://localhost:8181/api";
 // let baseUrl = "http://192.168.0.102:8181/api";
-// let baseUrl = "http://192.168.0.105:8181/api";
-let baseUrl = "http://47.93.9.196:8282/api"; // 1核
+let baseUrl = "http://192.168.0.105:8181/api";
+// let baseUrl = "http://47.93.9.196:8282/api"; // 1核
 //可以new多个request来支持多个域名请求
 let $http = new request({
 	//接口请求地址
@@ -44,11 +44,12 @@ $http.requestStart = function(options) {
 	//请求前加入token
 	options.headers['token'] = uni.getStorageSync('token') ? uni.getStorageSync('token') : '';
 	// console.log("请求开始前", options);
+	// ;
 	return options;
 }
 //请求结束
 $http.requestEnd = function(options, resolve) {
-	//判断当前接口是否需要加载动画
+	// 判断当前接口是否需要加载动画
 	requestNum = requestNum - 1;
 	if (requestNum <= 0) {
 		// uni.hideLoading();
