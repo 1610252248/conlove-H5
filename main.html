@@ -12,6 +12,13 @@
                 document.documentElement.style.fontSize = document.documentElement.clientWidth / 20 + 'px'
             })
         </script>
+		<style>
+			.iframe {
+			    height: 100%;
+			    width: 100%;
+			    border-radius: 15px;
+			}
+		</style>
 		<link rel="icon" href="/static/favicon.ico"> 
         <link rel="stylesheet" href="<%= BASE_URL %>static/index.<%= VUE_APP_INDEX_CSS_HASH %>.css" />
     </head>
@@ -19,7 +26,11 @@
         <noscript>
             <strong>Please enable JavaScript to continue.</strong>
         </noscript>
-        <div id="app"></div>
+		<!-- <iframe src="http://localhost:8080/#/" scrolling="auto" frameborder="0" class="iframe">
+			
+		</iframe> -->
+        <div id="app">
+        </div>
         <!-- built files will be auto injected -->
     </body>
 </html>

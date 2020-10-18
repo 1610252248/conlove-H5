@@ -4,6 +4,7 @@ import $utils from 'common/utils.js';
 import $http from 'common/zhouWei-request/requestConfig.js'
 //引入vuex
 import store from './store'
+import 'common/pc.js'
 //把vuex定义成全局组件
 Vue.prototype.$store = store
 

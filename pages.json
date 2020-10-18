@@ -4,7 +4,14 @@
 		"^c-(.*)": "@/components/conlove/c-$1.vue",
 		"^cu-(.*)": "@/colorui/components/cu-$1.vue"
 	},
-	"pages": [{
+	"pages": [
+		{
+		   "path": "pages/iframe/index",
+		   "style": {
+		   	"navigationStyle":"custom"
+		   }
+		},
+		{
 		"path": "pages/home/index",
 		"style": {
 			"navigationStyle":"custom"
