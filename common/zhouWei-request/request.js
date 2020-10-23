@@ -189,7 +189,7 @@ export default class request {
 	}
 
 	//本地服务器图片上传
-	urlImgUpload(url = '', data = {}, options = {}) {
+    urlImgUpload(url = '', data = {}, options = {}) {
 		let requestInfo = this.getDefault(url, options, "file");
 		requestInfo.data = data;
 		const _this = this;
@@ -200,21 +200,26 @@ export default class request {
 				sourceType: data.sourceType || ['album', 'camera'], //从相册选择
 				success: function(res) {
 					let list = []
+					uni.showLoading({
+					    title: '上传中',
+						mask: true
+					});
 					for(let i in res.tempFilePaths) {
-						TanslateImage.translate2(res.tempFilePaths[i], (res) => {
+						TanslateImage.translate2(res.tempFiles[i].size , res.tempFilePaths[i], (res) => {
 							list.push(res)
 						})
 					}
-					setTimeout( () => {
-						console.log(list);
+					setTimeout(() => {
+						uni.hideLoading();
 						_this.urlFileUpload(requestInfo, list, (state, response) => {
 							state ? resolve(response) : reject(response);
 						});
-					}, 200)
+					}, 2000)
 				}
 			});
 		});
 	}
+	
 	//本地服务器文件上传方法
 	urlFileUpload(options, files, callback) {
 		const _this = this;

@@ -26,7 +26,6 @@ export function translate(imgSrc, callback) {
 		let base64 = canvas.toDataURL('image/png');
 		canvas = null;
 		let blob = base64ToBlob(base64);
-		// console.log(blob)
 		//Blob对象转blob地址
 		let blobUrl = window.URL.createObjectURL(blob);
 		callback(blobUrl);
@@ -55,34 +54,45 @@ export function base64ToBlob(base64) {
 
 
 
-export function translate2(imgSrc, callback) {
-	uni.getImageInfo({
-		src: imgSrc,
-		success: function(res) {
-			let canvasWidth = res.width //图片原始长宽
-			let canvasHeight = res.height;
-			let base = canvasWidth / canvasHeight;
-			if (canvasWidth > 500) {
-				canvasWidth = 500;
-				canvasHeight = Math.floor(canvasWidth / base);
+export function translate2(size, imgSrc, callback) {
+	// 小于 200KB 直接不压缩
+	if (size / 1024 < 200) {
+		callback(imgSrc)
+	} else {
+		uni.getImageInfo({
+			src: imgSrc,
+			success: function(res) {
+				let img = new Image();
+				img.src = imgSrc; // 要压缩的图片  
+				img.onload = function() {
+					let canvasWidth = res.width //图片原始长宽
+					let canvasHeight = res.height;
+					let base = canvasWidth / canvasHeight;
+					if (canvasWidth > 700) {
+						canvasWidth = 700;
+						canvasHeight = Math.floor(canvasWidth / base);
+					}
+					let canvas = document.createElement('canvas');
+					let ctx = canvas.getContext('2d');
+					canvas.width = canvasWidth;
+					canvas.height = canvasHeight;
+					
+					//  将图片画到canvas上面   使用Canvas压缩  
+					ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
+					//压缩比例
+					let quality = 0.9;
+					let base64 = canvas.toDataURL('image/jpeg', quality);
+					canvas = null;
+					let blob = base64ToBlob(base64);
+					//Blob对象转blob地址
+					let blobUrl = window.URL.createObjectURL(blob);
+					callback(blobUrl);
+				}
+			},
+			fail: (err) => {
+				reject('获取图片信息失败')
 			}
-			let img = new Image();
-			img.src = imgSrc; // 要压缩的图片  
-			let canvas = document.createElement('canvas');
-			let ctx = canvas.getContext('2d');
-			canvas.width = canvasWidth;
-			canvas.height = canvasHeight;
-		
-			//  将图片画到canvas上面   使用Canvas压缩  
-			ctx.drawImage(img, 0, 0, canvasWidth, canvasHeight);
-			//压缩比例
-			let quality = 0.9;
-			let base64 = canvas.toDataURL('image/jpeg', quality);
-			canvas = null;
-			let blob = base64ToBlob(base64);
-			//Blob对象转blob地址
-			let blobUrl = window.URL.createObjectURL(blob);
-			callback(blobUrl);
-		},
-	})
+		})
+	}
+
 }
