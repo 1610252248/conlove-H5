@@ -2,7 +2,7 @@
 	<view>
 		<c-scroll minHeight @scrolltolower="lower" :scrollId="scrollId">
 			<!-- 帖子内容 -->
-			<post-info :data="post" style="padding-top: 30rpx;" />
+			<post-info :showMore="true" :data="post" style="padding-top: 30rpx;" />
 			<!-- xx赞 xx评论 -->
 			<post-info-bar :data="post" @click-message="clickMessage" :isAppreciate="isAppreciate" @change-appreciate="changAppreciate" />
 			<!-- 评论 -->

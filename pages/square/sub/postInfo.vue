@@ -1,5 +1,5 @@
 <template>
-	<view  v-if="Object.keys(data).length">
+	<view v-if="Object.keys(data).length">
 		<view class="box-content">
 			<view class="flex justify-start align-center">
 				<view @click.stop="navToOtherUser(data.user.id)" class="cu-avatar round" :style="[{ backgroundImage: 'url(' + data.user.avatar + ')' }]">
@@ -17,9 +17,29 @@
 			</view>
 		</view>
 		<view class="bg-white padding text-black padding-bottom-xs">
-			<text class="text-wrap">{{ data.content }}</text>
+			<!-- <text class="text-wrap">{{ data.content }}</text> -->
+			<view
+				class="c-content" :class="[elId]" :style="{
+					height: isLongContent && !showMore ? showHeight + 'rpx' : 'auto'
+				}">
+				<text class="text-wrap">
+					{{
+						`山不在高，有仙则名。水不在深，有龙则灵。斯是陋室，惟吾德馨。
+					苔痕上阶绿，草色入帘青。谈笑有鸿儒，往来无白丁。可以调素琴，阅金经。
+					无丝竹之乱耳，无案牍之劳形。南阳诸葛庐，西蜀子云亭。孔子云：何陋之有？山不在高，有仙则名。水不在深，有龙则灵。斯是陋室，惟吾德馨。
+					苔痕上阶绿，草色入帘青。谈笑有鸿儒，往来无白丁。可以调素琴，阅金经。
+					无丝竹之乱耳，无案牍之劳形。南阳诸葛庐，西蜀子云亭。孔子云：何陋之有？山不在高，有仙则名。水不在深，有龙则灵。斯是陋室，惟吾德馨。
+					苔痕上阶绿，草色入帘青。谈笑有鸿儒，往来无白丁。可以调素琴，阅金经。
+					无丝竹之乱耳，无案牍之劳形。南阳诸葛庐，西蜀子云亭。孔子云：何陋之有？山不在高，有仙则名。水不在深，有龙则灵。斯是陋室，惟吾德馨。
+					苔痕上阶绿，草色入帘青。谈笑有鸿儒，往来无白丁。可以调素琴，阅金经。
+					无丝竹之乱耳，无案牍之劳形。南阳诸葛庐，西蜀子云亭。孔子云：何陋之有？`
+					}}
+				</text>
+			</view>
+			<view v-if="isLongContent" class="see-more">查看全文</view>
+			
 			<view class="grid grid-square margin-top-xs" :class="data.images.length == 1 ? 'col-1' : 'col-3'">
-				<view class="bg-img" v-for="item in data.images" :key="item.id" :style="{ backgroundImage: 'url(' + item.image + ')' }" @click.stop="viewImage(item.image)"/>
+				<view class="bg-img" v-for="item in data.images" :key="item.id" :style="{ backgroundImage: 'url(' + item.image + ')' }" @click.stop="viewImage(item.image)" />
 			</view>
 		</view>
 	</view>
@@ -35,10 +55,33 @@ export default {
 		dotsShow: {
 			type: Boolean,
 			default: false
+		},
+		showMore: {
+			type: Boolean,
+			default: false
 		}
 	},
-
+	data() {
+		return {
+			isLongContent: false, // 是否需要隐藏一部分内容
+			showHeight: 280,
+			elId: this.$u.guid() // 生成唯一class
+		};
+	},
+	mounted() {
+		this.$nextTick(function() {
+			this.init();
+		});
+	},
 	methods: {
+		init() {
+			this.$uGetRect('.' + this.elId).then(res => {
+				// 判断高度，如果真实内容高度大于占位高度，则显示收起与展开的控制按钮
+				if (res.height > uni.upx2px(this.showHeight)) {
+					this.isLongContent = true;
+				}
+			})
+		},
 		viewImage(url) {
 			let images = [];
 			for (let obj of this.data.images) images.push(obj.image);
@@ -51,7 +94,7 @@ export default {
 		// 跳转用户资料
 		navToOtherUser(id) {
 			//当前统一跳转 其它用户
-			this.$u.route('/pages/user/otherUser', {id})
+			this.$u.route('/pages/user/otherUser', { id });
 		}
 	}
 };
@@ -80,4 +123,9 @@ export default {
 	margin-right 0
 	padding-left 30rpx
 	padding-right 10rpx
+.c-content
+	overflow hidden
+.see-more 
+	padding 10rpx 0
+	color #2979ff
 </style>

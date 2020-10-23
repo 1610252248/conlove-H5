@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view  class="display-box solids-bottom" v-for="(item, index) in lists" :key="item.id" @click="navToPostDetail(false, item.id)">
+		<view  class="display-box solids-bottom" v-for="(item, index) in lists" :key="item.id" @click.stop="navToPostDetail(false, item.id)">
 			<!-- 说说内容 -->
 			<post-info :data="item" :dotsShow="item.user.id==userDB.id" @more="showModal(index)"/>
 			<!-- 赞和评论 -->
