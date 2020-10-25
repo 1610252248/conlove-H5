@@ -1,11 +1,11 @@
 <template>
 	<view class="container bg-white">
 		<view class="imageSrc">
-			<view class="margin-left-sm">
-				<u-image width="260px" height="260px" src="/static/conlove.onlone.png"></u-image>
+			<view >
+				<u-image style="margin: 0 auto;" width="260px" height="260px" src="/static/conlove.online.png"></u-image>
 			</view>
-			<view style="font-size: 20px;">
-				请使用手机浏览器，扫描上方二维码预览。
+			<view style="font-size: 20px; text-align: center;">
+				请使用手机浏览器，扫描上方二维码预览 (:
 			</view>
 		</view>
 		<div id="showMobilePreview">
