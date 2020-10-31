@@ -197,7 +197,7 @@ export default class request {
 			uni.chooseImage({
 				count: 9, //默认9
 				sizeType: data.sizeType || ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
-				sourceType: data.sourceType || ['album', 'camera'], //从相册选择
+				sourceType: data.sourceType || ['album'], //从相册选择
 				success: function(res) {
 					let list = []
 					uni.showLoading({

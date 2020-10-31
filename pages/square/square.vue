@@ -1,12 +1,24 @@
 <template>
 	<view>
+		<!-- <view class="cu-bar  search">
+			<view class="cu-avatar round" style="background-image:url(https://ossweb-img.qq.com/images/lol/web201310/skin/big114004.jpg);"></view>
+			<view class="search-form round">
+				<text class="cuIcon-search"></text>
+				<input @focus="InputFocus" @blur="InputBlur" :adjust-position="false" type="text" placeholder="搜索动态" confirm-type="search"></input>
+			</view>
+			<view class="action">
+				<button class="cu-btn bg-red shadow-blur round">搜索</button>
+			</view>
+		</view> -->
+		
 		<!-- 导航  动态/树洞 -->
-		<view class="bg-white nav text-black">
+		<view class="bg-white nav text-black ">
 			<view>
 				<u-tabs :bar-height="8" :active-item-style="{'color':'#000000'}" :bar-style="{'background-color':'#c2c2c2'}"  :font-size="34" :bar-width="80" :gutter="40" :list="navs"  :current="tabCur" @change="changeTab"></u-tabs>
 			</view>
 			<view class="add-fixed text-xxl" @click="showModal"><text class="cuIcon-roundaddfill"></text></view>
 		</view>
+		
 		
 		<!-- 说说内容 -->
 		<post v-if="tabCur == 0"/>
@@ -43,6 +55,7 @@ export default {
 			tabCur: 0,
 			navs: [{name:'动态'}, {name:'树洞'}],
 			bottomModal: false,
+			InputBottom: 0
 		};
 	},
 	onShow() {
@@ -51,6 +64,12 @@ export default {
 		}
 	},
 	methods: {
+		InputFocus(e) {
+			this.InputBottom = e.detail.height
+		},
+		InputBlur(e) {
+			this.InputBottom = 0
+		},
 		//  导航切换["说说", "树洞"]
 		tabSelect(index) {
 			this.tabCur = index;
@@ -81,8 +100,10 @@ export default {
 
 <style lang="stylus">
 .nav
-	width 95%
+	width 100%
+	padding-left 20rpx
 	margin 0 auto
+	// border-bottom 1rpx solid #e5e5e5;
 .cu-item
 	margin 0
 	view
@@ -94,7 +115,7 @@ export default {
 	background-color #c0c0c0
 	border-radius 10rpx
 .add-fixed
-	position fixed
+	position absolute
 	right 40rpx
 	top 20rpx
 .text-black

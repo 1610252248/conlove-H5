@@ -1,5 +1,8 @@
 <template>
 	<c-scroll minHeight @scrolltolower="lower">
+		<view class="padding-tb-sm solids-bottom" v-if="swaiperList.length > 0">
+			<u-swiper style="width: 650rpx; margin: 0 auto;" :list="swaiperList"></u-swiper>
+		</view>
 		<c-post :lists="postList" :appreciateList="appreciateList"  
 			@chang-appreciate="changAppreciate" :isLoad="isLoad"  @chang-public="changPublic"
 			@delete="deletePost"/>
@@ -9,9 +12,24 @@
 <script>
 
 export default {
+	// props: {
+	// 	swaiperList: {
+	// 		type: Array,
+	// 		default: () => {[
+	// 			'https://cdn.uviewui.com/uview/swiper/1.jpg',
+	// 			'https://cdn.uviewui.com/uview/swiper/2.jpg',
+	// 			'https://cdn.uviewui.com/uview/swiper/3.jpg'
+	// 		]}
+	// 	},
+	// },
 	data() {
 		return {
 			// 帖子数组
+			swaiperList: [
+					// {image: 'https://cdn.uviewui.com/uview/swiper/1.jpg'},
+					// {image: 'https://cdn.uviewui.com/uview/swiper/2.jpg'},
+					// {image: 'https://cdn.uviewui.com/uview/swiper/3.jpg'}
+				],
 			postList: [],
 			// 点赞帖子数组
 			appreciateList: [],
@@ -45,7 +63,18 @@ export default {
 			this.postList = []
 			this.page = 1;
 			this.getPost()
-			
+			this.getSwiper()
+		},
+		// 获取轮播
+		getSwiper() {
+			this.swaiperList = []
+			this.$http.get('/swiper/all').then(res => {
+				for(let o of res.data) {
+					if(o.isPublic === 1) {
+						this.swaiperList.push(o)
+					}
+				}
+			})
 		},
 		// 请求帖子数据
 		getPost() {

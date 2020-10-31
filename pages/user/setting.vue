@@ -16,8 +16,13 @@
 				<view class="title">修改密码</view>
 				<text class="cuIcon-right text-gray" />
 			</view>
+			<view class="cu-form-group" @click="showApply = true">
+				<view class="title">申请校园新锐</view>
+				<text class="cuIcon-right text-gray" />
+			</view>	
 			<view class="vertical-space"/>
 				
+			
 			
 			<view class="cu-form-group">
 				<view class="title">黑名单</view>
@@ -32,6 +37,9 @@
 		</view>
 		<u-toast ref="uToast" />
 		
+		
+		<u-modal v-model="showApply" :content="content"></u-modal>
+		
 	</c-scroll>
 </template>
 
@@ -45,7 +53,9 @@ export default {
 	data() {
 		return {
 			isSwitch: true,
-			user: {}
+			user: {},
+			showApply: false,
+			content: '111'
 		};
 	},
 	onLoad() {
@@ -69,6 +79,10 @@ export default {
 		},
 		navToPassword() {
 			this.$u.route('/pages/user/sub/modify-password')
+		},
+		
+		apply() {
+			
 		}
 	}
 };

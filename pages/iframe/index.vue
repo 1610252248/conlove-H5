@@ -1,6 +1,6 @@
 <template>
-	<view class="container bg-white">
-		<view class="imageSrc">
+	<view class="container bg-white" id="jumpid">
+		<view class="imageSrc" v-if="showCode">
 			<view >
 				<u-image style="margin: 0 auto;" width="260px" height="260px" src="/static/conlove.online.png"></u-image>
 			</view>
@@ -9,11 +9,13 @@
 			</view>
 		</view>
 		<div id="showMobilePreview">
-			<div class="mobile_preview_header"><i class="mobile_preview_header_icon"></i></div>
-			<div class="mobile_preview_frame">
-				<iframe v-if="!ismobile" :src="url" id="YuFrameMobilePreview" name="YuFrameMobilePreview" frameborder="0" :style="'width:' + width"></iframe>
-			</div>
-			<div class="mobile_preview_footer"><i class="mobile_preview_footer_icon"></i></div>
+			<!-- <div class="mobile_preview_header"><i class="mobile_preview_header_icon"></i></div> -->
+			<view >
+				<view class="mobile_preview_frame">
+					<iframe v-if="!ismobile" :src="url" id="YuFrameMobilePreview" name="YuFrameMobilePreview" frameborder="0" :style="'width:' + width"></iframe>
+				</view>
+			</view>
+			<!-- <div class="mobile_preview_footer"><i class="mobile_preview_footer_icon"></i></div> -->
 		</div>
 	</view>
 </template>
@@ -24,7 +26,9 @@ export default {
 		return {
 			url: '',
 			width: '',
-			ismobile: true
+			ismobile: true,
+			showCode: false,
+			width_: 0
 		};
 	},
 	onLoad(opt) {
@@ -38,13 +42,28 @@ export default {
 		} else {
 			this.url = `${location.href}${url}`;
 		}
+		
 	},
 	onShow() {},
+	mounted() {
+		this.$nextTick(function() {
+			this.init();
+		});
+	},
 	methods: {
+		init() {
+			uni.getSystemInfo({
+				success: res => {
+					if(res.windowWidth > 400) this.showCode = true; 
+					this.width_ = res.windowWidth;
+				}
+			})
+		},
 		isMobile() {
 			let flag = navigator.userAgent.match(
 				/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
 			);
+			
 			return flag ? true : false;
 		}
 	}
@@ -78,13 +97,14 @@ export default {
 }
 #showMobilePreview {
 	z-index: 9999;
-	width: 391px;
-	height: 768px;
+	width: 374px;
+	height: 98vh;
 	position: absolute;
-	left: 80%;
-	top: 50%;
-	transform: translate(-50%, -50%);
-	opacity: 1;
+	right: 20rpx;
+	border: 6px solid #eeeff2;
+	// left: 80%;
+	// top: 50%;
+	// transform: translate(-50%, -50%);
 	text-align: center;
 }
 
@@ -113,16 +133,11 @@ export default {
 }
 
 .mobile_preview_frame {
-	width: 375px;
 	min-height: 294px;
-	height: 667px;
+	height: 98vh;
 	// max-height: calc(100vh - 100px);
-	top: 40px;
-	left: 0;
-	border: 6px solid #eeeff2;
-	position: relative;
-	background-color: #fff;
-	display: block;
+	// display: block;
+	display:block;
 }
 
 #YuFrameMobilePreview {

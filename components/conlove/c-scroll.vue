@@ -1,7 +1,7 @@
 <template>
 	<view >
 		<scroll-view
-			:class="[maxHeight ? 'max-height' : '', midHeight ? 'mid-height' : '', minHeight ? 'min-height' : '', $utils.isSafari() ? 'isSafari': '']"
+			:class="[maxHeight ? 'max-height' : '', midHeight ? 'mid-height' : '', minHeight ? 'min-height' : '', mini ? 'mini-height' : '', $utils.isSafari() ? 'isSafari': '']"
 			class="scroll-view"
 			scroll-y
 			@scrolltolower="scrolltolower"
@@ -30,6 +30,10 @@ export default {
 			default: false
 		},
 		minHeight: {
+			type: Boolean,
+			default: false
+		},
+		mini: {
 			type: Boolean,
 			default: false
 		},
@@ -111,13 +115,18 @@ export default {
 
 .min-height
 	height calc(100vh - 94px) !important
-	
+
+.mini-height
+	height calc(100vh - 94px - 46px) !important
+
 .max-height.isSafari
 	height calc(100vh - 75px) !important
 .mid-height.isSafari
 	height calc(100vh - 49px - 75px) !important
 .min-height.isSafari
 	height calc(100vh - 94px - 75px) !important
+.mini-height.isSafari
+	height calc(100vh - 94px - 75px- 46px) !important
 .goToTop
 	position fixed
 	bottom 55rpx

@@ -22,7 +22,8 @@
 				class="c-content" :class="[elId]" :style="{
 					height: isLongContent && !showMore ? showHeight + 'rpx' : 'auto'
 				}">
-				<text class="text-wrap">{{data.content}}</text>
+				<!-- <text class="text-wrap">{{data.content}}</text> -->
+				<u-parse class="text-wrap" :html="getHtml(data.content)"  :tag-style="style" @linkpress="linkClick"></u-parse>
 			</view>
 			<view v-if="isLongContent" class="see-more">查看全文</view>
 			
@@ -53,7 +54,12 @@ export default {
 		return {
 			isLongContent: false, // 是否需要隐藏一部分内容
 			showHeight: 280,
-			elId: this.$u.guid() // 生成唯一class
+			elId: this.$u.guid(), // 生成唯一class
+			content:'#双十一# #双十二# 嘿嘿和和',
+			style: {
+				a:  'color: #2979ff;text-decoration:none;',
+			}
+			
 		};
 	},
 	mounted() {
@@ -62,6 +68,28 @@ export default {
 		});
 	},
 	methods: {
+		getHtml(str) {
+			if(str.length == 0) return str;
+			str = str .replace(/(\r\n|\n|\r)/gm, "<br/>"); 
+			let arr = str.split('#')
+			let len = arr.length, html = arr[0];
+			for(let i = 1; i < len - 1; i++) {
+				if(arr[i].length > 0) {
+					html += `<a href="` + arr[i] + `">#` + arr[i] + `#</a>`
+					if(i + 1 < len - 1) html += arr[i + 1]
+					i++;
+				} else {
+					html += '#'
+				}
+			}
+			if(len > 1) html += arr[len-1];
+			return html
+		},
+		linkClick(e) {
+			console.log(e);
+			event.stopPropagation()
+			e.ignore();
+		},
 		init() {
 			this.$uGetRect('.' + this.elId).then(res => {
 				// 判断高度，如果真实内容高度大于占位高度，则显示收起与展开的控制按钮
@@ -91,7 +119,7 @@ export default {
 <style lang="stylus">
 .box-userName
 	font-size $uni-font-size-base
-	color #333333
+	color #333333;
 	max-width 300rpx
 .box-content
 	width 90%

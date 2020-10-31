@@ -120,7 +120,7 @@
 				</view>
 				<!-- 已选标签 -->
 				<view class="flex text-sm">
-					<text class="title text-nowrap margin-right-xs margin-left-sm">已选</text>
+					<text class="title text-nowrap margin-right-xs margin-left-sm">已选:</text>
 					<view class="text-sm">
 						<view class="flex flex-wrap">
 							<view class="info-tag" :class="getTagColor(index)" v-for="(item, index) in selectTagList" :key="index">{{ item.name }}</view>
@@ -170,13 +170,13 @@
 
 <script>
 import { mapState, mapActions } from 'vuex';
-import labelList from './label-data/label.js'
+import infoMixins from 'common/mixins/user-info.js' // 多余的个人信息（标签和关于我
 export default {
 	computed: {
 		// 使用对象展开运算符将 getter 混入 computed 对象中
 		...mapState(['userDB'])
 	},
-
+	mixins:  [infoMixins],
 	data() {
 		return {
 			//个人资料
@@ -188,7 +188,6 @@ export default {
 			},
 			isFemale: false,
 			sexPicker: ['男', '女'],
-			tabCur: 0,
 			showYear: false,
 			showMonth: false,
 			showDay: false,
@@ -198,9 +197,6 @@ export default {
 			showGraduation: false,
 			levelList: [{ label: '学士' }, { label: '硕士' }, { label: '博士' }],
 			graduationList: [{ value: 0, label: '未毕业' }, { value: 1, label: '已毕业' }],
-			selectTagList: [],
-			colorList: ['bg-red', 'bg-yellow', 'bg-blue'],
-			labelList: labelList,
 			changUser: false // 改变信息
 		};
 	},
@@ -252,9 +248,7 @@ export default {
 		sexChange(e) {
 			this.user.sex = this.sexPicker[e.detail.value];
 		},
-		changeTab(index) {
-			this.tabCur = index;
-		},
+		
 		setGrage(e) {
 			this.user.grade = e.year;
 		},
@@ -274,38 +268,7 @@ export default {
 		gradeChange(e) {
 			this.user.grade = this.gradePicker[e.detail.value];
 		},
-		// 换一批 个性展示
-		changeList() {
-			let cur = this.tabCur;
-			let info = this.labelList[cur];
-			//
-			if (info.index + 1 < info.list.length) info.index++;
-			else {
-				this.$u.toast('没有其他标签了');
-				info.index = 0;
-			}
-		},
-		//获取导航栏选中的 颜色
-		getTabColor(tab) {
-			if (this.selectTagList.find(item => item.name === tab)) {
-				return this.getTagColor(this.tabCur);
-			}
-			return 'tag-border';
-		},
-		// 获取选中标签的 颜色
-		getTagColor(idx) {
-			return this.colorList[idx % 3];
-		},
-		// 选中/取消 标签
-		changeTag(label) {
-			this.changUser = true;
-			let idx = this.selectTagList.findIndex(item => item.name === label);
-
-			let obj = { name: label, userId: this.userDB.id };
-
-			if (idx != -1) this.selectTagList.splice(idx, 1);
-			else this.selectTagList.push(obj);
-		},
+		
 		// 更新头像
 		async updateAvatar() {
 			await this.$http.urlImgUpload('/fileUpload').then(res => {
