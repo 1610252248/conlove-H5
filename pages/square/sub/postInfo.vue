@@ -3,7 +3,7 @@
 		<view class="box-content">
 			<view class="flex justify-start align-center">
 				<view @click.stop="navToOtherUser(data.user.id)" class="cu-avatar round" :style="[{ backgroundImage: 'url(' + data.user.avatar + ')' }]">
-					<view class="cu-tag badge" :class="data.user.sex == '女' ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'"></view>
+					<!-- <view class="cu-tag badge" :class="data.user.sex == '女' ? 'cuIcon-female bg-pink' : 'cuIcon-male bg-blue'"></view> -->
 				</view>
 				<view @click.stop="navToOtherUser(data.user.id)" class="margin-left-sm">
 					<view class="box-userName text-hidden">{{ data.user.nickName }}</view>
@@ -121,6 +121,7 @@ export default {
 	font-size $uni-font-size-base
 	color #333333;
 	max-width 300rpx
+	font-weight bold
 .box-content
 	width 90%
 	margin 0 auto

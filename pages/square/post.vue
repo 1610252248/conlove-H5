@@ -12,16 +12,6 @@
 <script>
 
 export default {
-	// props: {
-	// 	swaiperList: {
-	// 		type: Array,
-	// 		default: () => {[
-	// 			'https://cdn.uviewui.com/uview/swiper/1.jpg',
-	// 			'https://cdn.uviewui.com/uview/swiper/2.jpg',
-	// 			'https://cdn.uviewui.com/uview/swiper/3.jpg'
-	// 		]}
-	// 	},
-	// },
 	data() {
 		return {
 			// 帖子数组
