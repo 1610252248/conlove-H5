@@ -48,7 +48,7 @@
 				</view>
 				<view class="flex justify-start">
 					<view class="text-nowrap">关于我</view>
-					<view class="text-gray margin-left">{{ user.introduce }}</view>
+					<view class="text-gray margin-left"><text>{{ user.introduce }}</text></view>
 				</view>
 			</view>
 		</c-card>
@@ -60,7 +60,7 @@
 				<text v-if="user.id == userDB.id" class="fr cuIcon-right text-gray"></text>
 			</view>
 			<view slot="content">
-				<view class="margin-bottom-xs">
+				<view class="margin-bottom">
 					<view class="margin-bottom-xs">心仪的TA</view>
 					<view class="padding-left-xs text-gray">
 						<text>{{ user.favorite }}</text>

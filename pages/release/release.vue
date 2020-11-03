@@ -70,20 +70,11 @@ export default {
 				images: [],
 				favorite: '',
 				emotion: '',
+				level: '',
 				friend: true, // 默认为朋友发帖
 			},
 			id: -1, // 表明不是修改页面过来的
-			levelList: {
-				'学士': '大',
-				'硕士': '硕',
-				'博士': '博',
-			},
-			grade: {
-				'1': '一','2': '二',
-				'3': '三',
-				'4': '四',
-				'5': '五',
-			},
+		
 			last_user: {},
 		
 			
@@ -99,20 +90,12 @@ export default {
 		}
 		// 为自己发帖
 		if(friend && friend == 'false') {
-			let user = this.userDB;
+			let user = this.$u.deepClone(this.userDB);
 			for(let key in user) {
 				this.data[key] = user[key]
 			}
 			this.last_user = this.$u.deepClone(this.data);
-			if(user.grade && user.level ) {
-				let d = new Date();
-				let v = d.getFullYear() - user.grade;
-				if(d.getMonth() >= 7) v++;
-				this.data.grade = this.levelList[user.level] + this.grade[v];
-			}
-			if(user.graduation && user.graduation == 1) {
-				this.data.grade = '已毕业'
-			}
+			this.last_user['id'] = this.userDB['id']
 			this.data.images = []
 			this.data.friend = false
 		}
@@ -139,28 +122,38 @@ export default {
 		},
 		nextSec(images) {
 			// 先判断是否更新信息
+			let _this = this;
 			if(this.data.friend == false) {
 				let flag = false;
-				let user = {}
+				let user = this.$u.deepClone(this.userDB);
 				for(let key in this.userDB) {
-					if(this.last_user[key] != this.data[key]) flag = true;
-					user[key] = this.data[key]
+					if(this.data[key] == null || key === 'id') continue
+					if(this.last_user[key] != this.data[key]) {
+						user[key] = this.data[key]
+						flag = true
+					}
 				}
 				if(flag) {
-					let _this = this;
 					uni.showModal({
 					    title: '提示',
-					    content: '同步个人信息',
+					    content: '个人信息有改动，是否同步到个人资料？',
+						cancelText: '不同步',
+						confirmText: '同步',
 					    success: function (res) {
 					        if (res.confirm) {
 								user.grade = null;
-								_this.$http.post('/updateUserInfo', {user}).then(res => {
-									_this.set({user})
+								_this.$http.post('/updateUserInfo',  { user: user }).then(res => {
+									_this.set({user: user})
 									_this.publish(images)
+									_this.$eventBus.$emit('update-user-info');
 								})
-					        } 
+					        } else {
+								_this.publish(images)
+							}
 					    }
 					});
+				} else {
+					this.publish(images)
 				}
 			} else {
 				this.publish(images)
@@ -176,7 +169,7 @@ export default {
 			} else {
 				this.data.images = images
 				this.$http.post('/addSticker', this.data).then(res => {
-					this.$eventBus.$emit('add-sticker')
+					this.$eventBus.$emit('update-sticker')
 					this.jumpHome()
 				})
 			}

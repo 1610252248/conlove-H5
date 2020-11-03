@@ -11,7 +11,10 @@
 				<u-input inputAlign="right" type="select" v-model="form.sex" placeholder="请选择性别" @click="sexShow = true" />
 				</u-form-item>
 			<u-form-item label="年级" prop="grade">
-				<u-input inputAlign="right" type="select" v-model="form.grade" placeholder="请选择年级" @click="gradeShow = true" />
+				<u-input inputAlign="right" type="select" v-model="form.grade" placeholder="请选择入学时间" @click="gradeShow = true" />
+			</u-form-item>
+			<u-form-item label="学位" prop="level">
+				<u-input inputAlign="right" type="select" v-model="form.level" placeholder="请选择学位" @click="levelShow = true" />
 			</u-form-item>
 			<u-form-item label="生日" prop="birthDate">
 				<u-input inputAlign="right" type="select" v-model="form.birthDate" placeholder="请选择生日" @click="dateShow = true" />
@@ -20,8 +23,9 @@
 				<u-input inputAlign="right" type="number" v-model="form.height" placeholder="请输入身高" />
 			</u-form-item>
 		</u-form>
+		<u-picker v-model="gradeShow" mode="time"  :params="{ year: true }" @confirm="setGrage" ></u-picker>
 		<u-select v-model="sexShow" :list="sexPicker" @confirm="sexChange"></u-select>
-		<u-select v-model="gradeShow" :list="gradePicker" @confirm="gradeChange"></u-select>
+		<u-select v-model="levelShow" :list="levelPicker" @confirm="setLevel"></u-select>
 		<u-picker v-model="dateShow" mode="time" @confirm="dataChange"></u-picker>
 		<schoolPicker themeColor="#097fff" ref="schoolPicker" @onConfirm="onConfirm" />
 		<view class="flex padding-top-xl margin-top justify-center"><u-button class="btn" @click="next">下一步</u-button></view>
@@ -48,26 +52,16 @@ export default {
 				grade: '',
 				birthDate: '',
 				height: '',
+				level: '',
 			},
 			// 操作菜单控制显示
 			sexShow: false,
 			gradeShow: false,
 			dateShow: false,
+			levelShow: false,
 			// 选择列表
 			sexPicker: [{ value: '0', label: '男' }, { value: '1', label: '女' }],
-			gradePicker: [
-				{ value: '0', label: '已毕业' },
-				{ value: '1', label: '博士' },
-				{ value: '2', label: '研三' },
-				{ value: '3', label: '研二' },
-				{ value: '4', label: '研一' },
-				{ value: '5', label: '大五' },
-				{ value: '6', label: '大四' },
-				{ value: '7', label: '大三' },
-				{ value: '8', label: '大二' },
-				{ value: '9', label: '大一' }
-			],
-
+			levelPicker: [{ label: '学士' }, { label: '硕士' }, { label: '博士' }],
 			// 表单验证规则
 			rules: {
 				title: [{ required: true, message: '请输入标题' }],
@@ -111,11 +105,15 @@ export default {
 			}
 		},
 		/* 数据绑定 */
-		gradeChange(e) {
-			this.form.grade = e[0].label;
+	
+		setGrage(e) {
+			this.form.grade = e.year;
 		},
 		sexChange(e) {
 			this.form.sex = e[0].label;
+		},
+		setLevel(e) {
+			this.form.level = e[0].label
 		},
 		dataChange(e) {
 			this.form.birthDate = e.year + '-' + e.month + '-' + e.day;

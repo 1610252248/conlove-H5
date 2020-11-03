@@ -6,9 +6,14 @@
 				<text v-if="!item.isPublic" class="isPublic margin-left text-gray cuIcon-attentionforbid"></text>
 				<text :style="{'left':!item.isPublic?'270rpx':'300rpx'}" @click.stop="showModal(index)" class="cuIcon-more"></text>
 			</view>
-			<image lazy-load class="box-image" :src="item.images[0].image" mode="widthFix"></image>
+				
+			<image v-if="!item.isLong" lazy-load class="box-image" :src="item.images[0].image" mode="widthFix"></image>
+			<template v-else>
+				<image lazy-load class="box-image box-image2" :src="item.images[0].image" mode="aspectFill"></image>
+				<view class="lengthImage"  >长图</view>
+			</template>
 			<view class="box-info-up">
-				<text class="fl">{{ item.school + ' | ' + item.grade }}</text>
+				<text class="fl">{{ item.school + ' | ' + item.grade + '级·' + item.level }}</text>
 				<image class="sex-image fl" :src="getSexImage(item.sex)"></image>
 				<text class="fr">{{ $utils.getAge(item.birthDate) + '岁 | ' + item.height + 'cm' }}</text>
 			</view>
@@ -86,7 +91,7 @@ export default {
 		 */
 		navToHomeDetail(id) {
 			uni.navigateTo({
-				url: '/pages/home/homeDetail?id=' + id
+				url: '/pages/home/homeDetail?id=' + id 
 			});
 		},
 		//显示modal
@@ -108,7 +113,7 @@ export default {
 		},
 		// 更新动态
 		modify() {
-			this.$u.route('/pages/release/release', {id: this.lists[this.idx].id})
+			this.$u.route('/pages/release/release', {id: this.lists[this.idx].id, friend : false})
 		},
 		// 跳转用户资料
 		navToOtherUser(id) {
@@ -130,6 +135,8 @@ export default {
 	width 90%
 	border-radius 20rpx
 	box-shadow 0rpx 0rpx 20rpx 4rpx rgba(51, 51, 51, 0.15)
+.box-image2
+	height 800rpx
 .box-info-up
 	width 90%
 	font-size 28rpx
@@ -166,4 +173,13 @@ export default {
 	bottom 20rpx
 .c-border-top 
 	border-top 6px solid #ececec;
+.lengthImage 
+	padding 6rpx 12rpx
+	font-size 14rpx
+	color white
+	background-color rgba(0, 0, 0, 0.4);
+	border-radius 10rpx
+	position absolute
+	right 60rpx
+	bottom 190rpx
 </style>

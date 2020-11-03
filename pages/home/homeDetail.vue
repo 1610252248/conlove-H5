@@ -14,7 +14,7 @@
 					</view>
 				</view>
 				<view class="box-info-down">
-					<text class="fl">{{ sticker.school + ' | ' + sticker.grade }}</text>
+					<text class="fl">{{ sticker.school + ' | ' + sticker.grade + '级·' + sticker.level }}</text>
 					<image class="sex-image fl" :src="getSexImage(sticker.sex)"></image>
 					<text class="fr">{{ $utils.getAge(sticker.birthDate) + '岁 | ' + sticker.height + 'cm' }}</text>
 				</view>
@@ -24,13 +24,18 @@
 				<!-- 图片轮播 -->
 				<swiper class="card-swiper square-dot" indicator-dots circular autoplay @change="cardSwiper" indicator-color="#8799a3" indicator-active-color="#0081ff">
 					<swiper-item v-for="(item, index) in sticker.images" :key="index" :class="cardCur == index ? 'cur' : ''">
-						<view class="swiper-item" @click="viewImage(item.image)"><image :src="item.image" mode="aspectFill" /></view>
+						<view class="swiper-item" @click="viewImage(item.image)">
+							<image :src="item.image" mode="aspectFill" />
+							<view class="lengthImage" v-if="item.isLong" >长图</view>
+						</view>
 					</swiper-item>
 				</swiper>
 				<!-- 关于我 -->
 				<view class="padding margin-left-sm max-height">
 					<u-section lineColor="#FF4A2D" :title="sticker.friend ? '关于我的朋友': '关于我'" :bold="false" :right="false"></u-section>
-					<view class="text-gray text-content margin-top-sm" style="height: 100%;">{{ sticker.introduce }}</view>
+					<view class="text-gray text-content margin-top-sm" style="height: 100%;">
+						<text>{{ sticker.introduce }}</text>
+					</view>
 				</view>
 				<!-- 心仪的TA -->
 				<view class="padding margin-left-sm">
@@ -118,7 +123,19 @@ export default {
 				if (res.status == this.$http.ERROR) {
 					this.$u.route('/pages/empty/empty', { mode: 'page' });
 				} else {
-					this.sticker = res.data.sticker;
+					for(let o of res.data.sticker.images) {
+						uni.getImageInfo({
+							src : o.image,
+							success: res => {
+								if(res.height*375/res.width > uni.upx2px(800)) o.isLong = true
+								else o.isLong = false
+							}
+						})
+					}
+					setTimeout(() => {
+						this.sticker = res.data.sticker;
+					}, 100)
+					
 					// 是否对当前帖子用户发送秋波
 					if (res.data.friend != null) this.isLike = true;
 					if (this.sticker.user.id == this.userDB.id) this.isMySticker = true;
@@ -258,7 +275,7 @@ export default {
 	height 70rpx
 	z-index 999
 .card-swiper
-	height 630rpx !important
+	height 800rpx !important
 	.praise-wall
 		width 100%
 .on-right
@@ -273,4 +290,13 @@ export default {
 .text-content
 	height 40rpx
 	line-height 40rpx
+.lengthImage 
+	padding 6rpx 12rpx
+	font-size 14rpx
+	color white
+	background-color rgba(0, 0, 0, 0.4);
+	border-radius 10rpx
+	position absolute
+	right 20rpx
+	bottom 80rpx
 </style>

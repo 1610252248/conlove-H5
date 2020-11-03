@@ -23,28 +23,31 @@ export default {
 	},
 	onLoad() {
 		this.init();
-		this.$eventBus.$on('add-sticker', () => {
+		this.$eventBus.$on('update-sticker', () => {
 			this.init();
 		})
 	},
 	onPullDownRefresh() {
 		this.$http.get('/getAllSticker', {page: 1, pageSize: 10}).then(res => {
-			let list = [];
 			let lastId = this.list[0].id;
 			for(let obj of res.data.list) {
 				// 如果是更新的
-				if(obj.id > lastId) list.push(obj)
+				uni.getImageInfo({
+					src:obj.images[0].image ,
+					success: res => {
+						if(obj.id > lastId)  {
+							obj.isLong = res.height*680/res.width * 2 > 800
+							this.list.push(obj)
+						}
+					}
+				})
 			}
-			this.list.push(...list);
-			
 		})
 		setTimeout(() => {
 			uni.stopPullDownRefresh();
 		}, 500)
 	},
-	onShow() {
-		// this.init();
-	},
+	
 	methods: {
 		/**
 		 * 初始化拿数据,清空原数据之后请求
@@ -64,7 +67,15 @@ export default {
 				this.totalPage = res.pages;
 				this.page = res.pageNum;
 				if(this.page >= this.totalPage) this.isLoad = true
-				this.list.push(...res.list);
+				for(let obj of res.list) {
+					uni.getImageInfo({
+						src:obj.images[0].image ,
+						success: res => {
+							obj.isLong = res.height*680/res.width > 800
+							this.list.push(obj)
+						}
+					})
+				}
 			})
 		},
 		// 公开/私有 

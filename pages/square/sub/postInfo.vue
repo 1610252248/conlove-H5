@@ -86,7 +86,6 @@ export default {
 			return html
 		},
 		linkClick(e) {
-			console.log(e);
 			event.stopPropagation()
 			e.ignore();
 		},
