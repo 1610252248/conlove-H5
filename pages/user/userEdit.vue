@@ -49,7 +49,7 @@
 				<view class="flex" style="margin-top: 6rpx;">
 					<text class="left-text">个性签名</text>
 					<textarea placeholder-class="text-placeholder" placeholder="介绍自己的个性签名吧~~" class="textarea-border" maxlength="30" v-model="user.sign" />
-					<text class="totalNum">{{ user.introduce == null ? 0 : user.introduce.length }}/30</text>
+					<text class="totalNum">{{ user.sign == null ? 0 : user.sign.length }}/30</text>
 				</view>
 			</view>
 		</c-card>

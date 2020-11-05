@@ -15,7 +15,7 @@
 						<u-input :custom-style="inputCustome" placeholder="请输入昵称" :clearable="false" v-model="form.nickName" type="text" />
 					</u-form-item>
 					<u-form-item prop="sex" :border-bottom="false">
-						<u-input :custom-style="inputCustome" placeholder="请选择性别"  @click="showSex = true" disabled :clearable="false" v-model="form.sex" type="text" />
+						<u-input :custom-style="inputCustome" placeholder="选择性别之后无法修改哦~"  @click="showSex = true" disabled :clearable="false" v-model="form.sex" type="text" />
 						<u-icon class="arrow-down-fill"  @click="showSex = true" name="arrow-down-fill" color="#A7A7A7" size="22" />
 					</u-form-item>
 					<u-form-item prop="shool" :border-bottom="false">

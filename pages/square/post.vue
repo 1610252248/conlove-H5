@@ -32,18 +32,21 @@ export default {
 			loadCnt: 0,
 		};
 	},
+	created() {
+		this.$eventBus.$on('update-post', () => {
+			this.$nextTick(() => {
+				this.refresh();
+			});
+		});
+	},
 	mounted() {
 		// 初始化拿到数据
 		this.init();
 		// 监听新动态，重新拿到请求
-		this.$eventBus.$on('add-post', () => {
-			this.$nextTick(() => {
-				this.init();
-			});
-		});
+		
 		this.$eventBus.$on('login-success', () => {
 			this.$nextTick(() => {
-				this.init();
+				this.refresh();
 			});
 		});
 	},
@@ -54,6 +57,11 @@ export default {
 			this.page = 1;
 			this.getPost()
 			this.getSwiper()
+		},
+		refresh() {
+			this.postList = []
+			this.page = 1;
+			this.getPost()
 		},
 		// 获取轮播
 		getSwiper() {
@@ -71,11 +79,30 @@ export default {
 			this.$http.get('/getAllPost', { page: this.page, pageSize: this.pageSize }).then(res => {
 				res = res.data;
 				this.totalPage = res.pages;
-				if(this.page >= this.totalPage) this.isLoad = true;
-				this.postList.push(...res.list);
+				for(let obj of res.list) {
+					obj.content = this.getHtml(obj.content)
+				}
+				this.postList.push(...res.list)
 				// 请求数据玩之后，在请求点赞数组，避免渲染过快
 				this.getPostLike()
 			});
+		},
+		getHtml(str) {
+			str = str.replace(/(\r\n|\n|\r)/gm, "<br/>");
+			if(str.length == 0 || str.indexOf('#') == -1) return str;
+			let arr = str.split('#')
+			let len = arr.length, html = arr[0];
+			for(let i = 1; i < len - 1; i++) {
+				if(arr[i].length > 0) {
+					html += `<a style="color: #2979ff;text-decoration:none;">#` + arr[i] + `#</a>`
+					if(i + 1 < len - 1) html += arr[i + 1]
+					i++;
+				} else {
+					html += '#'
+				}
+			}
+			if(len > 1) html += arr[len-1];
+			return html
 		},
 		// 请求点赞帖子
 		getPostLike() {

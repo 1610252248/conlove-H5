@@ -165,9 +165,11 @@ uni-toast .uni-toast {
 	font-size: inherit;
 	line-height: inherit;
 	background-color: transparent;
+	color: inherit;
 }
 
 .u-reset-button::after {
    border: none;
 }
 /* end--去除button的所有默认样式--end */
+

@@ -70,6 +70,12 @@ export default {
 		this.$eventBus.$on("update-user-info", () => {
 			this.init();
 		})
+		this.$eventBus.$on('update-sticker', () => {
+			this.getData();
+		})
+		this.$eventBus.$on('update-post', () => {
+			this.getData();
+		})
 	},
 	methods: {
 		// 修改信息

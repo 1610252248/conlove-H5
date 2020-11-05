@@ -81,13 +81,13 @@
 			<view slot="content">
 				<block v-if="stickers.length">
 					<view class="flex justify-start">
-						<view class="fl"><image class="sticker-image" :src="stickers[0].images[0].image" @click.stop="viewImage(stickers[0].images[0].image)" /></view>
+						<view class="fl"><image class="sticker-image" mode="aspectFill" :src="stickers[0].images[0].image" @click.stop="viewImage(stickers[0].images[0].image)" /></view>
 						<view class="margin-left fl" style="width: 60%;">
 							<view class="cuIcon-notification">
 								<text class="margin-left-xs">{{ stickers[0].title }}</text>
 							</view>
 							<view class="text-wrap text-gray">
-								<text>{{ stickers[0].introduce }}</text>
+								<text>{{ stickers[0].introduce | introduceFilters }}</text>
 							</view>
 							<view class="text-gray">
 								<text>{{ $utils.dateUtils.format(stickers[0].createTime) }}</text>
@@ -157,7 +157,12 @@ export default {
 			default: true
 		}
 	},
-
+	filters: {
+		introduceFilters(str) {
+			if(str.length > 40) return str.substr(0, 40) + '...'
+			else return str
+		}
+	},
 	methods: {
 		viewImage(url) {
 			let images = [url];

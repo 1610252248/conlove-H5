@@ -13,7 +13,6 @@ export default {
 	data() {
 		return {
 			list: [], // 首页列表渲染的数据
-			isNoData: false, //延迟2s拿数据
 			isLoad: false,
 			loadCnt: 0,
 			page: 1, //当前请求页
@@ -32,15 +31,15 @@ export default {
 			let lastId = this.list[0].id;
 			for(let obj of res.data.list) {
 				// 如果是更新的
-				uni.getImageInfo({
-					src:obj.images[0].image ,
-					success: res => {
-						if(obj.id > lastId)  {
+				if(obj.id > lastId)  {
+					uni.getImageInfo({
+						src:obj.images[0].image ,
+						success: res => {
 							obj.isLong = res.height*680/res.width * 2 > 800
 							this.list.push(obj)
 						}
-					}
-				})
+					})
+				} else break
 			}
 		})
 		setTimeout(() => {
@@ -65,17 +64,18 @@ export default {
 			this.$http.get('/getAllSticker', {page: this.page, pageSize: this.pageSize}).then(res => {
 				res = res.data;
 				this.totalPage = res.pages;
-				this.page = res.pageNum;
-				if(this.page >= this.totalPage) this.isLoad = true
+				if(this.page > this.totalPage) this.isLoad = true
 				for(let obj of res.list) {
 					uni.getImageInfo({
 						src:obj.images[0].image ,
 						success: res => {
 							obj.isLong = res.height*680/res.width > 800
-							this.list.push(obj)
 						}
 					})
 				}
+				setTimeout(()=>{
+					this.list.push(...res.list)
+				},100)
 			})
 		},
 		// 公开/私有 
@@ -122,31 +122,3 @@ export default {
 	}
 };
 </script>
-
-<style lang="stylus">
-// .bottom-bar 
-// 	border-radius 10rpx
-// 	color #FFFFFF
-// 	background-color #600b7c;
-// 	opacity: 0.9;
-	
-// 	position absolute
-// 	bottom 0
-// 	width 100%
-// 	.content 
-// 		display flex
-// 		height 70rpx
-// 		line-height 70rpx
-// 		width 80%
-// 		margin 0 auto
-	
-// .btn
-// 	color #ffffff !important
-// 	background-image linear-gradient(135deg, #ff924d, #fc696e)
-// 	border-radius 1000px
-// 	font-size 26upx
-// 	margin auto 0 auto auto
-// 	height 60rpx
-// 	line-height 60rpx
-// 	width 200rpx
-</style>

@@ -16,21 +16,21 @@
 				<view class="title">修改密码</view>
 				<text class="cuIcon-right text-gray" />
 			</view>
-			<view class="cu-form-group" @click="showApply = true">
+			<!-- <view class="cu-form-group" @click="showApply = true">
 				<view class="title">申请校园新锐</view>
 				<text class="cuIcon-right text-gray" />
-			</view>	
-			<view class="vertical-space"/>
+			</view>	 -->
+			<!-- <view class="vertical-space"/>
 				
 			
 			
 			<view class="cu-form-group">
 				<view class="title">黑名单</view>
 				<text class="cuIcon-right text-gray" />
-			</view>
+			</view> -->
 			
 			<view class="vertical-space"/>
-			<view class="cu-form-group" @click="logout">
+			<view class="cu-form-group" @click="showLogout = true">
 				<view class="title">退出登录</view>
 				<text class="cuIcon-right text-gray"/>
 			</view>
@@ -39,6 +39,7 @@
 		
 		
 		<u-modal v-model="showApply" :content="content"></u-modal>
+		<u-modal v-model="showLogout" show-cancel-button content="确认要退出吗？" @confirm="logout"></u-modal>
 		
 	</c-scroll>
 </template>
@@ -55,7 +56,8 @@ export default {
 			isSwitch: true,
 			user: {},
 			showApply: false,
-			content: '111'
+			content: '111',
+			showLogout: false,
 		};
 	},
 	onLoad() {

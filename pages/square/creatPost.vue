@@ -92,13 +92,13 @@ export default {
 			} else {
 				this.$http.post('/addPost', { content: this.post.content, images: this.images }).then(res => {
 					// 全局事件 表明有新的数据，让post刷新
-					this.$eventBus.$emit('add-post');
 					this.$refs.uToast.show({
 						title: res.msg,
 						type: 'success',
 						isTab: true,
 						url: '/pages/square/square'
 					});
+					this.$eventBus.$emit('update-post');
 				});
 			}
 		},
